@@ -3,8 +3,6 @@
 require 'rubygems'
 require 'yaml'
 
-alias :q exit
-
 class Object
   def local_methods
     (methods - Object.instance_methods).sort
@@ -27,11 +25,11 @@ ANSI[:WHITE] = "\e[37m"
 
 # Build a simple colorful IRB prompt
 IRB.conf[:PROMPT][:SIMPLE_COLOR] = {
-  :PROMPT_I => "#{ANSI[:BLUE]}%N(%m):%03n:%i>#{ANSI[:RESET]} ",
-  :PROMPT_N => "#{ANSI[:BLUE]}%N(%m):%03n:%i>>#{ANSI[:RESET]} ",
-  :PROMPT_C => "#{ANSI[:RED]}%N(%m):%03n:%i*>#{ANSI[:RESET]} ",
-  :PROMPT_S => "#{ANSI[:YELLOW]}%N(%m):%03n:%i%l>#{ANSI[:RESET]} ",
-  :RETURN => "#{ANSI[:GREEN]}=>#{ANSI[:RESET]} %s\n",
+  :PROMPT_I => "#{ANSI[:BLUE]}%N(#{RUBY_VERSION}):%03n:%i>#{ANSI[:RESET]} ",
+  :PROMPT_N => "#{ANSI[:GREEN]}%N(#{RUBY_VERSION}):%03n:%i>>#{ANSI[:RESET]} ",
+  :PROMPT_C => "#{ANSI[:RED]}%N(#{RUBY_VERSION}):%03n:%i*>#{ANSI[:RESET]} ",
+  :PROMPT_S => "#{ANSI[:YELLOW]}%N(#{RUBY_VERSION}):%03n:%i%l>#{ANSI[:RESET]} ",
+  :RETURN => "#{ANSI[:MAGENTA]}=>#{ANSI[:RESET]} %s\n",
   :AUTO_INDENT => true }
 IRB.conf[:PROMPT_MODE] = :SIMPLE_COLOR
 
