@@ -130,7 +130,7 @@ set statusline+=[ASCII=\%03.3b]
 set statusline+=%#User10#
 set statusline+=[HEX=\%02.2B]
 set statusline+=%#User11#
-set statusline+=%{VimBuddy()}
+"set statusline+=%{VimBuddy()}
 set laststatus=2
 "STATUSLINE END
 
@@ -189,6 +189,9 @@ highlight ShowMarksHLo gui=bold guibg=LightYellow guifg=DarkYellow
 highlight ShowMarksHLm gui=bold guibg=LightGreen guifg=DarkGreen
 "SHOWMARKS END
 
+"YANKRING BEGIN
+ let g:yankring_history_file = '.yankring_history.txt'
+"YANKRING END
 
 "SUPERTAB BEGIN
 let g:SuperTabLongestEnhanced = 1
@@ -264,6 +267,9 @@ noremap! <F3> <Esc>:TlistToggle<CR>l<Insert>
 noremap <F4> <Esc>:NERDTreeToggle<CR>l<Insert>
 noremap! <F4> <Esc>:NERDTreeToggle<CR>l<Insert>
 
+noremap <F5> <Esc>:CommandT<CR>l<Insert>
+noremap! <F5> <Esc>:CommandT<CR>l<Insert>
+
 
 noremap <F6> <Esc>:YRShow<CR>l<Insert>
 noremap! <F6> <Esc>:YRShow<CR>l<Insert>
@@ -305,6 +311,8 @@ if has("autocmd")
     autocmd QuickfixCmdPost make,grep,grepadd,vimgrep :botright cwindow "wlacz okienko quickfix po kazdym make
     autocmd BufWinLeave *.* mkview! "zapisz widok przy wylaczeniu
     autocmd BufWinEnter *.* silent loadview "wczytaj widok przy wlaczeniu
+    autocmd BufWinEnter NERD_* setl statusline=%#User11#%f
+    autocmd BufWinEnter *Tag_List* setl statusline=%#User11#%f
     filetype plugin indent on
     augroup vimrcEx
         au!
@@ -313,7 +321,8 @@ if has("autocmd")
         autocmd FileType c setlocal formatoptions=croq "wrap only comments, not code
         autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
         autocmd FileType ruby,eruby set tabstop=2 expandtab shiftwidth=2 softtabstop=2
-        autocmd FileType ruby,eruby let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+        autocmd FileType ruby,eruby set makeprg=ruby\ -c\ %  
+        "autocmd FileType ruby,eruby let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
         "autocmd! bufwritepost vimrc source ~/.vim/vimrc " When vimrc is edited, reload it
         autocmd BufReadPost * "skacz do ostatniej pozycji kursora w pliku
                     \ if line("'\"") > 0 && line("'\"") <= line("$") |
