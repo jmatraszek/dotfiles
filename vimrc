@@ -51,7 +51,7 @@ if &t_Co > 2 || has("gui_running")
     set hlsearch
     set guifont=Monospace\ 8
     colorscheme wombat256
-    endif
+endif
 if has("gui_running")
     "set background=dark
     colorscheme desert
@@ -102,7 +102,7 @@ hi User11 guibg=#FEC939 ctermbg=215 guifg=#000000 ctermfg=16
 
 set statusline=
 set statusline=%#User0#
-set statusline+=[%F 
+set statusline+=[%f 
 set statusline+=%#mod#
 set statusline+=%m
 set statusline+=%#ro#
@@ -129,7 +129,7 @@ set statusline+=%#User9#
 set statusline+=[ASCII=\%03.3b]
 set statusline+=%#User10#
 set statusline+=[HEX=\%02.2B]
-set statusline+=%#User11#
+set statusline+=%#User11#%=
 "set statusline+=%{VimBuddy()}
 set laststatus=2
 "STATUSLINE END
@@ -190,7 +190,7 @@ highlight ShowMarksHLm gui=bold guibg=LightGreen guifg=DarkGreen
 "SHOWMARKS END
 
 "YANKRING BEGIN
- let g:yankring_history_file = '.yankring_history.txt'
+let g:yankring_history_file = '.yankring_history.txt'
 "YANKRING END
 
 "SUPERTAB BEGIN
@@ -231,6 +231,19 @@ map <leader>n :cnext<cr>
 map <leader>p :cprev<cr>
 map <leader>cx :cclose<cr>
 map <leader>wr :w !ruby -c<cr>
+" Bubble single lines
+nmap <C-Up> [e
+nmap <C-Down> ]e
+" Bubble multiple lines
+vmap <C-Up> [egv
+vmap <C-Down> ]egv
+" Visually select the text that was last edited/pasted
+nmap gV `[v`]
+
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
 
 map Q gq
 " szybkie wylaczenie podswietlania wynikow wyszukiwania
@@ -253,7 +266,11 @@ noremap <A-Right> <Esc>:tabn<CR><INSERT>
 " zapis gdy edytujemy plik bez uprawnien do zapisu
 cmap w!! w !sudo tee % >/dev/null
 
-map <Esc>:W<CR> <Esc>:w<CR>
+" unikniecie bledow spowodowanym shiftem
+cmap W w
+cmap Wq wq
+cmap WQ wq
+cmap Q q
 
 noremap <F1> :help<Space>
 noremap! <F1> :help<Space>
@@ -261,18 +278,18 @@ noremap! <F1> :help<Space>
 noremap <F2> <Esc>mZggVG=`Z:delmarks Z<CR>lzz<Insert>
 noremap! <F2> <Esc>mZggVG=`Z:delmarks Z<CR>lzz<Insert>
 
-noremap <F3> <Esc>:TlistToggle<CR>l<Insert>
-noremap! <F3> <Esc>:TlistToggle<CR>l<Insert>
+noremap <F3> <Esc>:TlistToggle<CR>
+noremap! <F3> <Esc>:TlistToggle<CR>
 
-noremap <F4> <Esc>:NERDTreeToggle<CR>l<Insert>
-noremap! <F4> <Esc>:NERDTreeToggle<CR>l<Insert>
+noremap <F4> <Esc>:NERDTreeToggle<CR>
+noremap! <F4> <Esc>:NERDTreeToggle<CR>
 
-noremap <F5> <Esc>:CommandT<CR>l<Insert>
-noremap! <F5> <Esc>:CommandT<CR>l<Insert>
+noremap <F5> <Esc>:CommandT<CR>
+noremap! <F5> <Esc>:CommandT<CR>
 
 
-noremap <F6> <Esc>:YRShow<CR>l<Insert>
-noremap! <F6> <Esc>:YRShow<CR>l<Insert>
+noremap <F6> <Esc>:YRShow<CR>
+noremap! <F6> <Esc>:YRShow<CR>
 
 " nowe linie powyzej/ponizej w trybie normal
 nnoremap + O<esc>
@@ -300,7 +317,7 @@ let g:NERDTreeWinPos = "left" "pozycja okna nerd tree
 let g:NERDTreeAutoCenter = 0 "wycentrowanie
 let g:NERDTreeHighlightCursorline = 0 "podswietlanie linii z kursorem
 "set noautochdir
-let g:NERDTreeChDirMode = 2
+let g:NERDTreeChDirMode = 0
 let g:NERDTreeShowBookmarks = 1 "wyswietl zakladki
 let g:NERDTreeStatusline = -1
 "NERD TREE END
@@ -311,18 +328,19 @@ if has("autocmd")
     autocmd QuickfixCmdPost make,grep,grepadd,vimgrep :botright cwindow "wlacz okienko quickfix po kazdym make
     autocmd BufWinLeave *.* mkview! "zapisz widok przy wylaczeniu
     autocmd BufWinEnter *.* silent loadview "wczytaj widok przy wlaczeniu
-    autocmd BufWinEnter NERD_* setl statusline=%#User11#%f
-    autocmd BufWinEnter *Tag_List* setl statusline=%#User11#%f
+    autocmd BufWinEnter NERD_* setlocal statusline=%#User11#%F
+    autocmd BufWinEnter *Tag_List* setlocal statusline=%#User11#%F
+
     filetype plugin indent on
     augroup vimrcEx
         au!
         autocmd FileType make setlocal noexpandtab "wylacz zamiane tabow na spacje gdy edytujemy makefile
         autocmd FileType text setlocal textwidth=120
         autocmd FileType c setlocal formatoptions=croq "wrap only comments, not code
-        autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-        autocmd FileType ruby,eruby set tabstop=2 expandtab shiftwidth=2 softtabstop=2
-        autocmd FileType ruby,eruby set makeprg=ruby\ -c\ %  
-        "autocmd FileType ruby,eruby let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+        autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
+        autocmd FileType ruby,eruby setlocal tabstop=2 expandtab shiftwidth=2 softtabstop=2
+        autocmd FileType ruby,eruby setlocal makeprg=ruby\ -c\ %  
+        autocmd FileType ruby,eruby let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
         "autocmd! bufwritepost vimrc source ~/.vim/vimrc " When vimrc is edited, reload it
         autocmd BufReadPost * "skacz do ostatniej pozycji kursora w pliku
                     \ if line("'\"") > 0 && line("'\"") <= line("$") |
