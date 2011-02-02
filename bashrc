@@ -102,7 +102,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 export GIT_PS1_SHOWDIRTYSTATE=1 
-export PS1='\[\e[1;33m\]\u@\h:\[\e[0;33m\]\w\[\e[0m\]\[\e[32m\]$(__git_ps1 "[%s]")\[\e[0m\]$ ' 
+export PS1='\[\e[0;33m\]\u@\h:\[\e[1;33m\]\w\[\e[0m\]\[\e[32m\]$(__git_ps1 "[%s]")\[\e[0m\]$ ' 
 
 export GPGKEY=8F3CD8EE
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
