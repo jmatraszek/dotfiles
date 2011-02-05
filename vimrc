@@ -205,12 +205,6 @@ highlight PmenuThumb term=NONE cterm=NONE ctermfg=0 ctermbg=7 gui=NONE guifg=Bla
 "SUPERTAB END
 
 "XPTEMPLATES BEGIN
-" bez wstawiania znakow zamykajacych
-inoremap <buffer>( (
-inoremap <buffer>[ [
-inoremap <buffer>{ {
-inoremap <buffer>" "
-inoremap <buffer>' '
 let g:xptemplate_vars = "SParg=&BRloop=\n&SPcmd=&BRif=\n&BRstc=\n&SPop=" "dostosowanie snippetow do stylu kodowania
 " let g:SuperTabMappingForward = '<Plug>supertabKey' "avoid key conflict with supertab
 " let g:xptemplate_fallback = '<Plug>supertabKey' "jesli nic nie pasowalo w xpt sprawdzamy supertab'a
