@@ -44,6 +44,8 @@ set shiftwidth=4 "4 spacje przyautoformatowaniu kodu"
 set softtabstop=4 "tylko spacje w formatowaniu kodu
 set nocursorline
 source $VIMRUNTIME/ftplugin/man.vim "wlaczamy plugin man
+set list
+set listchars=tab:▸\ ,eol:¬
 
 "GUI BEGIN
 if &t_Co > 2 || has("gui_running")
@@ -51,10 +53,14 @@ if &t_Co > 2 || has("gui_running")
     set hlsearch
     set guifont=Monospace\ 8
     colorscheme wombat256
+    hi SpecialKey ctermfg=12 ctermbg=234
+    hi NonText ctermfg=12 ctermbg=234
 endif
 if has("gui_running")
     "set background=dark
     colorscheme desert
+    hi SpecialKey guibg=grey20
+    hi NonText guifg=yellowgreen guibg=grey20
     set lines=58
     set columns=152
     set cursorline
@@ -208,12 +214,25 @@ highlight PmenuThumb term=NONE cterm=NONE ctermfg=0 ctermbg=7 gui=NONE guifg=Bla
 let g:xptemplate_vars = "SParg=&BRloop=\n&SPcmd=&BRif=\n&BRstc=\n&SPop=" "dostosowanie snippetow do stylu kodowania
 " let g:SuperTabMappingForward = '<Plug>supertabKey' "avoid key conflict with supertab
 " let g:xptemplate_fallback = '<Plug>supertabKey' "jesli nic nie pasowalo w xpt sprawdzamy supertab'a
+let g:xptemplate_key = '<A-\>'
 " let g:xptemplate_key = '<Tab>' "xpt uzywa <tab> zamiast <C-\>
 " let g:xptemplate_pum_tab_nav = 1 "uzycie <tab>/<S-tab> do nawigacji w popup-msg
 let g:xptemplate_minimal_prefix = 'full' "xpt wlaczy sie tylko po wpisaniu pelnej nazwy snippeta
 "XMTEMPLATE END
 
 "KEY MAPPING BEGIN
+" moving in a right way :)
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+" inoremap <up> <nop>
+" inoremap <down> <nop>
+" inoremap <left> <nop>
+" inoremap <right> <nop>
+nnoremap j gj
+nnoremap k gk
+
 " Fast saving
 nmap <leader>gw :Gwrite<cr>
 nmap <leader>gc :Gcommit<cr>
@@ -316,6 +335,12 @@ let g:NERDTreeShowBookmarks = 1 "wyswietl zakladki
 let g:NERDTreeStatusline = -1
 "NERD TREE END
 
+"VIM TASK BEGIN
+inoremap <silent> <buffer> <C-S-CR> <ESC>:call Toggle_task_status()<CR>i
+noremap <silent> <buffer> <C-S-CR> :call Toggle_task_status()<CR>
+"VIM TASK END
+
+
 "AUTOCMD BEGIN
 if has("autocmd")
     "autocmd BufEnter * if expand('%:p') !~ '://' | cd %:p:h | endif
@@ -336,6 +361,7 @@ if has("autocmd")
         autocmd FileType ruby,eruby setlocal makeprg=ruby\ -c\ %  
         autocmd FileType ruby,eruby let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
         "autocmd! bufwritepost vimrc source ~/.vim/vimrc " When vimrc is edited, reload it
+        autocmd BufNewFile,BufRead *todo.txt,*.task,*.tasks  setfiletype task
         autocmd BufReadPost * "skacz do ostatniej pozycji kursora w pliku
                     \ if line("'\"") > 0 && line("'\"") <= line("$") |
                     \ exe "normal g`\"" |
