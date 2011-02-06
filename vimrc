@@ -79,15 +79,15 @@ let html_dynamic_folds=1
 function! FileSize()
     let bytes = getfsize(expand("%:p"))
     if bytes <= 0
-        return ""
+	return ""
     endif
     if bytes < 1024 "w bajtach
-        return bytes
+	return bytes
     endif
     if bytes < 1048576 "w kilobajtach
-        return (bytes / 1024) . "K"
+	return (bytes / 1024) . "K"
     else "w megabajtach
-        return (bytes / 1048576) . "M"
+	return (bytes / 1048576) . "M"
     endif
 endfunction
 
@@ -104,7 +104,7 @@ hi User7 guibg=#C939FE ctermbg=171 guifg=#000000 ctermfg=16
 hi User8 guibg=#FE39D2 ctermbg=206 guifg=#000000 ctermfg=16
 hi User9 guibg=#FE396F ctermbg=203 guifg=#000000 ctermfg=16
 hi User10 guibg=#FF6639 ctermbg=208 guifg=#000000 ctermfg=16
-hi User11 guibg=#FEC939 ctermbg=215 guifg=#000000 ctermfg=16
+hi User11 guibg=#FEC939 ctermbg=215 guifg=#FF0000 ctermfg=169
 
 set statusline=
 set statusline=%#User0#
@@ -135,8 +135,10 @@ set statusline+=%#User9#
 set statusline+=[ASCII=\%03.3b]
 set statusline+=%#User10#
 set statusline+=[HEX=\%02.2B]
+set statusline+=%#ro#
+set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%#User11#%=
-"set statusline+=%{VimBuddy()}
+" set statusline+=%*
 set laststatus=2
 "STATUSLINE END
 
@@ -200,9 +202,9 @@ let g:yankring_history_file = '.yankring_history.txt'
 "YANKRING END
 
 "SUPERTAB BEGIN
-let g:SuperTabLongestEnhanced = 1
-let g:SuperTabMappingForward = '<Tab>'
-let g:SuperTabMappingBackward = '<S-Tab>'
+" let g:SuperTabLongestEnhanced = 1
+" let g:SuperTabMappingForward = '<Tab>'
+" let g:SuperTabMappingBackward = '<S-Tab>'
 "kolory dla pop up menu
 highlight Pmenu term=NONE cterm=NONE ctermfg=7 ctermbg=5 gui=NONE guifg=White guibg=Magenta
 highlight PmenuSel term=NONE cterm=NONE ctermfg=0 ctermbg=7 gui=NONE guifg=Black guibg=White
@@ -212,11 +214,11 @@ highlight PmenuThumb term=NONE cterm=NONE ctermfg=0 ctermbg=7 gui=NONE guifg=Bla
 
 "XPTEMPLATES BEGIN
 let g:xptemplate_vars = "SParg=&BRloop=\n&SPcmd=&BRif=\n&BRstc=\n&SPop=" "dostosowanie snippetow do stylu kodowania
-" let g:SuperTabMappingForward = '<Plug>supertabKey' "avoid key conflict with supertab
-" let g:xptemplate_fallback = '<Plug>supertabKey' "jesli nic nie pasowalo w xpt sprawdzamy supertab'a
-let g:xptemplate_key = '<A-\>'
-" let g:xptemplate_key = '<Tab>' "xpt uzywa <tab> zamiast <C-\>
-" let g:xptemplate_pum_tab_nav = 1 "uzycie <tab>/<S-tab> do nawigacji w popup-msg
+let g:SuperTabMappingForward = '<Plug>supertabKey' "avoid key conflict with supertab
+let g:xptemplate_fallback = '<Plug>supertabKey' "jesli nic nie pasowalo w xpt sprawdzamy supertab'a
+" let g:xptemplate_key = '<C-\>'
+let g:xptemplate_key = '<Tab>' "xpt uzywa <tab> zamiast <C-\>
+let g:xptemplate_pum_tab_nav = 1 "uzycie <tab>/<S-tab> do nawigacji w popup-msg
 let g:xptemplate_minimal_prefix = 'full' "xpt wlaczy sie tylko po wpisaniu pelnej nazwy snippeta
 "XMTEMPLATE END
 
@@ -314,9 +316,9 @@ noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 function ToggleFlag(option,flag)
     exec ('let lopt = &' . a:option)
     if lopt =~ (".*" . a:flag . ".*")
-        exec ('set ' . a:option . '-=' . a:flag)
+	exec ('set ' . a:option . '-=' . a:flag)
     else
-        exec ('set ' . a:option . '+=' . a:flag)
+	exec ('set ' . a:option . '+=' . a:flag)
     endif
 endfunction
 noremap <silent> <A-1> :call ToggleFlag("guioptions","m")<BAR>set guioptions?<CR>
@@ -352,20 +354,20 @@ if has("autocmd")
 
     filetype plugin indent on
     augroup vimrcEx
-        au!
-        autocmd FileType make setlocal noexpandtab "wylacz zamiane tabow na spacje gdy edytujemy makefile
-        autocmd FileType text setlocal textwidth=120
-        autocmd FileType c setlocal formatoptions=croq "wrap only comments, not code
-        autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
-        autocmd FileType ruby,eruby setlocal tabstop=2 expandtab shiftwidth=2 softtabstop=2
-        autocmd FileType ruby,eruby setlocal makeprg=ruby\ -c\ %  
-        autocmd FileType ruby,eruby let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
-        "autocmd! bufwritepost vimrc source ~/.vim/vimrc " When vimrc is edited, reload it
-        autocmd BufNewFile,BufRead *todo.txt,*.task,*.tasks  setfiletype task
-        autocmd BufReadPost * "skacz do ostatniej pozycji kursora w pliku
-                    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-                    \ exe "normal g`\"" |
-                    \ endif
+	au!
+	autocmd FileType make setlocal noexpandtab "wylacz zamiane tabow na spacje gdy edytujemy makefile
+	autocmd FileType text setlocal textwidth=120
+	autocmd FileType c setlocal formatoptions=croq "wrap only comments, not code
+	autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
+	autocmd FileType ruby,eruby setlocal tabstop=2 expandtab shiftwidth=2 softtabstop=2
+	autocmd FileType ruby,eruby setlocal makeprg=ruby\ -c\ %  
+	autocmd FileType ruby,eruby let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+	"autocmd! bufwritepost vimrc source ~/.vim/vimrc " When vimrc is edited, reload it
+	autocmd BufNewFile,BufRead *todo.txt,*.task,*.tasks  setfiletype task
+	autocmd BufReadPost * "skacz do ostatniej pozycji kursora w pliku
+		    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+		    \ exe "normal g`\"" |
+		    \ endif
     augroup END
 else
     set autoindent " always set autoindenting on
