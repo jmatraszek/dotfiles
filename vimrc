@@ -9,7 +9,7 @@ filetype plugin indent on
 set showmode
 set backspace=indent,eol,start
 set virtualedit=onemore
-set autochdir
+set noautochdir
 if has("vms")
     set nobackup " do not keep a backup file, use versions instead
 else
@@ -203,8 +203,8 @@ let g:yankring_history_file = '.yankring_history.txt'
 
 "SUPERTAB BEGIN
 " let g:SuperTabLongestEnhanced = 1
-" let g:SuperTabMappingForward = '<Tab>'
-" let g:SuperTabMappingBackward = '<S-Tab>'
+let g:SuperTabMappingForward = '<Down>'
+let g:SuperTabMappingBackward = '<Up>'
 "kolory dla pop up menu
 highlight Pmenu term=NONE cterm=NONE ctermfg=7 ctermbg=5 gui=NONE guifg=White guibg=Magenta
 highlight PmenuSel term=NONE cterm=NONE ctermfg=0 ctermbg=7 gui=NONE guifg=Black guibg=White
@@ -325,13 +325,13 @@ noremap <silent> <A-1> :call ToggleFlag("guioptions","m")<BAR>set guioptions?<CR
 imap <A-1> <C-O><A-1>
 "KEY MAPPINGS END
 
-"NERD TREE BEGIN
+
+
 let g:NERDTreeMapActivateNode='<CR>' "otwieramy plik/katalog enterem
 let g:NERDTreeWinSize = 35 "szerokość okna nerd tree
 let g:NERDTreeWinPos = "left" "pozycja okna nerd tree
 let g:NERDTreeAutoCenter = 0 "wycentrowanie
 let g:NERDTreeHighlightCursorline = 0 "podswietlanie linii z kursorem
-"set noautochdir
 let g:NERDTreeChDirMode = 0
 let g:NERDTreeShowBookmarks = 1 "wyswietl zakladki
 let g:NERDTreeStatusline = -1
@@ -345,7 +345,6 @@ noremap <silent> <buffer> <C-S-CR> :call Toggle_task_status()<CR>
 
 "AUTOCMD BEGIN
 if has("autocmd")
-    "autocmd BufEnter * if expand('%:p') !~ '://' | cd %:p:h | endif
     autocmd QuickfixCmdPost make,grep,grepadd,vimgrep :botright cwindow "wlacz okienko quickfix po kazdym make
     autocmd BufWinLeave *.* mkview! "zapisz widok przy wylaczeniu
     autocmd BufWinEnter *.* silent loadview "wczytaj widok przy wlaczeniu
