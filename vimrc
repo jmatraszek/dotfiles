@@ -108,7 +108,7 @@ hi User11 guibg=#FEC939 ctermbg=215 guifg=#FF0000 ctermfg=169
 
 set statusline=
 set statusline=%#User0#
-set statusline+=[%t 
+set statusline+=[%f 
 set statusline+=%#mod#
 set statusline+=%m
 set statusline+=%#ro#
