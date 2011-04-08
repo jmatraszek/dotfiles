@@ -38,10 +38,10 @@
     lol = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
     ls = ls-files
-[mergetool "gvimdiff3"]
-    cmd = gvim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
-[mergetool "vimdiff3"]
-    cmd = vim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
-[merge]
-    tool = gvimdiff3
+; [mergetool "gvimdiff3"]
+    ; cmd = gvim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+; [mergetool "vimdiff3"]
+    ; cmd = vim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+; [merge]
+    ; ; tool = gvimdiff3
     ; tool = vimdiff3
