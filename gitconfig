@@ -1,6 +1,6 @@
 [user]
     name = Jakub Matraszek
-    email = jakub.matraszek@gmail.com
+    email = jakubm@innov8on.com
 [github]
     user = jmatraszek
     token = 50d0e4c655ec0a8a88689fbd0df91001
@@ -38,10 +38,10 @@
     lol = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
     ls = ls-files
-; [mergetool "gvimdiff3"]
-    ; cmd = gvim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+[mergetool "gvimdiff3"]
+    cmd = gvim -f -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
 ; [mergetool "vimdiff3"]
     ; cmd = vim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
-; [merge]
-    ; ; tool = gvimdiff3
+[merge]
+    tool = gvimdiff3
     ; tool = vimdiff3
