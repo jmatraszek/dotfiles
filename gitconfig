@@ -45,3 +45,5 @@
 [merge]
     tool = gvimdiff3
     ; tool = vimdiff3
+[mergetool]
+	keepBackup = false
