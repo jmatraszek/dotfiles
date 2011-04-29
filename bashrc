@@ -101,8 +101,18 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-export GIT_PS1_SHOWDIRTYSTATE=1 
-export PS1='\[\e[0;33m\]\u@\h:\[\e[1;33m\]\w\[\e[0m\]\[\e[32m\]$(__git_ps1 "[%s]")\[\e[0m\]$ ' 
+export GIT_PS1_SHOWDIRTYSTATE=1
+export PS1='\[\e[0;33m\]\u@\h:\[\e[1;33m\]\w\[\e[0m\]\[\e[32m\]$(__git_ps1 "[%s]")\[\e[0m\]$ '
 
 export GPGKEY=8F3CD8EE
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+
+function gsed () {
+  if [ -z "$3" ]
+  then
+    echo "== Usage:    gsed search_string replace_string [path]"
+  else
+    egrep --exclude-dir=.git -lRZ "$1" $3 | xargs -0 -l sed -i -e "s/$1/$2/g"
+  fi
+}
+
