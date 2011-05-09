@@ -34,12 +34,14 @@
     br = branch
     co = checkout
     df = diff
-    df = diff --staged
+    dfs = diff --staged
     lg = log -p
     lol = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
     ls = ls-files
     rmc = rm --cached
+    rbc = rebase --continue
+    rba = rebase --abort
 [mergetool "gvimdiff3"]
     cmd = gvim -f -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
 ; [mergetool "vimdiff3"]
