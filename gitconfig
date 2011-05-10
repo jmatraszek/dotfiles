@@ -29,6 +29,7 @@
     ; pager = tig
     ; pager = cat
 [alias]
+    s = !tig status
     st = status
     ci = commit
     br = branch
