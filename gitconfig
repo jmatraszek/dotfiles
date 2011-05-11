@@ -40,6 +40,7 @@
     lol = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
     ls = ls-files
+    lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
     rmc = rm --cached
     rbc = rebase --continue
     rba = rebase --abort
