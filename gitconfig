@@ -34,7 +34,7 @@
     st = status
     ci = commit
     br = branch
-    branch-name = !git branch --no-color 2> /dev/null | sed -e 's/* \\(.*\\)/\\1/'
+    branch-name = !git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' | sed -e 's/* \\(.*\\)/\\1/'
     co = checkout
     df = !git diff | tig
     dfs = !git diff --staged | tig
