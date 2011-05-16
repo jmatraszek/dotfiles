@@ -48,6 +48,8 @@
     rbc = rebase --continue
     rba = rebase --abort
     sl = !git --no-pager stash list --pretty=format:'%C(red)%gd %C(blue)%h %C(yellow)%ad %Creset%f' && echo
+    sp = stash pop
+    ss = stash save
 [mergetool "gvimdiff3"]
     cmd = gvim -f -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
 ; [mergetool "vimdiff3"]
