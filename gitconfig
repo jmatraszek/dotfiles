@@ -34,8 +34,8 @@
     br = branch
     branch-name = !git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' | sed -e 's/* \\(.*\\)/\\1/'
     co = checkout
-    df = !git diff | tig
-    dfs = !git diff --staged | tig
+    df = "!sh -c 'git diff -- $1 | tig' -"
+    dfs = "!sh -c 'git diff --staged -- $1 | tig' -"
     lg = log -p
     lol = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
