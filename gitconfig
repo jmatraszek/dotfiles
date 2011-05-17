@@ -48,6 +48,7 @@
     s = !tig status
     sl = !git --no-pager stash list --pretty=format:'%C(yellow)%ad %C(blue)%h %C(red)%gd %Creset%f' && echo
     sa = stash apply
+    sd = stash drop
     sp = stash pop
     ss = stash save
     st = status
