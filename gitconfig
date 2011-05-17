@@ -30,8 +30,6 @@
     ; pager = cat
 [alias]
     alias = "!sh -c '[ $# = 2 ] && git config --global alias.\"$1\" \"$2\" && exit 0 || [ $# = 1 ] && [ $1 = \"--list\" ] && git config --list | grep \"alias\\.\" | sed \"s/^alias\\.\\([^=]*\\)=\\(.*\\).*/\\1@@@@=>@@@@\\2/\" | grep -v \"alias\" | sort | column -ts \"@@@@\" && exit 0 || echo \"usage: git alias <new alias> <original command>\\n       git alias --list\" >&2 && exit 1' -"
-    s = !tig status
-    st = status
     ci = commit
     br = branch
     branch-name = !git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' | sed -e 's/* \\(.*\\)/\\1/'
@@ -47,9 +45,11 @@
     rmc = rm --cached
     rbc = rebase --continue
     rba = rebase --abort
-    sl = !git --no-pager stash list --pretty=format:'%C(red)%gd %C(blue)%h %C(yellow)%ad %Creset%f' && echo
+    s = !tig status
+    sl = !git --no-pager stash list --pretty=format:'%C(yellow)%ad %C(blue)%h %C(red)%gd %Creset%f' && echo
     sp = stash pop
     ss = stash save
+    st = status
 [mergetool "gvimdiff3"]
     cmd = gvim -f -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
 ; [mergetool "vimdiff3"]
