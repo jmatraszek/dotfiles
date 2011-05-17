@@ -47,9 +47,9 @@
     rba = rebase --abort
     s = !tig status
     sl = !git --no-pager stash list --pretty=format:'%C(yellow)%ad %C(blue)%h %C(red)%gd %Creset%f' && echo
-    sa = stash apply
-    sd = stash drop
-    sp = stash pop
+    sa = !"sh -c 'git stash apply `echo \"stash@{$1}\"`' -"
+    sd = !"sh -c 'git stash drop `echo \"stash@{$1}\"`' -"
+    sp = !"sh -c 'git stash pop `echo \"stash@{$1}\"`' -"
     ss = stash save
     st = status
 [mergetool "gvimdiff3"]
