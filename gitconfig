@@ -54,6 +54,7 @@
     sh = !"sh -c 'git stash show -p `echo \"stash@{$1}\"` | tig' -"
     sp = !"sh -c 'git stash pop `echo \"stash@{$1}\"`' -"
     ss = stash save
+    ssp = stash save --patch --no-keep-index
     st = status
 [mergetool "gvimdiff3"]
     cmd = gvim -f -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
