@@ -56,12 +56,16 @@
     ss = stash save
     ssp = stash save --patch --no-keep-index
     st = status
+[mergetool "threesome"]
+    cmd = "gvim -f $BASE $LOCAL $REMOTE $MERGED -c 'set hidden' -c 'SyntasticDisable' -c 'ThreesomeInit'"
+    ; trustExitCode = true
 [mergetool "gvimdiff3"]
     cmd = gvim -f -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
-; [mergetool "vimdiff3"]
-    ; cmd = vim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+[mergetool "vimdiff3"]
+    cmd = vim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 [merge]
-    tool = gvimdiff3
+    tool = threesome
+    ; tool = gvimdiff3
     ; tool = vimdiff3
 [mergetool]
 	keepBackup = false
