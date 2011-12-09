@@ -65,6 +65,7 @@
     cmd = vim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 [merge]
     tool = threesome
+    conflictstyle = diff3
     ; tool = gvimdiff3
     ; tool = vimdiff3
 [mergetool]
