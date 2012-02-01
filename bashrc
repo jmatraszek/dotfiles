@@ -86,6 +86,7 @@ export PS1='\[\e[0;33m\]\u@\h:\[\e[1;33m\]\w\[\e[0m\]\[\e[32m\]$(__git_ps1 "[%s]
 export MYSQL_PS1="\u@\h [\d]> "
 
 export GPGKEY=8F3CD8EE
+export EDITOR=/usr/bin/vim
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 function gsed () {

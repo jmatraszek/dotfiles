@@ -1,9 +1,9 @@
 [user]
     name = Jakub Matraszek
-    email = jakubm@innov8on.com
+    ; email = jakub.matraszek@gmail.com ; set on per-machine basis
 [github]
     user = jmatraszek
-    token = 50d0e4c655ec0a8a88689fbd0df91001
+    token = ********
 [diff]
     tool = vimdiff
 
