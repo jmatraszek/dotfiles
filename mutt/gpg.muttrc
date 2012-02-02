@@ -71,10 +71,13 @@ set pgp_list_pubring_command="gpg --no-verbose --batch --quiet --with-colons --l
 set pgp_list_secring_command="gpg --no-verbose --batch --quiet --with-colons --list-secret-keys %r"
 
 
-set pgp_autosign=yes
 set pgp_sign_as=0x8F3CD8EE
 
-set pgp_replyencrypt=yes
+set crypt_autosign
+set crypt_replysign
+set crypt_replyencrypt=yes
+set crypt_replysignencrypted=yes
+set crypt_verify_sig=yes
 set pgp_timeout=1800
 # fetch keys
 # set pgp_getkeys_command="pkspxycwrap %r"
