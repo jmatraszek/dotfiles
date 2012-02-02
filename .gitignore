@@ -1,4 +1,4 @@
 *.swp
 gitconfig
 mutt/cache
-muttrc
+accounts.muttrc

@@ -1,0 +1,13 @@
+set imap_user = "jakub.matraszek@gmail.com"
+set imap_pass = "********"
+
+set smtp_url = "smtp://jakub.matraszek@smtp.gmail.com:587/"
+set smtp_pass = "********"
+set from = "jakub.matraszek@gmail.com"
+set realname = "Jakub Matraszek"
+
+set folder = "imaps://imap.gmail.com:993"
+set spoolfile = "+INBOX"
+# set record="+[Gmail]/Sent"
+# set postponed="+[Gmail]/Drafts"
+# set trash = "imaps://imap.gmail.com/[Gmail]/Trash"

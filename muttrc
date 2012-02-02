@@ -1,16 +1,4 @@
-set imap_user = "jakub.matraszek@gmail.com"
-set imap_pass = "********"
-
-set smtp_url = "smtp://jakub.matraszek@smtp.gmail.com:587/"
-set smtp_pass = "********"
-set from = "jakub.matraszek@gmail.com"
-set realname = "Jakub Matraszek"
-
-set folder = "imaps://imap.gmail.com:993"
-set spoolfile = "+INBOX"
-# set record="+[Gmail]/Sent"
-# set postponed="+[Gmail]/Drafts"
-# set trash = "imaps://imap.gmail.com/[Gmail]/Trash"
+source $HOME/.mutt/accounts.muttrc
 
 set header_cache=~/.mutt/cache/headers
 set message_cachedir=~/.mutt/cache/bodies
@@ -52,3 +40,15 @@ bind index,pager \CO sidebar-open
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-16.muttrc
 source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-256.muttrc
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-256.muttrc
+#
+color body yellow black '^\[GNUPG:] SIG_ID.*'
+color body brightgreen black '^\[GNUPG:] GOODSIG.*'
+color body brightyellow black '^\[GNUPG:] SIGEXPIRED.*'
+color body brightred black '^\[GNUPG:] (KEYREVOKED|BADSIG|ERRSIG|BADARMOR).*'
+color body yellow black '^\[GNUPG:] VALIDSIG.*'
+color body yellow black '^gpg: .*'
+color body brightgreen black '^\[GNUPG:] TRUST_(ULTIMATE|FULLY)'
+color body brightyellow black '^\[GNUPG:] TRUST_(MARGINAL|UNDEFINED)'
+color body brightyellow black '^\[GNUPG:] TRUST_UNDEFINED'
+color body brightred black '^\[GNUPG:] TRUST_NEVER'
+color body yellow black '^\[GNUPG:]'
