@@ -27,7 +27,7 @@ hdr_order Date From To Cc
 source $HOME/.mutt/gpg.muttrc
 
 #SIDEBAR
-set sidebar_width=22
+set sidebar_width=25
 set sidebar_visible=yes
 set sidebar_delim='|'
 set sidebar_sort=yes
