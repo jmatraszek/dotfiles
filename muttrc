@@ -17,6 +17,7 @@ set sort_aux = 'last-date-received'
 set imap_check_subscribed
 
 set mark_old
+set quit=ask-yes
 
 ignore "Authentication-Results:"
 ignore "DomainKey-Signature:"
@@ -27,7 +28,7 @@ hdr_order Date From To Cc
 source $HOME/.mutt/gpg.muttrc
 
 #SIDEBAR
-set sidebar_width=25
+set sidebar_width=40
 set sidebar_visible=yes
 set sidebar_delim='|'
 set sidebar_sort=yes
@@ -42,9 +43,9 @@ macro pager S '<enter-command>toggle sidebar_visible<enter><redraw-screen>'
 # COLORS
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-16.muttrc
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-16.muttrc
-source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-256.muttrc
+# source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-256.muttrc
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-256.muttrc
-#
+
 color body yellow black '^\[GNUPG:] SIG_ID.*'
 color body brightgreen black '^\[GNUPG:] GOODSIG.*'
 color body brightyellow black '^\[GNUPG:] SIGEXPIRED.*'
@@ -56,3 +57,5 @@ color body brightyellow black '^\[GNUPG:] TRUST_(MARGINAL|UNDEFINED)'
 color body brightyellow black '^\[GNUPG:] TRUST_UNDEFINED'
 color body brightred black '^\[GNUPG:] TRUST_NEVER'
 color body yellow black '^\[GNUPG:]'
+
+source $HOME/.mutt/themes/zenburn.muttrc
