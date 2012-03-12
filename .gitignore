@@ -1,4 +1,4 @@
 *.swp
 gitconfig
 mutt/cache
-accounts.muttrc
+mutt/accounts.txt.gpg

@@ -1,0 +1,7 @@
+set my_login1 = "account.one"
+set my_pass1 = "passone"
+set my_name1 = "Account One"
+
+set my_login2 = "account.two"
+set my_pass2 = "passtwo"
+set my_name2 = "Account Two"
