@@ -56,6 +56,7 @@ macro pager S '<enter-command>toggle sidebar_visible<enter><redraw-screen>'
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-16.muttrc
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-256.muttrc
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-256.muttrc
+source $HOME/.mutt/themes/zenburn.muttrc
 
 color body yellow black '^\[GNUPG:] SIG_ID.*'
 color body brightgreen black '^\[GNUPG:] GOODSIG.*'
@@ -69,4 +70,3 @@ color body brightyellow black '^\[GNUPG:] TRUST_UNDEFINED'
 color body brightred black '^\[GNUPG:] TRUST_NEVER'
 color body yellow black '^\[GNUPG:]'
 
-source $HOME/.mutt/themes/zenburn.muttrc
