@@ -5,6 +5,7 @@ set message_cachedir=~/.mutt/cache/bodies
 set certificate_file=~/.mutt/certificates
 
 set move = no
+set pager_stop=yes          # Don't move to next message on space bar
 
 set index_format="%4C %Z %(%b %d %H:%M) %-15.15F (%?l?%4l&%4c?) %s"
 
