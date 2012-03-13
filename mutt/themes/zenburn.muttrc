@@ -54,6 +54,8 @@ color body       color174 color237 "[-a-z_0-9.%$]+@[-a-z_0-9.]+\\.[-a-z][-a-z]+"
 color attachment color174 color237 #Add-ons to the message
 color signature  color223 color237
 
+color sidebar_new color116 color237
+
 # quote levels
 color quoted     color108 color237
 color quoted1    color116 color237
