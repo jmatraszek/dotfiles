@@ -30,6 +30,7 @@ set imap_check_subscribed
 
 set mark_old
 set quit=ask-yes
+set pager_index_lines=6
 
 ignore "Authentication-Results:"
 ignore "DomainKey-Signature:"
