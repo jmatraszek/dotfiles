@@ -37,6 +37,9 @@ ignore "DomainKey-Signature:"
 ignore "DKIM-Signature:"
 hdr_order Date From To Cc
 
+auto_view text/html
+macro pager \cb <pipe-entry>'urlview'<enter> 'Follow links with urlview'
+
 # GPG
 source $HOME/.mutt/gpg.muttrc
 
