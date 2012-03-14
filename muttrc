@@ -5,14 +5,31 @@ set message_cachedir=~/.mutt/cache/bodies
 set certificate_file=~/.mutt/certificates
 
 set move = no
-set pager_stop=yes          # Don't move to next message on space bar
 
 set index_format="%4C %Z %(%b %d %H:%M) %-15.15F (%?l?%4l&%4c?) %s"
 
+set charset="utf-8"
 set editor="vim -c 'set tw=70 et' '+/^$' "
 set edit_headers=yes      # See the headers when editing
 mailboxes =INBOX
+#
+# Skip the bothering prompt for recipient and subject when replying and start immediately with writing your message:
+set fast_reply="yes"
+# Always quote when replying:
+set include="yes"
+# Here you can determine your personal attribution line. This string always precedes quoted text.
+set attribution="* %n <%a> wrote:\n"
+# The quoting character can be set individually, too:
+set indent_string="> "
+# Scrolling line by line in index mode is really a cool thing, isn't it:
+set menu_scroll="yes"
+# Also very useful in pager mode (even the number of scrolling lines can be set):
+set pager_context="1"
+# Mutt can split the screen into halves, so you can watch index + pager simultaneously:
+set pager_index_lines="6"
 
+# Don't jump to next message when at bottom of current message:
+set pager_stop="yes"
 # Check for mail every minute for current IMAP mailbox every 1 min
 set timeout         = 60
 # Check for new mail in ALL mailboxes every 2 min
@@ -30,7 +47,6 @@ set imap_check_subscribed
 
 set mark_old
 set quit=ask-yes
-set pager_index_lines=6
 
 ignore "Authentication-Results:"
 ignore "DomainKey-Signature:"
