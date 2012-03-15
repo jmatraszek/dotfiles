@@ -43,16 +43,20 @@ unset imap_passive
 set sort            = threads
 # and sort threads by date
 set sort_aux        = last-date-received
+# no plus signs on broken lines
+unset markers
 
 set imap_check_subscribed
 
 set mark_old
 set quit=ask-yes
 
-ignore "Authentication-Results:"
-ignore "DomainKey-Signature:"
-ignore "DKIM-Signature:"
-hdr_order Date From To Cc
+# In the first step we are going to weed all headers:
+ignore *
+# In the second step we remove the desired headers from the ignore-list:
+unignore date: from: to: subject: cc: user-agent: x-mailer:
+# Finally we specify the order for displaying headers:
+hdr_order date: from: to: subject: cc: user-agent: x-mailer:
 
 auto_view text/html
 macro pager \cb <pipe-entry>'urlview'<enter> 'Follow links with urlview'
