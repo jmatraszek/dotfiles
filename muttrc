@@ -6,7 +6,8 @@ set certificate_file=~/.mutt/certificates
 
 set move = no
 
-set index_format="%4C %Z %(%b %d %H:%M) %-15.15F (%?l?%4l&%4c?) %s"
+set index_format="%4C | %Z | %d | %-17.17F | (%?l?%4l&%4c?) | %s"
+set date_format="%d-%m-%Y %H:%M"
 
 set charset="utf-8"
 set editor="vim -c 'set tw=70 et' '+/^$' "
