@@ -47,8 +47,9 @@ set sort_aux        = last-date-received
 unset markers
 
 set imap_check_subscribed
+set imap_peek = no
 
-set mark_old
+unset mark_old
 set quit=ask-yes
 set write_bcc=yes
 
