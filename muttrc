@@ -61,11 +61,10 @@ unignore date: from: to: subject: cc: bcc: user-agent: x-mailer:
 hdr_order date: from: to: subject: cc: bcc: user-agent: x-mailer:
 
 auto_view text/html
-macro pager \cb <pipe-entry>'urlview'<enter> 'Follow links with urlview'
 
 # KEY BINDINGS
 
-bind index I imap-fetch-mail
+bind index I       imap-fetch-mail
 bind pager /       search
 bind pager <up>    previous-line
 bind pager <down>  next-line
@@ -73,14 +72,13 @@ bind pager gg      top
 bind pager G       bottom
 bind index gg      first-entry
 bind index G       last-entry
-bind pager K       previous-undeleted
-bind pager J       next-undeleted
-bind index K       previous-unread
-bind index J       next-unread
+bind index,pager K previous-unread
+bind index,pager J next-unread
 bind index,pager R group-reply
 
 # MACROS
 
+macro pager \cb <pipe-entry>'urlview'<enter> 'Follow links with urlview'
 macro index \i "<change-folder>!<return>" "go to inbox"
 macro index \p "<pipe-message>cat > ~/" "save message as"
 macro index \r "<tag-pattern>all<return><tag-prefix><clear-flag>N<untag-pattern>all<return>" "mark all as read"
