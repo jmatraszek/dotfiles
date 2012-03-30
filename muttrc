@@ -80,7 +80,6 @@ bind index ,z	   current-middle
 # MACROS
 
 macro pager \cb <pipe-entry>'urlview'<enter> 'Follow links with urlview'
-macro index \i "<change-folder>!<return>" "go to inbox"
 macro index \p "<pipe-message>cat > ~/" "save message as"
 macro index ,r "<tag-pattern>all<return><tag-prefix><clear-flag>N<untag-pattern>all<return>" "mark all as read"
 macro index ,R "<collapse-all><tag-pattern>all<return><tag-prefix><clear-flag>N<untag-pattern>all<return><collapse-all>" "mark all as read (collapsed)"
@@ -91,6 +90,12 @@ macro index,pager a "<enter-command>unset trash\n<delete-message>" "Gmail archiv
 macro index,pager d "<enter-command>set trash=\"+[Gmail]/Kosz\"\n<delete-message>" "Gmail delete message"
 macro index,pager A "<enter-command>unset trash\n<delete-pattern>" "Gmail archive pattern"
 macro index,pager D "<enter-command>set trash=\"+[Gmail]/Kosz\"\n<delete-pattern>" "Gmail delete pattern"
+
+macro index,pager gi "<change-folder>!<return>" "Go to inbox"
+macro index,pager ga "<change-folder>=[Gmail]/Wszystkie<enter>" "Go to all mail"
+macro index,pager gd "<change-folder>=[Gmail]/Wersje<quote-char> robocze<enter>" "Go to drafts"
+macro index,pager gs "<change-folder>=[Gmail]/Wysłane<enter>" "Go to sent mail"
+macro index,pager gt "<change-folder>=[Gmail]/Kosz<enter>" "Go to trash"
 
 # GPG
 source $HOME/.mutt/gpg.muttrc
