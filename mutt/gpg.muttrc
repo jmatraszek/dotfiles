@@ -96,3 +96,5 @@ set pgp_good_sign="`gettext -d gnupg -s 'Poprawny podpis od "' | tr -d '"'`"
 # set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
 
 message-hook '!(~g|~G) ~b"^-----BEGIN\ PGP\ (SIGNED\ )?MESSAGE"' "exec check-traditional-pgp"
+
+# vim: set ft=muttrc:

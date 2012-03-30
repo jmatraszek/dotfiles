@@ -47,3 +47,4 @@ folder-hook         imaps://$my_login2@imap.gmail.com/ "\
 
 alternates "$my_login1@gmail.com|$my_login2@gmail.com"
 
+# vim: set ft=muttrc:
