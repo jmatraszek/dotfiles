@@ -86,6 +86,11 @@ macro index \R "<collapse-all><tag-pattern>all<return><tag-prefix><clear-flag>N<
 macro index \v "<collapse-thread>" "collapse/uncollapse thread"
 macro index \V "<collapse-all>"    "collapse/uncollapse all threads"
 
+macro index,pager a "<enter-command>unset trash\n<delete-message>" "Gmail archive message"
+macro index,pager d "<enter-command>set trash=\"+[Gmail]/Kosz\"\n<delete-message>" "Gmail delete message"
+macro index,pager A "<enter-command>unset trash\n<delete-pattern>" "Gmail archive pattern"
+macro index,pager D "<enter-command>set trash=\"+[Gmail]/Kosz\"\n<delete-pattern>" "Gmail delete pattern"
+
 # GPG
 source $HOME/.mutt/gpg.muttrc
 
@@ -101,6 +106,7 @@ bind index,pager \CO sidebar-open
 
 macro index S '<enter-command>toggle sidebar_visible<enter><refresh>'
 macro pager S '<enter-command>toggle sidebar_visible<enter><redraw-screen>'
+
 # COLORS
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-16.muttrc
 # source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-16.muttrc
