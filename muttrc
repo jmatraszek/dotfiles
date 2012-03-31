@@ -52,6 +52,10 @@ set imap_peek = no
 unset mark_old
 set quit=ask-yes
 set write_bcc=yes
+# Ask for CC: when composing mail
+set askcc=yes
+# Ask for BCC: whem composing mail
+set askbcc=yes
 
 # In the first step we are going to weed all headers:
 ignore *
