@@ -101,6 +101,11 @@ macro index,pager gd "<change-folder>=[Gmail]/Wersje<quote-char> robocze<enter>"
 macro index,pager gs "<change-folder>=[Gmail]/Wysłane<enter>" "Go to sent mail"
 macro index,pager gt "<change-folder>=[Gmail]/Kosz<enter>" "Go to trash"
 
+# ABOOK INTEGRATION
+set query_command = "abook --mutt-query '%s'"
+macro generic,index,pager \ca "<shell-escape>abook<return>" "launch abook"
+macro index,pager gk "<pipe-message>abook --add-email<return>" "add the sender address to abook"
+
 # GPG
 source $HOME/.mutt/gpg.muttrc
 
