@@ -28,6 +28,12 @@ set menu_scroll="yes"
 set pager_context="1"
 # Mutt can split the screen into halves, so you can watch index + pager simultaneously:
 set pager_index_lines="6"
+# Wrap long lines at word boundary.
+set smart_wrap
+# Abort, if message has no subject.
+set abort_nosubject=ask-yes
+# Abort, if message wasn't edited.
+set abort_unmodified=ask-yes
 
 # Don't jump to next message when at bottom of current message:
 set pager_stop="yes"
