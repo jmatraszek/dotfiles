@@ -34,6 +34,12 @@ set smart_wrap
 set abort_nosubject=ask-yes
 # Abort, if message wasn't edited.
 set abort_unmodified=ask-yes
+# Sort mail by threads
+set sort            = threads
+# And sort threads by date
+set sort_aux        = last-date-received
+# No plus signs on broken lines
+unset markers
 
 # Don't jump to next message when at bottom of current message:
 set pager_stop="yes"
@@ -45,18 +51,15 @@ set mail_check      = 120
 set imap_keepalive  = 300
 # allow mutt to open new imap connection automatically
 unset imap_passive
-# sort mail by threads
-set sort            = threads
-# and sort threads by date
-set sort_aux        = last-date-received
-# no plus signs on broken lines
-unset markers
 
 set imap_check_subscribed
 set imap_peek = no
 
+# Do not mark messages as old
 unset mark_old
+# Ask before quitting mutt
 set quit=ask-yes
+# Write BCC header
 set write_bcc=yes
 # Ask for CC: when composing mail
 set askcc=yes
