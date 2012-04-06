@@ -1,0 +1,24 @@
+include "~/.newsbeuter/google-reader"
+browser "firefox %u"
+auto-reload yes
+reload-time 60
+confirm-exit yes
+text-width 120
+
+#SOLARIZED
+#color listnormal color244 color234
+#color listfocus  color166 color235
+#color info       color136 color235
+#color background color244 color234
+#color article    color244 color234
+
+#ZENBURN
+color background  magenta color237
+#Text/background when reading an article
+color article     color188 color237
+#Color the listview items
+color listnormal  color188 color237
+#Selected listveiew item.
+color listfocus   color108 color236
+# info
+color info        color144 color234
