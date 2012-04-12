@@ -194,3 +194,7 @@ settings = {
   "fe-text" = { actlist_sort = "refnum"; };
   "perl/core/scripts" = { nicklist_width = "15"; };
 };
+hilights = (
+  { text = "xkx"; nick = "yes"; word = "yes"; },
+  { text = "xkx_"; nick = "yes"; word = "yes"; }
+);
