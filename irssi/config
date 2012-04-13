@@ -196,6 +196,7 @@ settings = {
     nicklist_width = "15";
     crapbuster_levels = "JOINS PARTS QUITS NICKS CLIENTCRAP CRAP MODE";
   };
+  "fe-common/core" = { theme = "default"; };
 };
 hilights = (
   { text = "xkx"; nick = "yes"; word = "yes"; },
