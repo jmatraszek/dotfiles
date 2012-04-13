@@ -192,7 +192,10 @@ statusbar = {
 settings = {
   core = { real_name = "xkx xkx"; user_name = "xkx"; nick = "xkx"; };
   "fe-text" = { actlist_sort = "refnum"; };
-  "perl/core/scripts" = { nicklist_width = "15"; };
+  "perl/core/scripts" = {
+    nicklist_width = "15";
+    crapbuster_levels = "JOINS PARTS QUITS NICKS CLIENTCRAP CRAP MODE";
+  };
 };
 hilights = (
   { text = "xkx"; nick = "yes"; word = "yes"; },
