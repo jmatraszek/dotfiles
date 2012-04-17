@@ -3,10 +3,8 @@
     ; email = jakub.matraszek@gmail.com ; set on per-machine basis
 [github]
     user = jmatraszek
-    token = ********
 [diff]
     tool = vimdiff
-
 [color]
     ui = auto
 [color "branch"]
