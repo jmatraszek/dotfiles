@@ -195,6 +195,7 @@ settings = {
   "perl/core/scripts" = {
     nicklist_width = "15";
     crapbuster_levels = "JOINS PARTS QUITS NICKS CLIENTCRAP CRAP MODE";
+    nicklist_automode = "fifo";
   };
   "fe-common/core" = { theme = "default"; };
 };
