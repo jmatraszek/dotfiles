@@ -187,6 +187,13 @@ statusbar = {
         topicbarend = { priority = "100"; alignment = "right"; };
       };
     };
+    awl_0 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_0 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
   };
 };
 settings = {
@@ -196,6 +203,8 @@ settings = {
     nicklist_width = "15";
     crapbuster_levels = "JOINS PARTS QUITS NICKS CLIENTCRAP CRAP MODE";
     nicklist_automode = "fifo";
+    awl_display_key = "[$Q%K:%n$H$C$S]";
+    awl_block = "-15";
   };
   "fe-common/core" = { theme = "default"; };
 };
