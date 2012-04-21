@@ -6,8 +6,7 @@ servers = (
     address = "chat.freenode.net";
     chatnet = "freenode";
     port = "6667";
-  },
-  { address = "irc.pirc.pl"; chatnet = "pirc"; port = "6667"; }
+  }
 );
 
 chatnets = {
@@ -25,7 +24,6 @@ chatnets = {
     max_whois = "1";
   };
   freenode = { type = "IRC"; };
-  pirc = { type = "IRC"; };
 };
 
 channels = ( { name = "#irssi"; chatnet = "ircnet"; autojoin = "No"; } );
