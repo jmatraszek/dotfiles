@@ -88,6 +88,7 @@ export MYSQL_PS1="\u@\h [\d]> "
 export GPGKEY=8F3CD8EE
 export EDITOR=/usr/bin/vim
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
 function gsed () {
   if [ -z "$3" ]
