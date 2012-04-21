@@ -100,11 +100,11 @@ abstracts = {
   ##
 
   # highlighted nick/host is printed (joins)
-  channick_hilight = "%C$*%n";
-  chanhost_hilight = "{nickhost %c$*%n}";
+  channick_hilight = "$*%n";
+  chanhost_hilight = "{nickhost $*%n}";
 
   # nick/host is printed (parts, quits, etc.)
-  channick = "%c$*%n";
+  channick = "$*%n";
   chanhost = "{nickhost $*}";
 
   # highlighted channel name is printed
