@@ -198,15 +198,16 @@ statusbar = {
 };
 settings = {
   core = { real_name = "xkx xkx"; user_name = "xkx"; nick = "xkx"; };
-  "fe-text" = { actlist_sort = "refnum"; };
+  "fe-text" = { actlist_sort = "refnum"; indent = "28"; };
   "perl/core/scripts" = {
     nicklist_width = "15";
     crapbuster_levels = "JOINS PARTS QUITS NICKS CLIENTCRAP CRAP MODE";
     nicklist_automode = "fifo";
     awl_display_key = "[$Q%K:%n$H$C$S]";
     awl_block = "-15";
+    neat_colorize = "yes";
   };
-  "fe-common/core" = { theme = "default"; };
+  "fe-common/core" = { theme = "default"; show_nickmode_empty = "yes"; };
 };
 hilights = (
   { text = "xkx"; nick = "yes"; word = "yes"; },
