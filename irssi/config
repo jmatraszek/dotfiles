@@ -206,6 +206,9 @@ settings = {
     awl_display_key = "[$Q%K:%n$H$C$S]";
     awl_block = "-15";
     neat_colorize = "yes";
+    neat_left_actions = "no";
+    neat_left_messages = "no";
+    neat_right_mode = "no";
   };
   "fe-common/core" = { theme = "default"; show_nickmode_empty = "yes"; };
 };
