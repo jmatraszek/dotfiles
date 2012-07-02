@@ -1,0 +1,19 @@
+# source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-16.muttrc
+# source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-16.muttrc
+# source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-256.muttrc
+# source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-256.muttrc
+source $HOME/.mutt/themes/zenburn.muttrc
+
+color body yellow black '^\[GNUPG:] SIG_ID.*'
+color body brightgreen black '^\[GNUPG:] GOODSIG.*'
+color body brightyellow black '^\[GNUPG:] SIGEXPIRED.*'
+color body brightred black '^\[GNUPG:] (KEYREVOKED|BADSIG|ERRSIG|BADARMOR).*'
+color body yellow black '^\[GNUPG:] VALIDSIG.*'
+color body yellow black '^gpg: .*'
+color body brightgreen black '^\[GNUPG:] TRUST_(ULTIMATE|FULLY)'
+color body brightyellow black '^\[GNUPG:] TRUST_(MARGINAL|UNDEFINED)'
+color body brightyellow black '^\[GNUPG:] TRUST_UNDEFINED'
+color body brightred black '^\[GNUPG:] TRUST_NEVER'
+color body yellow black '^\[GNUPG:]'
+
+# vim: set ft=muttrc:

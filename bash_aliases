@@ -22,3 +22,6 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 alias ber='bundle exec rspec -c'
 alias srcvim='cd src && gvim && cd ..'
+
+alias mutt='MUTT_PROFILE=gmail /usr/bin/mutt'
+alias mutt-work='MUTT_PROFILE=work /usr/bin/mutt'

@@ -1,152 +1,26 @@
-source $HOME/.mutt/accounts.muttrc
+# ACCOUNTS
+source $HOME/.mutt/accounts.$MUTT_PROFILE.muttrc
 
-set header_cache=~/.mutt/cache/headers
-set message_cachedir=~/.mutt/cache/bodies
-set certificate_file=~/.mutt/certificates
-
-set move = no
-
-set index_format="%4C | %Z | %d | %-17.17F | (%?l?%4l&%4c?) | %s"
-set date_format="%d-%m-%Y %H:%M"
-
-set charset="utf-8"
-set editor="vim -c 'set tw=70 et' '+/^$' "
-set edit_headers=yes      # See the headers when editing
-mailboxes =INBOX
-#
-# Skip the bothering prompt for recipient and subject when replying and start immediately with writing your message:
-set fast_reply="yes"
-# Always quote when replying:
-set include="yes"
-# Here you can determine your personal attribution line. This string always precedes quoted text.
-set attribution="* %n <%a> wrote:\n"
-# The quoting character can be set individually, too:
-set indent_string="> "
-# Scrolling line by line in index mode is really a cool thing, isn't it:
-set menu_scroll="yes"
-# Also very useful in pager mode (even the number of scrolling lines can be set):
-set pager_context="1"
-# Mutt can split the screen into halves, so you can watch index + pager simultaneously:
-set pager_index_lines="6"
-# Wrap long lines at word boundary.
-set smart_wrap
-# Abort, if message has no subject.
-set abort_nosubject=ask-yes
-# Abort, if message wasn't edited.
-set abort_unmodified=ask-yes
-# Sort mail by threads
-set sort            = threads
-# And sort threads by date
-set sort_aux        = last-date-received
-# No plus signs on broken lines
-unset markers
-
-# Don't jump to next message when at bottom of current message:
-set pager_stop="yes"
-# Check for mail every minute for current IMAP mailbox every 1 min
-set timeout         = 60
-# Check for new mail in ALL mailboxes every 2 min
-set mail_check      = 120
-# keep imap connection alive by polling intermittently (time in seconds)
-set imap_keepalive  = 300
-# allow mutt to open new imap connection automatically
-unset imap_passive
-
-set imap_check_subscribed
-set imap_peek = no
-
-# Do not mark messages as old
-unset mark_old
-# Ask before quitting mutt
-set quit=ask-yes
-# Write BCC header
-set write_bcc=yes
-# Ask for CC: when composing mail
-set askcc=yes
-# Ask for BCC: whem composing mail
-set askbcc=yes
-
-# In the first step we are going to weed all headers:
-ignore *
-# In the second step we remove the desired headers from the ignore-list:
-unignore date: from: to: subject: cc: bcc: user-agent: x-mailer:
-# Finally we specify the order for displaying headers:
-hdr_order date: from: to: subject: cc: bcc: user-agent: x-mailer:
-
-auto_view text/html
+# SETTINGS
+source $HOME/.mutt/settings.muttrc
 
 # KEY BINDINGS
-
-bind index I       imap-fetch-mail
-bind pager /       search
-bind pager <up>    previous-line
-bind pager <down>  next-line
-bind pager gg      top
-bind pager G       bottom
-bind index gg      first-entry
-bind index G       last-entry
-bind index,pager K previous-unread
-bind index,pager J next-unread
-bind index,pager R group-reply
-bind index ,z	   current-middle
+source $HOME/.mutt/bindings.muttrc
 
 # MACROS
+source $HOME/.mutt/macros.muttrc
 
-macro pager \cb <pipe-entry>'urlview'<enter> 'Follow links with urlview'
-macro index \p "<pipe-message>cat > ~/" "save message as"
-macro index ,r "<tag-pattern>all<return><tag-prefix><clear-flag>N<untag-pattern>all<return>" "mark all as read"
-macro index ,R "<collapse-all><tag-pattern>all<return><tag-prefix><clear-flag>N<untag-pattern>all<return><collapse-all>" "mark all as read (collapsed)"
-macro index ,v "<collapse-thread>" "collapse/uncollapse thread"
-macro index ,V "<collapse-all>"    "collapse/uncollapse all threads"
-
-macro index,pager a "<enter-command>unset trash\n<delete-message>" "Gmail archive message"
-macro index,pager d "<enter-command>set trash=\"+[Gmail]/Kosz\"\n<delete-message>" "Gmail delete message"
-macro index,pager A "<enter-command>unset trash\n<delete-pattern>" "Gmail archive pattern"
-macro index,pager D "<enter-command>set trash=\"+[Gmail]/Kosz\"\n<delete-pattern>" "Gmail delete pattern"
-
-macro index,pager gi "<change-folder>!<return>" "Go to inbox"
-macro index,pager ga "<change-folder>=[Gmail]/Wszystkie<enter>" "Go to all mail"
-macro index,pager gd "<change-folder>=[Gmail]/Wersje<quote-char> robocze<enter>" "Go to drafts"
-macro index,pager gs "<change-folder>=[Gmail]/Wysłane<enter>" "Go to sent mail"
-macro index,pager gt "<change-folder>=[Gmail]/Kosz<enter>" "Go to trash"
+# ACCOUNT SPECIFIC MACROS
+source $HOME/.mutt/macros.$MUTT_PROFILE.muttrc
 
 # ABOOK INTEGRATION
-set query_command = "abook --mutt-query '%s'"
-macro generic,index,pager \ca "<shell-escape>abook<return>" "launch abook"
-macro index,pager gk "<pipe-message>abook --add-email<return>" "add the sender address to abook"
+source $HOME/.mutt/abook.muttrc
 
 # GPG
 source $HOME/.mutt/gpg.muttrc
 
 #SIDEBAR
-set sidebar_width=30
-set sidebar_visible=yes
-set sidebar_delim='|'
-set sidebar_sort=yes
-
-bind index,pager \CP sidebar-prev
-bind index,pager \CN sidebar-next
-bind index,pager \CO sidebar-open
-
-macro index S '<enter-command>toggle sidebar_visible<enter><refresh>'
-macro pager S '<enter-command>toggle sidebar_visible<enter><redraw-screen>'
+source $HOME/.mutt/sidebar.muttrc
 
 # COLORS
-# source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-16.muttrc
-# source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-16.muttrc
-# source $HOME/.mutt/themes/solarized/mutt-colors-solarized-dark-256.muttrc
-# source $HOME/.mutt/themes/solarized/mutt-colors-solarized-light-256.muttrc
-source $HOME/.mutt/themes/zenburn.muttrc
-
-color body yellow black '^\[GNUPG:] SIG_ID.*'
-color body brightgreen black '^\[GNUPG:] GOODSIG.*'
-color body brightyellow black '^\[GNUPG:] SIGEXPIRED.*'
-color body brightred black '^\[GNUPG:] (KEYREVOKED|BADSIG|ERRSIG|BADARMOR).*'
-color body yellow black '^\[GNUPG:] VALIDSIG.*'
-color body yellow black '^gpg: .*'
-color body brightgreen black '^\[GNUPG:] TRUST_(ULTIMATE|FULLY)'
-color body brightyellow black '^\[GNUPG:] TRUST_(MARGINAL|UNDEFINED)'
-color body brightyellow black '^\[GNUPG:] TRUST_UNDEFINED'
-color body brightred black '^\[GNUPG:] TRUST_NEVER'
-color body yellow black '^\[GNUPG:]'
-
+source $HOME/.mutt/colors.muttrc

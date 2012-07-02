@@ -1,0 +1,12 @@
+macro index,pager a "<enter-command>unset trash\n<delete-message>" "Gmail archive message"
+macro index,pager d "<enter-command>set trash=\"+[Gmail]/Kosz\"\n<delete-message>" "Gmail delete message"
+macro index,pager A "<enter-command>unset trash\n<delete-pattern>" "Gmail archive pattern"
+macro index,pager D "<enter-command>set trash=\"+[Gmail]/Kosz\"\n<delete-pattern>" "Gmail delete pattern"
+
+macro index,pager gi "<change-folder>!<return>" "Go to inbox"
+macro index,pager ga "<change-folder>=[Gmail]/Wszystkie<enter>" "Go to all mail"
+macro index,pager gd "<change-folder>=[Gmail]/Wersje<quote-char> robocze<enter>" "Go to drafts"
+macro index,pager gs "<change-folder>=[Gmail]/Wysłane<enter>" "Go to sent mail"
+macro index,pager gt "<change-folder>=[Gmail]/Kosz<enter>" "Go to trash"
+
+# vim: set ft=muttrc:
