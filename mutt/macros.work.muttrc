@@ -1,0 +1,6 @@
+macro index,pager gi "<change-folder>!<return>" "Go to inbox"
+macro index,pager gd "<change-folder>+INBOX/Drafts<enter>" "Go to drafts"
+macro index,pager gs "<change-folder>+INBOX/Sent<enter>" "Go to sent mail"
+macro index,pager gt "<change-folder>+INBOX/Trash<enter>" "Go to trash"
+
+# vim: set ft=muttrc:
