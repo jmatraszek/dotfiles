@@ -10,10 +10,30 @@ account-hook        "imaps://$my_login1@imap.gmail.com/" "\
 account-hook        "imaps://$my_login2@imap.gmail.com/" "\
     set imap_user   = $my_login2@gmail.com \
         imap_pass   = $my_pass2"
+account-hook        "imaps://$my_login2@ssl0.ovh.net:993/" "\
+    set imap_user   = $my_login3 \
+        imap_pass   = $my_pass3"
 
 #-------------------------------------#
 # Folders, mailboxes and folder hooks #
 #-------------------------------------#
+#
+# Setup for user3:
+set folder          = imaps://$my_login3@ssl0.ovh.net:993/
+mailboxes           = +INBOX
+set spoolfile       = +INBOX
+folder-hook         imaps://$my_login3@ssl0.ovh.net:993/ "\
+    set folder      = imaps://$my_login3@ssl0.ovh.net:993/ \
+        spoolfile   = +INBOX \
+        postponed   = Drafts \
+        trash       = Trash \
+        record      = Sent \
+        from        = '$my_name3 <$my_login3> ' \
+        realname    = '$my_name3' \
+        status_format = '-%r-$my_login3: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(%P)---' \
+        smtp_url    = smtps://$my_login3@ssl0.ovh.net:465 \
+        smtp_pass   = $my_pass3"
+
 # Setup for user1:
 set folder          = imaps://$my_login1@imap.gmail.com/
 mailboxes           = +INBOX =[Gmail]/'Wersje robocze' =[Gmail]/Wysłane =[Gmail]/Spam =[Gmail]/Kosz
@@ -44,7 +64,6 @@ folder-hook         imaps://$my_login2@imap.gmail.com/ "\
         smtp_url    = smtps://$my_login2@smtp.gmail.com \
         smtp_pass   = $my_pass2"
 
-
-alternates "$my_login1@gmail.com|$my_login2@gmail.com"
+alternates "$my_login1@gmail.com|$my_login2@gmail.com|$my_login3"
 
 # vim: set ft=muttrc:
