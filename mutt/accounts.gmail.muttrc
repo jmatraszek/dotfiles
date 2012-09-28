@@ -43,7 +43,7 @@ folder-hook         imaps://$my_login1@imap.gmail.com/ "\
         spoolfile   = +INBOX \
         postponed   = +[Gmail]/'Wersje robocze' \
         trash       = +[Gmail]/Kosz \
-        record      = ! \
+        record      = ^ \
         from        = '$my_name1 <$my_login1@gmail.com> ' \
         realname    = '$my_name1' \
         status_format = '-%r-$my_login1@gmail.com: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(%P)---' \
@@ -59,7 +59,7 @@ folder-hook         imaps://$my_login2@imap.gmail.com/ "\
         spoolfile   = +INBOX \
         postponed   = +[Gmail]/'Wersje robocze' \
         trash       = +[Gmail]/Kosz \
-        record      = ! \
+        record      = ^ \
         from        = '$my_name2 <$my_login2@gmail.com> ' \
         realname    = '$my_name2' \
         status_format = '-%r-$my_login2@gmail.com: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(%P)---' \
