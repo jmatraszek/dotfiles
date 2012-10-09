@@ -72,5 +72,6 @@ unignore date: from: to: subject: cc: bcc: user-agent: x-mailer:
 hdr_order date: from: to: subject: cc: bcc: user-agent: x-mailer:
 
 auto_view text/html
+alternative_order text/plain text/enriched text/html
 
 # vim: set ft=muttrc:
