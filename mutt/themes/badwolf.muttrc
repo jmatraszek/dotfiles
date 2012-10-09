@@ -1,0 +1,45 @@
+set my_background  = "color237"
+color normal color15 $my_background
+color error brightcolor15 color196
+color indicator color15 color235
+color status brightcolor39 $my_background
+color markers color142 $my_background
+
+color hdrdefault color245 $my_background
+color header brightcolor214 $my_background "^(Subject): "
+color signature color243 $my_background
+
+color body color137 $my_background [\-\.+_a-zA-Z0-9]+@[\-\.a-zA-Z0-9]+
+color body color137 $my_background ((https?|ftp)://|www)+[\-\.\;@,/%~_:?&=\#a-zA-Z0-9+]+
+color bold brightcolor15 $my_background
+color search brightcolor16 color221
+
+color quoted color243 $my_background
+color quoted1 color211 $my_background
+color quoted2 color222 $my_background
+color quoted3 color214 $my_background
+color quoted4 color154 $my_background
+
+color tilde color240 $my_background
+color tree color240 $my_background
+color attachment brightcolor211 $my_background
+
+# http://www.mutt.org/doc/manual/manual-4.html#ss4.2
+# color index color241 $my_background ~A
+# color index color241 $my_background ~Q
+# color index color243 $my_background ~P
+color index color221 $my_background ~N
+color index brightcolor211 $my_background ~F
+color index brightcolor39 $my_background ~T
+color index color243 $my_background ~Q
+color index color196 $my_background ~D
+
+# Colorize inline diffs, really helpful for LKML or other mailing lists where
+# mails frequently include patches.
+color body brightcolor15 $my_background '^diff .*'
+color body brightcolor15 $my_background '^[Ii]{1}ndex .*'
+color body brightcolor15 $my_background '^=+$'
+color body brightcolor15 $my_background '^(---|\+\+\+) .*'
+color body brightcolor15 $my_background '^@@ .*'
+color body color121 $my_background '^\+([^\+].*)?$'
+color body color211 $my_background '^-([^-].*)?$'

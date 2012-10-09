@@ -4,5 +4,6 @@ macro index ,r "<tag-pattern>all<return><tag-prefix><clear-flag>N<untag-pattern>
 macro index ,R "<collapse-all><tag-pattern>all<return><tag-prefix><clear-flag>N<untag-pattern>all<return><collapse-all>" "mark all as read (collapsed)"
 macro index ,v "<collapse-thread>" "collapse/uncollapse thread"
 macro index ,V "<collapse-all>"    "collapse/uncollapse all threads"
+macro	index	<F12>	"<enter-command>source ~/.muttrc<enter>"				"Reload ~/.muttrc"
 
 # vim: set ft=muttrc:
