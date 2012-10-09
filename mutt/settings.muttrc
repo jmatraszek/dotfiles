@@ -42,6 +42,8 @@ unset markers
 # Don't jump to next message when at bottom of current message:
 set pager_stop="yes"
 # Check for mail every minute for current IMAP mailbox every 1 min
+set check_new = yes
+set beep_new = yes
 set timeout         = 60
 # Check for new mail in ALL mailboxes every 2 min
 set mail_check      = 120
