@@ -1,6 +1,7 @@
 *.swp
 gitconfig
 mutt/cache
+mutt/certificates
 mutt/accounts.txt.gpg
 mutt/accounts.work.muttrc
 irssi/saved_colors
