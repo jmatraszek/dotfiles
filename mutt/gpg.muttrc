@@ -73,7 +73,6 @@ set pgp_list_secring_command="gpg --no-verbose --batch --quiet --with-colons --l
 
 set pgp_sign_as=0x8F3CD8EE
 
-set crypt_autosign
 set crypt_replysign
 set crypt_replyencrypt=yes
 set crypt_replysignencrypted=yes
