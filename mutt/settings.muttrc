@@ -38,6 +38,8 @@ set sort            = threads
 set sort_aux        = last-date-received
 # No plus signs on broken lines
 unset markers
+# mailcap settings
+set mailcap_path="~/.mailcap:/etc/mailcap"
 
 # Don't jump to next message when at bottom of current message:
 set pager_stop="yes"
