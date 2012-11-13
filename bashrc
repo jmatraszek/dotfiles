@@ -158,8 +158,14 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 prompt_command () {
   local EXIT_CODE="[$BRed\${?#0}$Color_Off]"
   local TIME="[$Cyan\t$Color_Off]"
-  local USERNAME="[$IBlue\u$Color_Off]"
-  local HOST="[$IBlue\h$Color_Off]"
+  if [[ $SSH_TTY ]]
+  then
+    local USERNAME="$BIRed[$Color_Off$IBlue\u$Color_Off$BIRed]$Color_Off"
+    local HOST="$BIRed[$Color_Off$IBlue\h$Color_Off$BIRed]$Color_Off"
+  else
+    local USERNAME="[$IBlue\u$Color_Off]"
+    local HOST="[$IBlue\h$Color_Off]"
+  fi
   local RVM="[$IGreen$(~/.rvm/bin/rvm-prompt v p g)$Color_Off]"
   local GIT="[$Green$(__git_ps1 '%s')$Color_Off]"
   local CWD="[$BIYellow\w$Color_Off]"
