@@ -146,6 +146,11 @@ On_IWhite='\[\e[0;107m\]'   # White
 
 export GIT_PS1_SHOWDIRTYSTATE=1
 
+update_title() {
+  echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/#$HOME/~}\007"
+    # title "$USER@$HOSTNAME ${PWD/#$HOME/~}"
+}
+
 prompt_command () {
   local EXIT_CODE="[$BRed\${?#0}$Color_Off]"
   local TIME="[$Cyan\t$Color_Off]"
@@ -161,7 +166,9 @@ prompt_command () {
   local GIT="[$Green$(__git_ps1 '%s')$Color_Off]"
   local CWD="[$BIYellow\w$Color_Off]"
   export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT \n$CWD \$ "
+  update_title
 }
+
 PROMPT_COMMAND=prompt_command
 export MYSQL_PS1="\u@\h [\d]> "
 
