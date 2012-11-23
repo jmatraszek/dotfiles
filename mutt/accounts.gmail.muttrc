@@ -27,7 +27,7 @@ folder-hook         imaps://$my_login3@$my_domain3@ssl0.ovh.net:993/ "\
         spoolfile   = +INBOX \
         postponed   = Drafts \
         trash       = Trash \
-        record      = Sent \
+        record      = ^ \
         from        = '$my_name3 <$my_login3@$my_domain3> ' \
         realname    = '$my_name3' \
         status_format = '-%r-$my_login3@$my_domain3: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(%P)---' \

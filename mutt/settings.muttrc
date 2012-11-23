@@ -13,7 +13,7 @@ set edit_headers=yes      # See the headers when editing
 mailboxes =INBOX
 #
 # Skip the bothering prompt for recipient and subject when replying and start immediately with writing your message:
-set fast_reply="yes"
+# set fast_reply="yes"
 # Always quote when replying:
 set include="yes"
 # Here you can determine your personal attribution line. This string always precedes quoted text.
