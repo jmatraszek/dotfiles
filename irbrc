@@ -25,10 +25,10 @@ ANSI[:WHITE] = "\e[37m"
 
 # Build a simple colorful IRB prompt
 IRB.conf[:PROMPT][:SIMPLE_COLOR] = {
-  :PROMPT_I => "#{ANSI[:BLUE]}%N(#{RUBY_VERSION}):%03n:%i>#{ANSI[:RESET]} ",
-  :PROMPT_N => "#{ANSI[:GREEN]}%N(#{RUBY_VERSION}):%03n:%i>>#{ANSI[:RESET]} ",
-  :PROMPT_C => "#{ANSI[:RED]}%N(#{RUBY_VERSION}):%03n:%i*>#{ANSI[:RESET]} ",
-  :PROMPT_S => "#{ANSI[:YELLOW]}%N(#{RUBY_VERSION}):%03n:%i%l>#{ANSI[:RESET]} ",
+  :PROMPT_I => "\001#{ANSI[:BLUE]}\002%N(#{RUBY_VERSION}):%03n:%i>\001#{ANSI[:RESET]}\002 ",
+  :PROMPT_N => "\001#{ANSI[:GREEN]}\002%N(#{RUBY_VERSION}):%03n:%i>>\001#{ANSI[:RESET]}\002 ",
+  :PROMPT_C => "\001#{ANSI[:RED]}\002%N(#{RUBY_VERSION}):%03n:%i*>\001#{ANSI[:RESET]}\002 ",
+  :PROMPT_S => "\001#{ANSI[:YELLOW]}\002%N(#{RUBY_VERSION}):%03n:%i%l>\001#{ANSI[:RESET]}\002 ",
   :RETURN => "#{ANSI[:MAGENTA]}=>#{ANSI[:RESET]} %s\n",
   :AUTO_INDENT => true }
 IRB.conf[:PROMPT_MODE] = :SIMPLE_COLOR
@@ -129,5 +129,4 @@ end
 
 # Show results of all extension-loading
 puts "#{ANSI[:GRAY]}~> Console extensions:#{ANSI[:RESET]} #{$console_extensions.join(' ')}#{ANSI[:RESET]}"
-
 
