@@ -151,6 +151,9 @@ update_title() {
     # title "$USER@$HOSTNAME ${PWD/#$HOME/~}"
 }
 
+export KERNEL_VER=`uname -r`
+export SYSTEM_VER=`uname -o`
+
 prompt_command () {
   local EXIT_CODE="[$BRed\${?#0}$Color_Off]"
   local TIME="[$Cyan\t$Color_Off]"
@@ -162,10 +165,12 @@ prompt_command () {
     local USERNAME="[$IBlue\u$Color_Off]"
     local HOST="[$IBlue\h$Color_Off]"
   fi
+  local SYSTEM="[$Purple$SYSTEM_VER$Color_Off]"
+  local KERNEL="[$Purple$KERNEL_VER$Color_Off]"
   local RVM="[$IGreen$(~/.rvm/bin/rvm-prompt v p g)$Color_Off]"
   local GIT="[$Green$(__git_ps1 '%s')$Color_Off]"
   local CWD="[$BIYellow\w$Color_Off]"
-  export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT \n$CWD \$ "
+  export PS1="$EXIT_CODE $TIME $USERNAME $HOST $SYSTEM $KERNEL $RVM $GIT \n$CWD \$ "
   update_title
 }
 
