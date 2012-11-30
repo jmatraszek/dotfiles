@@ -156,7 +156,7 @@ export SYSTEM_VER=`uname -o`
 
 prompt_command () {
   local EXIT_CODE="[$BRed\${?#0}$Color_Off]"
-  local TIME="[$Cyan\t$Color_Off]"
+  local TIME="[$Yellow\t$Color_Off]"
   if [[ $SSH_TTY ]]
   then
     local USERNAME="$BIRed[$Color_Off$IBlue\u$Color_Off$BIRed]$Color_Off"
