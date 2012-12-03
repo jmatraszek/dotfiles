@@ -155,21 +155,23 @@ export KERNEL_VER=`uname -r`
 export SYSTEM_VER=`uname -o`
 
 prompt_command () {
-  local EXIT_CODE="[$BRed\${?#0}$Color_Off]"
-  local TIME="[$Yellow\t$Color_Off]"
   if [[ $SSH_TTY ]]
   then
-    local USERNAME="$BIRed[$Color_Off$IBlue\u$Color_Off$BIRed]$Color_Off"
-    local HOST="$BIRed[$Color_Off$IBlue\h$Color_Off$BIRed]$Color_Off"
+    local d="$Red[$Color_Off"
+    local b="$Red]$Color_Off"
   else
-    local USERNAME="[$IBlue\u$Color_Off]"
-    local HOST="[$IBlue\h$Color_Off]"
+    local d="["
+    local b="]"
   fi
+  local EXIT_CODE="[$BRed\${?#0}$Color_Off]"
+  local TIME="[$Cyan\t$Color_Off]"
+  local USERNAME="[$IBlue\u$Color_Off]"
+  local HOST="[$IBlue\h$Color_Off]"
   local SYSTEM="[$Purple$SYSTEM_VER$Color_Off]"
   local KERNEL="[$Purple$KERNEL_VER$Color_Off]"
   local RVM="[$IGreen$(~/.rvm/bin/rvm-prompt v p g)$Color_Off]"
   local GIT="[$Green$(__git_ps1 '%s')$Color_Off]"
-  local CWD="[$BIYellow\w$Color_Off]"
+  local CWD="$d$BIYellow\w$Color_Off$b"
   export PS1="$EXIT_CODE $TIME $USERNAME $HOST $SYSTEM $KERNEL $RVM $GIT \n$CWD \$ "
   update_title
 }
