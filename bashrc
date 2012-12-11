@@ -152,7 +152,7 @@ update_title() {
 }
 
 export KERNEL_VER=`uname -r`
-export SYSTEM_VER=`uname -o`
+export SYSTEM_VER=`uname -o | tr '[A-Z]' '[a-z]'`
 
 prompt_command () {
   if [[ $SSH_TTY ]]
