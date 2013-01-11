@@ -172,7 +172,7 @@ prompt_command () {
   local RVM="[$IGreen$(~/.rvm/bin/rvm-prompt v p g)$Color_Off]"
   local GIT="[$Green$(__git_ps1 '%s')$Color_Off]"
   local CWD="$d$BIYellow\w$Color_Off$b"
-  export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT $SYSTEM $KERNEL \n$CWD \$ "
+  export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT \n$CWD \$ "
   update_title
 }
 
