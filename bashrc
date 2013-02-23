@@ -71,6 +71,10 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+if [ -f $HOME/.git-prompt.sh ]; then
+    source $HOME/.git-prompt.sh
+fi
+
 # Reset
 Color_Off='\[\e[0m\]'       # Text Reset
 
