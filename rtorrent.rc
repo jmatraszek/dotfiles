@@ -1,0 +1,55 @@
+##Max upload slots per torrent.
+max_uploads = 4
+
+#Max global download/upload rate in KiB, 0 is unlimited.
+download_rate = 0
+upload_rate = 14
+
+#Maximum and minimum number of peers to connect to, per torrent.
+min_peers = 10
+max_peers = 40
+
+#Same as above but for seeding completed torrents (-1 = same as downloading)
+#min_peers_seed = 10
+#max_peers_seed = 50
+
+use_udp_trackers = yes
+
+#Close torrents when diskspace is low (in this instance, 100MB).
+schedule = low_diskspace,5,60,close_low_diskspace=100M
+
+#Note that my rule stops rtorrent seeding as soon as the files are downloaded (well, 1%
+#uploaded), I have another server for uploads.  The default rule of (schedule = ratio,60,
+#60,stop_on_ratio=200,200M,2000) uploads 200%, with a 200MB minimum and a 2000% maximum.
+#stop_on_ratio = min_ratio,min_upload,max_ratio
+# schedule = ratio,30,30,stop_on_ratio=1
+
+#Port range to use for listening, ranges work better than a single port.
+port_range = 17370-17379
+
+#Off, auto or on; I'm not a fan, but for public trackers these days you might need it.
+dht = auto
+
+#Not sure who wouldn't prefer encrypted over unecrypted, but you can set a preference.
+#Allow_incoming, try_outgoing, require, require_RC4, enable_retry or prefer_plaintext
+encryption = require_RC4
+
+#Look for torrents in specified directory; start when found, stop when removed.
+schedule = watch_directory,5,5,load_start=~/Pobrane/*.torrent
+schedule = tied_directory,5,5,start_tied=
+schedule = untied_directory,5,5,stop_untied=
+
+#Where to store torrent data.
+directory = ~/Pobrane
+#Where to store session data.
+session = ~/.rtsessions
+
+#When the torrent finishes, move the data.
+# on_finished = move_complete,"execute=mv,-u,$d.get_base_path=,/mnt/archive/media/unsorted_torrents;d
+# .set_directory=/mnt/archive/media/unsorted_torrents"
+
+#When the torrent finishes, the .torrent file is removed.
+schedule = untied_directory,5,5,stop_untied=
+# on_finished = rm_torrent,"execute=rm,$d.get_tied_to_file="
+
+# vim:set ft=conf:
