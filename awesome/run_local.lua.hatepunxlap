@@ -1,0 +1,3 @@
+run_once("nm-applet",nil,nil,1)
+run_once("cbatticon","",nil,1)
+run_once("yweather","523920 c",nil,1)
