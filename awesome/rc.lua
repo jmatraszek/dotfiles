@@ -13,10 +13,6 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local calendar2 = require("calendar2")
 local menubar = require("menubar")
--- Widgets library
-require("obvious.battery")
-require("obvious.volume_alsa")
-require("obvious.temp_info")
 
 -- Load Debian menu entries
 require("debian.menu")
@@ -148,38 +144,6 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 mytextclock = awful.widget.textclock("%a, %d/%m/%y, %H:%M", 30)
 calendar2.addCalendarToWidget(mytextclock, "<span color='green'>%s</span>")
 
--- Create a systray
--- mysystray = wibox.widget.systray--({ type = "systray" })
-
---Create a weather widget
-
-weatherwidget = wibox.widget.textbox--({ type = "textbox" })
-weatherwidget.set_text = awful.util.pread(
-  "weather -i EPWA --headers=Temperature --quiet -m | grep -Eo -e '-?[0-9]* C'"
-) -- replace METARID with the metar ID for your area. This uses metric. If you prefer Fahrenheit change C to F in grep's regexp
-weathertimer = timer(
-  { timeout = 900 } -- Update every 15 minutes.
-)
-weathertimer:connect_signal(
-  "timeout", function()
-     weatherwidget.set_text = awful.util.pread(
-     "weather -i EPWA --headers=Temperature --quiet -m | grep -Eo -e '-?[0-9]* C'"
-   ) --replace METARID
- end)
-
-weathertimer:start() -- Start the timer
-awesome.connect_signal(
-"mouse::enter", function()
-  weather = naughty.notify(
-    {title="Weather",text=awful.util.pread("weather -i EPWA -m"),screen=mouse.screen})
-  end) -- this creates the hover feature. replace METARID and remove -m if you want Fahrenheit
-awesome.connect_signal(
-  "mouse::leave", function()
-    naughty.destroy(weather)
-  end)
--- -- I added some spacing because on my computer it is right next to my clock.
--- awful.widget.layout.margins[weatherwidget] = { right = 5 }
-
 -- Create a wibox for each screen and add it
 mywibox = {}
 mypromptbox = {}
@@ -257,9 +221,6 @@ for s = 1, screen.count() do
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(spacer)
-    -- right_layout:add(weatherwidget)
-    -- right_layout:add(obvious.volume_alsa())
-    right_layout:add(spacer)
     right_layout:add(mytextclock)
     right_layout:add(spacer)
     right_layout:add(mylayoutbox[s])
@@ -272,28 +233,6 @@ for s = 1, screen.count() do
 
     mywibox[s]:set_widget(layout)
 
-    -- Add widgets to the wibox - order matters
-    -- mywibox[s].widgets = {
-    --     {
-    --         mylauncher,
-    --         mytaglist[s],
-    --         mypromptbox[s],
-    --         layout = awful.widget.layout.horizontal.leftright
-    --     },
-    --     mylayoutbox[s],
-    --     mytextclock,
-    --     spacer,
-    --     obvious.temp_info(),
-    --     spacer,
-    --     obvious.volume_alsa(),
-    --     obvious.battery(),
-    --     spacer,
-    --     weatherwidget,
-    --     spacer,
-    --     s == 1 and mysystray or nil,
-    --     mytasklist[s],
-    --     layout = awful.widget.layout.horizontal.rightleft
-    -- }
 end
 
 -- {{{ Mouse bindings
@@ -584,7 +523,6 @@ function run_once(prg,arg_string,pname,screen)
     end
 end
 
--- run_once("udisks-glue",nil,nil,nil)
 run_once("gtk-redshift","-l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr",nil,1)
 run_once("yaudtray",nil,nil,1)
 run_once("clipit",nil,nil,1)
