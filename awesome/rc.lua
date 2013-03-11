@@ -2,7 +2,6 @@
 -- suckless-tools feh xlockmore
 
 -- Standard awesome library
-local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
 awful.rules = require("awful.rules")
@@ -56,11 +55,6 @@ terminal = "konsole"
 -- terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
-
--- {{{ Wallpaper
-gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-l.jpg", 1, true)
-gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-r.jpg", 2, true)
--- }}}
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -523,7 +517,8 @@ function run_once(prg,arg_string,pname,screen)
     end
 end
 
-run_once("gtk-redshift","-l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr",nil,1)
+run_once("gtk-redshift","-l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr","redshift",1)
 run_once("yaudtray",nil,nil,1)
 run_once("clipit",nil,nil,1)
 run_once("qasmixer","-t",nil,1)
+require("run_local")

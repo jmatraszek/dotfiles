@@ -1,0 +1,8 @@
+local gears = require("gears")
+
+run_once("weatherboy", "-l 523920 -u c -a",nil,1)
+
+-- {{{ Wallpaper
+gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-l.jpg", 1, true)
+gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-r.jpg", 2, true)
+-- }}}

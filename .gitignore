@@ -5,3 +5,4 @@ mutt/certificates
 mutt/accounts.txt.gpg
 mutt/accounts.work.muttrc
 irssi/saved_colors
+awesome/run_local.lua
