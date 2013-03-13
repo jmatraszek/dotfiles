@@ -208,3 +208,5 @@ man() {
 		LESS_TERMCAP_us=$(printf "\e[1;32m") \
 			man "$@"
 }
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
