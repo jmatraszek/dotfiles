@@ -40,6 +40,8 @@ set sort_aux        = last-date-received
 unset markers
 # mailcap settings
 set mailcap_path="~/.mailcap:/etc/mailcap"
+# fast folder switching
+set sleep_time = 0
 
 # Don't jump to next message when at bottom of current message:
 set pager_stop="yes"
