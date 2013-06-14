@@ -159,7 +159,7 @@ export KERNEL_VER=`uname -r`
 export SYSTEM_VER=`uname -o | tr '[A-Z]' '[a-z]'`
 
 prompt_command () {
-  if [[ $SSH_TTY ]]
+  if [[ $SSH_TTY && -z $TMUX ]]
   then
     local d="$Red[$Color_Off"
     local b="$Red]$Color_Off"
