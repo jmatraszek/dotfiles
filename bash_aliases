@@ -26,6 +26,10 @@ alias srcvim='cd src && gvim && cd ..'
 alias mutt='MUTT_PROFILE=gmail /usr/bin/mutt'
 alias mutt-work='MUTT_PROFILE=work /usr/bin/mutt'
 
+alias s='TERM=screen-256color'
+
+alias tig='TERM=screen-256color tig'
+
 alias vim='TERM=screen-256color vim'
 
 randpw() { tr -cd '[:alnum:]' < /dev/urandom | fold -w$1 | head -n1; }
