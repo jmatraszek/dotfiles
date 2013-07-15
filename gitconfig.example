@@ -46,7 +46,7 @@
     rbc = rebase --continue
     rba = rebase --abort
     s = !tig status
-    sl = !git --no-pager stash list --pretty=format:'%C(yellow)%ad %C(blue)%h %C(red)%gd %Creset%f' && echo
+    sl = !git --no-pager stash list --pretty=format:'%C(yellow)%ai %C(blue)%h %C(red)%gd %Creset%f' && echo
     sa = !"sh -c 'git stash apply `echo \"stash@{$1}\"`' -"
     sd = !"sh -c 'git stash drop `echo \"stash@{$1}\"`' -"
     sh = !"sh -c 'git stash show -p `echo \"stash@{$1}\"` | tig' -"
