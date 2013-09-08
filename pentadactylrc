@@ -1,11 +1,13 @@
-"1.0
+"hg6942
 
 loadplugins '\.(js|penta)$'
 group user
+highlight Hint font: bold 10px "Droid Sans Mono", monospace !important; margin: -.2ex; padding: 0 0 0 1px; outline: 1px solid rgba(0, 0, 0, .5); background: rgba(255, 248, 231, .8); color: black; transform: uppercase; test-transform: uppercase; font-size: 10.5pt !important; text-transform: uppercase;
 map -count -modes=n,v <A-k> <count>gT
 map -count -modes=n,v <A-j> <count>gt
 map -modes=n,v gn -ex nohlfind
 set guioptions=bCrsnmBT
+set hintkeys=1234qwerasdf
 set hlfind
 
 " vim: set ft=pentadactyl:
