@@ -13,7 +13,19 @@ HISTCONTROL=ignoredups:ignorespace
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000 HISTFILESIZE=2000
+HISTSIZE=10000
+HISTFILESIZE=$HISTSIZE
+
+history() {
+  _bash_history_sync
+  builtin history "$@"
+}
+
+_bash_history_sync() {
+  builtin history -a
+  HISTFILESIZE=$HISTSIZE
+}
+
 TERM=xterm-256color
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -159,6 +171,7 @@ export KERNEL_VER=`uname -r`
 export SYSTEM_VER=`uname -o | tr '[A-Z]' '[a-z]'`
 
 prompt_command () {
+  _bash_history_sync
   if [[ $SSH_TTY && -z $TMUX ]]
   then
     local d="$Red[$Color_Off"
