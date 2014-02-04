@@ -3,6 +3,7 @@
 
 -- Standard awesome library
 local awful = require("awful")
+require("eminent")
 require("awful.autofocus")
 awful.rules = require("awful.rules")
 local wibox = require("wibox")
@@ -70,7 +71,7 @@ layouts =
     awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
     awful.layout.suit.tile.top,
-    -- awful.layout.suit.fair,
+    awful.layout.suit.fair,
     -- awful.layout.suit.fair.horizontal,
     -- awful.layout.suit.spiral,
     -- awful.layout.suit.spiral.dwindle,
@@ -261,6 +262,8 @@ globalkeys = awful.util.table.join(
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
+    awful.key({ modkey,           }, "w", function () awful.screen.focus_relative( 1) end),
+    awful.key({ modkey,           }, "q", function () awful.screen.focus_relative(-1) end),
     awful.key({ modkey,           }, "]", function () awful.screen.focus_relative( 1) end),
     awful.key({ modkey,           }, "[", function () awful.screen.focus_relative(-1) end),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
@@ -518,7 +521,7 @@ function run_once(prg,arg_string,pname,screen)
     end
 end
 
-run_once("gtk-redshift","-l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr","redshift",1)
+run_once("redshift-gtk","-l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr","redshift",1)
 run_once("yaudtray",nil,nil,1)
 run_once("clipit",nil,nil,1)
 run_once("qasmixer","-t",nil,1)
