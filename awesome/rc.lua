@@ -3,7 +3,6 @@
 
 -- Standard awesome library
 awful = require("awful")
-require("eminent")
 require("awful.autofocus")
 awful.rules = require("awful.rules")
 local wibox = require("wibox")
@@ -203,6 +202,13 @@ globalkeys = awful.util.table.join(
             mymainmenu:show({keygrabber=true})
         end),
 
+    awful.key({ modkey,           }, "r",    function ()
+                awful.prompt.run({ prompt = "Rename tab: ", text = awful.tag.selected().name, },
+                mypromptbox[mouse.screen].widget,
+                function (s)
+                    awful.tag.selected().name = s
+                end)
+        end),
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
