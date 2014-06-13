@@ -1,4 +1,1 @@
-set show-rev-graph = yes        # Show revision graph?
-set show-refs = yes             # Show references?
-set commit-encoding = "UTF-8"   # Commit encoding
 set horizontal-scroll = 33%     # Scroll 33% of the view width
