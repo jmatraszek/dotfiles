@@ -83,8 +83,8 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-if [ -f /usr/share/git/completion/git-completion.sh ]; then
-    source /usr/share/git/completion/git-completion.sh
+if [ -f /usr/share/git/completion/git-completion.bash ]; then
+    source /usr/share/git/completion/git-completion.bash
 fi
 
 if [ -f /usr/share/git/completion/git-prompt.sh ]; then
