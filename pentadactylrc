@@ -1,4 +1,4 @@
-"hg6942
+"1.1
 
 loadplugins '\.(js|penta)$'
 group user
@@ -6,7 +6,7 @@ highlight Hint font: bold 10px "Droid Sans Mono", monospace !important; margin: 
 map -count -modes=n,v <A-k> <count>gT
 map -count -modes=n,v <A-j> <count>gt
 map -modes=n,v gn -ex nohlfind
-set guioptions=bCrsnmBT
+set guioptions=bCrsnT
 set hintkeys=1234qwerasdf
 set hlfind
 
