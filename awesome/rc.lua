@@ -12,6 +12,7 @@ beautiful = require("beautiful")
 naughty = require("naughty")
 local calendar2 = require("calendar2")
 local menubar = require("menubar")
+local lain = require("lain")
 runonce = require("runonce")
 
 -- Load Debian menu entries
@@ -82,6 +83,20 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- Create a textclock widget
 mytextclock = awful.widget.textclock("%a, %d/%m/%y, %H:%M", 30)
 calendar2.addCalendarToWidget(mytextclock, "<span color='green'>%s</span>")
+
+mycpu = lain.widgets.cpu({
+    timeout = 4,
+    settings = function()
+        widget:set_markup("cpu:" .. cpu_now.usage)
+    end
+})
+
+mymem = lain.widgets.mem({
+    timeout = 4,
+    settings = function()
+        widget:set_markup("mem:" .. mem_now.used)
+    end
+})
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -159,6 +174,12 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    if s == 2 then
+       right_layout:add(spacer)
+       right_layout:add(mycpu)
+       right_layout:add(spacer)
+       right_layout:add(mymem)
+    end
     right_layout:add(spacer)
     right_layout:add(mytextclock)
     right_layout:add(spacer)
