@@ -12,6 +12,7 @@ beautiful = require("beautiful")
 naughty = require("naughty")
 local calendar2 = require("calendar2")
 local menubar = require("menubar")
+runonce = require("runonce")
 
 -- Load Debian menu entries
 require("debian.menu")
@@ -452,24 +453,9 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 client.size_hints_honor = false
 --
 
-function run_once(prg,arg_string,pname,screen)
-    if not prg then
-        do return nil end
-    end
+runonce.run("redshift-gtk -l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr")
+runonce.run("yaudtray")
+runonce.run("clipit")
+runonce.run("qasmixer -t")
 
-    if not pname then
-       pname = prg
-    end
-
-    if not arg_string then
-        awful.util.spawn_with_shell("pgrep -f -u $USER -x '" .. pname .. "' || (" .. prg .. ")",screen)
-    else
-        awful.util.spawn_with_shell("pgrep -f -u $USER -x '" .. pname .. "' || (" .. prg .. " " .. arg_string .. ")",screen)
-    end
-end
-
-run_once("redshift-gtk","-l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr","redshift",1)
-run_once("yaudtray",nil,nil,1)
-run_once("clipit",nil,nil,1)
-run_once("qasmixer","-t",nil,1)
 require("run_local")
