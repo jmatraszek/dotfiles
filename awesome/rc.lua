@@ -80,10 +80,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibox
--- Create a textclock widget
-mytextclock = awful.widget.textclock("%a, %d/%m/%y, %H:%M", 30)
-calendar2.addCalendarToWidget(mytextclock, "<span color='green'>%s</span>")
-
+-- Create a some widgets
 mycpu = lain.widgets.cpu({
     timeout = 4,
     settings = function()
@@ -97,6 +94,12 @@ mymem = lain.widgets.mem({
         widget:set_markup("mem:" .. mem_now.used)
     end
 })
+
+-- Textclock
+mytextclock = awful.widget.textclock("%a, %d/%m/%y, %H:%M")
+
+-- calendar
+lain.widgets.calendar:attach(mytextclock, { cal = 'cal -m', font = 'Inconsolata', font_size = 10 })
 
 -- Create a wibox for each screen and add it
 mywibox = {}
