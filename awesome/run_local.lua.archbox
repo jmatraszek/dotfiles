@@ -5,6 +5,10 @@ runonce.run("unclutter -idle 3")
 runonce.run("pidgin")
 
 -- {{{ Wallpaper
-gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-l.jpg", 1, true)
-gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-r.jpg", 2, true)
+if screen.count() == 2 then
+  gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-l.jpg", 1, true)
+  gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-r.jpg", 2, true)
+elseif screen.count() == 1 then
+  gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-l.jpg", 1, true)
+end
 -- }}}
