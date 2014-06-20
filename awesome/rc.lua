@@ -23,6 +23,7 @@ require("variable_definitions")
 
 -- Default modkey.
 modkey = "Mod4"
+altkey = 'Mod1'
 
 require('layouts')
 
@@ -252,7 +253,7 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({ 'Mod1', 'Control' }, "l", function () awful.util.spawn('slimlock') end),
+    awful.key({ altkey, 'Control' }, "l", function () awful.util.spawn('slimlock') end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
