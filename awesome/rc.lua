@@ -10,7 +10,6 @@ local wibox = require("wibox")
 beautiful = require("beautiful")
 -- Notification library
 naughty = require("naughty")
-local calendar2 = require("calendar2")
 local menubar = require("menubar")
 local lain = require("lain")
 runonce = require("runonce")
