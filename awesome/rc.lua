@@ -81,17 +81,47 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 
 -- {{{ Wibox
 -- Create a some widgets
-mycpu = lain.widgets.cpu({
-    timeout = 4,
+markup = lain.util.markup
+
+-- Net
+netdownicon = wibox.widget.imagebox(beautiful.netdown_icon)
+--netdownicon.align = "middle"
+netdowninfo = wibox.widget.textbox()
+netupicon = wibox.widget.imagebox(beautiful.netup_icon)
+--netupicon.align = "middle"
+netupinfo = lain.widgets.net({
     settings = function()
-        widget:set_markup("cpu:" .. cpu_now.usage)
+        widget:set_markup(markup("#e54c62", net_now.sent .. " "))
+        netdowninfo:set_markup(markup("#87af5f", net_now.received .. " "))
     end
 })
 
+-- / fs
+fsicon = wibox.widget.imagebox(beautiful.fs_icon)
+myfs = lain.widgets.fs({
+   timeout = 4,
+    settings  = function()
+        widget:set_markup(markup("#80d9d8", fs_now.used .. "% "))
+        fs_notification_preset = { font = "Inconsolata" }
+    end
+})
+
+-- CPU
+cpuicon = wibox.widget.imagebox(beautiful.cpu_icon)
+mycpu = lain.widgets.cpu({
+    timeout = 4,
+    settings = function()
+        widget:set_markup(markup("#e33a6e", cpu_now.usage .. "% "))
+    end
+})
+
+
+-- MEM
+memicon = wibox.widget.imagebox(beautiful.mem_icon)
 mymem = lain.widgets.mem({
     timeout = 4,
     settings = function()
-        widget:set_markup("mem:" .. mem_now.used)
+        widget:set_markup(markup("#e0da37", mem_now.used .. "M "))
     end
 })
 
@@ -178,9 +208,15 @@ for s = 1, screen.count() do
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
     if s == 2 then
-       right_layout:add(spacer)
+       right_layout:add(netdownicon)
+       right_layout:add(netdowninfo)
+       right_layout:add(netupicon)
+       right_layout:add(netupinfo)
+       right_layout:add(fsicon)
+       right_layout:add(myfs)
+       right_layout:add(cpuicon)
        right_layout:add(mycpu)
-       right_layout:add(spacer)
+       right_layout:add(memicon)
        right_layout:add(mymem)
     end
     right_layout:add(spacer)
