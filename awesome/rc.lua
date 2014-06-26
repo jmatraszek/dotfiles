@@ -433,6 +433,8 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
+    { rule = { class = "Gvim" },
+      properties = { size_hints_honor = false } },
     { rule = { class = "Firefox" }, except = { role = 'browser' },
       properties = { floating = true } },
     { rule = { class = "Thunderbird" }, except = { role = '3pane' },
