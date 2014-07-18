@@ -21,17 +21,12 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 
 alias ber='bundle exec rspec -c'
-alias srcvim='cd src && gvim && cd ..'
 
 alias mutt='MUTT_PROFILE=gmail /usr/bin/mutt'
 alias mutt-work='MUTT_PROFILE=work /usr/bin/mutt'
 
 alias s='TERM=screen-256color'
 
-alias tig='TERM=screen-256color tig'
-
-alias vim='TERM=screen-256color vim'
-alias svim='TERM=screen-256color vim -u ~/.vim/simple_vimrc'
+alias vim='vim'
+alias svim='vim -u ~/.vim/simple_vimrc'
 alias sgvim='gvim -u ~/.vim/simple_vimrc'
-
-randpw() { tr -cd '[:alnum:]' < /dev/urandom | fold -w$1 | head -n1; }
