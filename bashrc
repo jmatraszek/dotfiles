@@ -83,6 +83,11 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+# Use bash-completion, if available
+if [ -f /etc/bash_completion ]; then
+  . /etc/bash_completion
+fi
+
 if [ -f /usr/share/git/completion/git-completion.bash ]; then
     source /usr/share/git/completion/git-completion.bash
 fi
@@ -194,8 +199,9 @@ prompt_command () {
   local KERNEL="[$Purple$KERNEL_VER$Color_Off]"
   local RVM="[$IGreen$(~/.rvm/bin/rvm-prompt v p g)$Color_Off]"
   local GIT="[$Green$(__git_ps1 '%s')$Color_Off]"
+  local HG="[$Green$(hg prompt "{branch}{:{bookmark}} {status}{update}" 2>/dev/null)$Color_Off]"
   local CWD="$d$BIYellow\w$Color_Off$b"
-  export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT \n$CWD \$ "
+  export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT $HG \n$CWD \$ "
   update_title
 }
 
@@ -228,4 +234,7 @@ man() {
 			man "$@"
 }
 
+complete -cf sudo
+
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+export JRUBY_OPTS=--dev
