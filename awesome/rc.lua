@@ -519,6 +519,17 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 client.size_hints_honor = false
 --
 
+-- Slack notification fix
+naughty.config.notify_callback = function(args)
+  if args.appname == "Electron" then
+    args.title = args.title:gsub("^New message from (.*)$", "%1")
+    args.icon = nil
+  end
+
+  return args
+end
+--
+
 runonce.run("redshift-gtk -l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr")
 runonce.run("yaudtray")
 runonce.run("clipit")
