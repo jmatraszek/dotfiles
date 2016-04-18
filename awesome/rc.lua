@@ -442,7 +442,9 @@ awful.rules.rules = {
     { rule = { class = "Firefox" }, except = { role = 'browser' },
       properties = { floating = true } },
     { rule = { class = "Thunderbird" }, except = { role = '3pane' },
-      properties = { floating = true } }
+      properties = { floating = true } },
+    { rule = { class = "albert" },
+      properties = { floating = true } },
 }
 -- }}}
 
