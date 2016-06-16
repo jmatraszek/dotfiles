@@ -3,6 +3,7 @@ local gears = require("gears")
 runonce.run("weatherboy -l 523920 -u c -a")
 runonce.run("unclutter -idle 3")
 runonce.run("pidgin")
+runonce.run("qxkb")
 
 -- {{{ Wallpaper
 if screen.count() == 2 then
