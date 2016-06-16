@@ -19,3 +19,4 @@ public/system/*
 vendor/gems
 *.swp
 .sass-cache
+.vimtags
