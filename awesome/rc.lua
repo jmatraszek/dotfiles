@@ -294,14 +294,18 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end),
-    -- awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)      end),
-    -- awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)      end),
-    -- awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)         end),
-    -- awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)         end),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1) naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1) naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1) naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1) naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end),
+    awful.key({ modkey, "Shift"   }, "h",     function ()
+       awful.tag.incnmaster( 1) naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 })
+    end),
+    awful.key({ modkey, "Shift"   }, "l",     function ()
+       awful.tag.incnmaster(-1) naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 })
+    end),
+    awful.key({ modkey, "Control" }, "h",     function ()
+       awful.tag.incncol( 1) naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 })
+    end),
+    awful.key({ modkey, "Control" }, "l",     function ()
+       awful.tag.incncol(-1) naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 })
+    end),
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
 
@@ -442,7 +446,9 @@ awful.rules.rules = {
     { rule = { class = "Firefox" }, except = { role = 'browser' },
       properties = { floating = true } },
     { rule = { class = "Thunderbird" }, except = { role = '3pane' },
-      properties = { floating = true } }
+      properties = { floating = true } },
+    { rule = { class = "albert" },
+      properties = { floating = true } },
 }
 -- }}}
 
@@ -517,6 +523,17 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 --
 --
 client.size_hints_honor = false
+--
+
+-- Slack notification fix
+naughty.config.notify_callback = function(args)
+  if args.appname == "Electron" then
+    args.title = args.title:gsub("^New message from (.*)$", "%1")
+    args.icon = nil
+  end
+
+  return args
+end
 --
 
 runonce.run("redshift-gtk -l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr")
