@@ -241,5 +241,10 @@ complete -cf sudo
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 export JRUBY_OPTS=--dev
 
+export PATH="${PATH}:${HOME}/bin"
+export PATH="${PATH}:${HOME}/.cargo/bin"
+export PATH="$PATH:$HOME/.node_modules/bin"
+export npm_config_prefix=~/.node_modules
+
 export NVM_DIR="/home/kuba/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
