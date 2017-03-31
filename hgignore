@@ -16,6 +16,7 @@ TAGS
 .redcar/*
 /*.pid
 public/system/*
+public/assets/*
 vendor/gems
 /*.swp
 .sass-cache
