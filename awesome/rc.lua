@@ -233,8 +233,8 @@ awful.screen.connect_for_each_screen(function(s)
        -- right_layout:add(brightness_widget)
        right_layout:add(wibox.widget.systray())
     else
-       if s == 1 then right_layout:add(wibox.widget.systray()) end
-       if s == 2 then
+       if s.index == 1 then right_layout:add(wibox.widget.systray()) end
+       if s.index == 2 then
           right_layout:add(netdownicon)
           right_layout:add(netdowninfo)
           right_layout:add(netupicon)
