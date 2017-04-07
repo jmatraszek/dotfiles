@@ -34,8 +34,8 @@ require('layouts')
               layouts[3], layouts[3], layouts[3], layouts[3]
  }}
  for s = 1, screen.count() do
-     -- Each screen has its own tag table.
-     tags[s] = awful.tag(tags.names, s, tags.layout)
+    -- Each screen has its own tag table.
+    tags[s] = awful.tag(tags.names, s, tags.layout)
  end
 -- }}}
 
@@ -60,7 +60,7 @@ myawesomemenu = {
    { "manual", terminal .. " -e man awesome" },
    { "edit config", "gvim " .. awesome.conffile },
    { "restart", awesome.restart },
-   { "quit", awesome.quit }
+   { "quit", function() awesome.quit() end}
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
@@ -89,7 +89,7 @@ netdownicon = wibox.widget.imagebox(beautiful.netdown_icon)
 netdowninfo = wibox.widget.textbox()
 netupicon = wibox.widget.imagebox(beautiful.netup_icon)
 --netupicon.align = "middle"
-netupinfo = lain.widgets.net({
+netupinfo = lain.widget.net({
     settings = function()
         widget:set_markup(markup("#e54c62", net_now.sent .. " "))
         netdowninfo:set_markup(markup("#87af5f", net_now.received .. " "))
@@ -98,27 +98,34 @@ netupinfo = lain.widgets.net({
 
 -- / fs
 fsicon = wibox.widget.imagebox(beautiful.fs_icon)
-myfs = lain.widgets.fs({
+myfs = lain.widget.fs({
    timeout = 4,
     settings  = function()
         widget:set_markup(markup("#80d9d8", fs_now.used .. "% "))
-        fs_notification_preset = { font = "Inconsolata" }
+        fs_notification_preset = { font = "Inconsolata", fg = theme.fg_normal }
     end
 })
 
 -- CPU
 cpuicon = wibox.widget.imagebox(beautiful.cpu_icon)
-mycpu = lain.widgets.cpu({
+mycpu = lain.widget.cpu({
     timeout = 4,
     settings = function()
         widget:set_markup(markup("#e33a6e", cpu_now.usage .. "% "))
     end
 })
 
+-- TEMP
+tempicon = wibox.widget.imagebox(theme.temp_icon)
+temp = lain.widget.temp({
+    settings = function()
+        widget:set_markup(markup.fontfg(theme.font, "#f1af5f", coretemp_now .. "°C "))
+    end
+})
 
 -- MEM
 memicon = wibox.widget.imagebox(beautiful.mem_icon)
-mymem = lain.widgets.mem({
+mymem = lain.widget.mem({
     timeout = 4,
     settings = function()
         widget:set_markup(markup("#e0da37", mem_now.used .. "M "))
@@ -126,10 +133,10 @@ mymem = lain.widgets.mem({
 })
 
 -- Textclock
-mytextclock = awful.widget.textclock("%a, %d/%m/%y, %H:%M")
+mytextclock = wibox.widget.textclock("%a, %d/%m/%y, %H:%M")
 
 -- calendar
-lain.widgets.calendar:attach(mytextclock, { cal = 'cal -m', font = 'Inconsolata', font_size = 10 })
+-- lain.widget.calendar:attach(mytextclock, { cal = 'cal -m', font = 'Inconsolata', font_size = 10 })
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -177,7 +184,9 @@ mytasklist.buttons = awful.util.table.join(
                                           end))
 
 
-for s = 1, screen.count() do
+require("widgets/battery")
+require("widgets/brightness")
+awful.screen.connect_for_each_screen(function(s)
     -- Create a promptbox for each screen
     mypromptbox[s] = awful.widget.prompt()
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
@@ -197,7 +206,7 @@ for s = 1, screen.count() do
     local spacer = wibox.widget.textbox(" | ")
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s })
+    mywibox[s] = awful.wibar({ position = "top", screen = s })
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
     left_layout:add(mylauncher)
@@ -206,18 +215,37 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    if s == 1 then right_layout:add(wibox.widget.systray()) end
-    if s == 2 then
+    if screen.count() == 1 then
        right_layout:add(netdownicon)
        right_layout:add(netdowninfo)
        right_layout:add(netupicon)
-       right_layout:add(netupinfo)
+       right_layout:add(netupinfo.widget)
        right_layout:add(fsicon)
-       right_layout:add(myfs)
+       right_layout:add(myfs.widget)
        right_layout:add(cpuicon)
-       right_layout:add(mycpu)
+       right_layout:add(mycpu.widget)
        right_layout:add(memicon)
-       right_layout:add(mymem)
+       right_layout:add(mymem.widget)
+       right_layout:add(tempicon)
+       right_layout:add(temp.widget)
+       right_layout:add(battery_widget)
+       right_layout:add(brightness_icon)
+       -- right_layout:add(brightness_widget)
+       right_layout:add(wibox.widget.systray())
+    else
+       if s == 1 then right_layout:add(wibox.widget.systray()) end
+       if s == 2 then
+          right_layout:add(netdownicon)
+          right_layout:add(netdowninfo)
+          right_layout:add(netupicon)
+          right_layout:add(netupinfo.widget)
+          right_layout:add(fsicon)
+          right_layout:add(myfs.widget)
+          right_layout:add(cpuicon)
+          right_layout:add(mycpu.widget)
+          right_layout:add(memicon)
+          right_layout:add(mymem.widget)
+       end
     end
     right_layout:add(spacer)
     right_layout:add(mytextclock)
@@ -231,8 +259,7 @@ for s = 1, screen.count() do
     layout:set_right(right_layout)
 
     mywibox[s]:set_widget(layout)
-
-end
+end)
 
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
@@ -316,8 +343,16 @@ globalkeys = awful.util.table.join(
     -- awful.key({ modkey,           }, "p",      function(c) awful.client.movetoscreen(c,c.screen+1) end ),
 
     -- volume control with amixer
+    awful.key({}, "XF86MonBrightnessUp", function ()
+        awful.spawn.with_shell("xbacklight -inc 5")
+    end),
+
+    awful.key({}, "XF86MonBrightnessDown", function ()
+        awful.spawn.with_shell("xbacklight -dec 5")
+    end),
+
     awful.key({}, "XF86AudioLowerVolume", function ()
-        awful.util.spawn_with_shell("amixer set Master 5%-")
+        awful.spawn.with_shell("amixer set Master 5%-")
     end),
 
     awful.key({}, "XF86AudioRaiseVolume", function ()
@@ -327,10 +362,10 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioMute", function()
         if is_mute then
             is_mute = false
-            awful.util.spawn_with_shell("amixer set Master unmute")
+            awful.spawn.with_shell("amixer set Master unmute")
         else
             is_mute = true
-            awful.util.spawn_with_shell("amixer set Master mute")
+            awful.spawn.with_shell("amixer set Master mute")
         end
     end),
 
@@ -383,34 +418,52 @@ end
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it works on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
-for i = 1, keynumber do
-    globalkeys = awful.util.table.join(globalkeys,
+local gears = require("gears")
+for i = 1, 9 do
+    globalkeys = gears.table.join(globalkeys,
+        -- View tag only.
         awful.key({ modkey }, "#" .. i + 9,
                   function ()
-                        local screen = mouse.screen
-                        if tags[screen][i] then
-                            awful.tag.viewonly(tags[screen][i])
+                        local screen = awful.screen.focused()
+                        local tag = screen.tags[i]
+                        if tag then
+                           tag:view_only()
                         end
-                  end),
+                  end,
+                  {description = "view tag #"..i, group = "tag"}),
+        -- Toggle tag display.
         awful.key({ modkey, "Control" }, "#" .. i + 9,
                   function ()
-                      local screen = mouse.screen
-                      if tags[screen][i] then
-                          awful.tag.viewtoggle(tags[screen][i])
+                      local screen = awful.screen.focused()
+                      local tag = screen.tags[i]
+                      if tag then
+                         awful.tag.viewtoggle(tag)
                       end
-                  end),
+                  end,
+                  {description = "toggle tag #" .. i, group = "tag"}),
+        -- Move client to tag.
         awful.key({ modkey, "Shift" }, "#" .. i + 9,
                   function ()
-                      if client.focus and tags[client.focus.screen][i] then
-                          awful.client.movetotag(tags[client.focus.screen][i])
-                      end
-                  end),
+                      if client.focus then
+                          local tag = client.focus.screen.tags[i]
+                          if tag then
+                              client.focus:move_to_tag(tag)
+                          end
+                     end
+                  end,
+                  {description = "move focused client to tag #"..i, group = "tag"}),
+        -- Toggle tag on focused client.
         awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
                   function ()
-                      if client.focus and tags[client.focus.screen][i] then
-                          awful.client.toggletag(tags[client.focus.screen][i])
+                      if client.focus then
+                          local tag = client.focus.screen.tags[i]
+                          if tag then
+                              client.focus:toggle_tag(tag)
+                          end
                       end
-                  end))
+                  end,
+                  {description = "toggle focused client on tag #" .. i, group = "tag"})
+    )
 end
 
 clientbuttons = awful.util.table.join(
