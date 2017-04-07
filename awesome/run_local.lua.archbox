@@ -1,6 +1,6 @@
 local gears = require("gears")
 
-runonce.run("weatherboy -l 523920 -u c -a")
+runonce.run("qopenvpn")
 runonce.run("unclutter -idle 3")
 runonce.run("qxkb")
 
