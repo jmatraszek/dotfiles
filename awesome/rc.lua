@@ -590,8 +590,8 @@ end
 --
 
 runonce.run("redshift-gtk -l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr")
-runonce.run("yaudtray")
+runonce.run("udiskie -2 --smart-tray --notify --no-automount")
 runonce.run("clipit")
-runonce.run("qasmixer -t")
+runonce.run("pasystray --notify=default_sink")
 
 require("run_local")

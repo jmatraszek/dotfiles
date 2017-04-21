@@ -37,7 +37,7 @@ watch(
         local batteryType
         local _, status, charge_str, time = string.match(stdout, '(.+): (%a+), (%d?%d%d)%%,? ?.*')
         local charge = tonumber(charge_str)
-        if (charge >= 0 and charge < 15) then
+        if (status ~= 'Charging' and (charge >= 0 and charge < 10)) then
             batteryType="battery-empty%s-symbolic"
             show_battery_warning()
         elseif (charge >= 15 and charge < 40) then batteryType="battery-caution%s-symbolic"
