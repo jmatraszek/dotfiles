@@ -592,6 +592,6 @@ end
 runonce.run("redshift-gtk -l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr")
 runonce.run("udiskie -2 --smart-tray --notify --no-automount")
 runonce.run("clipit")
-runonce.run("pasystray --notify=default_sink")
+runonce.run("pasystray --notify=sink_default")
 
 require("run_local")
