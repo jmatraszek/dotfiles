@@ -35,7 +35,7 @@ watch(
     "acpi", 10,
     function(widget, stdout, stderr, exitreason, exitcode)
         local batteryType
-        local _, status, charge_str, time = string.match(stdout, '(.+): (%a+), (%d?%d%d)%%,? ?.*')
+        local _, status, charge_str, time = string.match(stdout, '(.+): (%a+), (%d+)%%,? ?.*')
         local charge = tonumber(charge_str)
         if (charge >= 0 and charge < 10) then
             batteryType="battery-empty%s-symbolic"
@@ -77,12 +77,9 @@ watch(
 
 function show_battery_warning()
     naughty.notify{
-    icon = "/home/pashik/.config/awesome/nichosi.png",
-    icon_size=100,
-    text = "Huston, we have a problem",
+    text = "Connect the charger!",
     title = "Battery is dying",
     timeout = 5, hover_timeout = 0.5,
-    position = "bottom_right",
     bg = "#F06060",
     fg = "#EEE9EF",
     width = 300,
