@@ -1,4 +1,4 @@
 \timing
 \pset border 2
-\setenv PAGER /usr/bin/less
 \set PROMPT1 '\n%[%033[0;36;29m%]%n@%m:%/%[%033[0m%]\n%# '
+\set G '\\set QUIET 1\\x\\g\\x\\set QUIET 0'
