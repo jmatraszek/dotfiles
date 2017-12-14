@@ -1,6 +1,3 @@
 local gears = require("gears")
 gears.wallpaper.maximized("/home/jakub/.wallpapers/wallpaper32001800.jpg", 1, true)
 runonce.run("touchegg")
-runonce.run("cmst --minimized -i Arc")
-runonce.run("qxkb")
-runonce.run("qopenvpn")
