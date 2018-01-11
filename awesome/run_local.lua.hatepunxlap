@@ -1,3 +1,0 @@
-runonce.run("nm-applet")
-runonce.run("cbatticon")
-runonce.run("yweather 523920 c")

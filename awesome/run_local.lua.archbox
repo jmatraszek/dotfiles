@@ -1,9 +1,5 @@
 local gears = require("gears")
 
-runonce.run("qopenvpn")
-runonce.run("unclutter -idle 3")
-runonce.run("qxkb")
-
 -- {{{ Wallpaper
 if screen.count() == 2 then
   gears.wallpaper.maximized("/home/kuba/.wallpapers/lake-l.jpg", 1, true)
