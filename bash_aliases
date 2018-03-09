@@ -33,3 +33,6 @@ alias svim='vim -u ~/.vim/simple_vimrc'
 alias sgvim='gvim -u ~/.vim/simple_vimrc'
 
 alias ssl1='PKG_CONFIG_PATH=/usr/lib/openssl-1.0/pkgconfig CFLAGS+=" -I/usr/include/openssl-1.0" LDFLAGS+=" -L/usr/lib/openssl-1.0 -lssl"'
+
+alias vim='env -u GEM_PATH -u GEM_HOME \vim'
+alias gvim='env -u GEM_PATH -u GEM_HOME \gvim'
