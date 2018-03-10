@@ -1,3 +1,4 @@
 exec jmcfg/jm
+exec jmcfg/defrag.cfg
 
 // vim: set ft=quake:
