@@ -101,8 +101,8 @@ fsicon = wibox.widget.imagebox(beautiful.fs_icon)
 myfs = lain.widget.fs({
    timeout = 4,
     settings  = function()
-        widget:set_markup(markup("#80d9d8", fs_now.used .. "% "))
-        fs_notification_preset = { font = "Inconsolata", fg = theme.fg_normal }
+        widget:set_markup(markup("#80d9d8", fs_now["/"].percentage .. "% "))
+        fs_notification_preset = { font = "Iosevka Medium", fg = theme.fg_normal }
     end
 })
 
