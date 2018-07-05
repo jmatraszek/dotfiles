@@ -8,3 +8,4 @@ irssi/saved_colors
 awesome/run_local.lua
 .vimtags
 quake3/jmcfg/rconpassword.cfg
+*.local
