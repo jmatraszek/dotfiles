@@ -88,7 +88,7 @@ netdownicon = wibox.widget.imagebox(beautiful.netdown_icon)
 --netdownicon.align = "middle"
 netdowninfo = wibox.widget.textbox()
 netupicon = wibox.widget.imagebox(beautiful.netup_icon)
---netupicon.align = "middle"
+                                netupicon.align = "middle"
 netupinfo = lain.widget.net({
     settings = function()
         widget:set_markup(markup("#e54c62", net_now.sent .. " "))
@@ -98,13 +98,13 @@ netupinfo = lain.widget.net({
 
 -- / fs
 fsicon = wibox.widget.imagebox(beautiful.fs_icon)
-myfs = lain.widget.fs({
-   timeout = 4,
-    settings  = function()
-        widget:set_markup(markup("#80d9d8", fs_now["/"].percentage .. "% "))
-        fs_notification_preset = { font = "Iosevka Medium", fg = theme.fg_normal }
-    end
-})
+                                -- myfs = lain.widget.fs({
+                                --    timeout = 4,
+                                --     settings  = function()
+                                --         widget:set_markup(markup("#80d9d8", fs_now["/"].percentage .. "% "))
+                                --         fs_notification_preset = { font = "Iosevka Medium", fg = theme.fg_normal }
+                                --     end
+                                -- })
 
 -- CPU
 cpuicon = wibox.widget.imagebox(beautiful.cpu_icon)
@@ -136,7 +136,7 @@ mymem = lain.widget.mem({
 mytextclock = wibox.widget.textclock("%a, %d/%m/%y, %H:%M")
 
 -- calendar
--- lain.widget.calendar:attach(mytextclock, { cal = 'cal -m', font = 'Inconsolata', font_size = 10 })
+                                lain.widget.calendar({ attach_to = { mytextclock }, cal = 'cal -m', font = 'Inconsolata', font_size = 10 })
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -221,7 +221,7 @@ awful.screen.connect_for_each_screen(function(s)
        right_layout:add(netupicon)
        right_layout:add(netupinfo.widget)
        right_layout:add(fsicon)
-       right_layout:add(myfs.widget)
+                                    -- right_layout:add(myfs.widget)
        right_layout:add(cpuicon)
        right_layout:add(mycpu.widget)
        right_layout:add(memicon)
@@ -240,7 +240,7 @@ awful.screen.connect_for_each_screen(function(s)
           right_layout:add(netupicon)
           right_layout:add(netupinfo.widget)
           right_layout:add(fsicon)
-          right_layout:add(myfs.widget)
+                                      -- right_layout:add(myfs.widget)
           right_layout:add(cpuicon)
           right_layout:add(mycpu.widget)
           right_layout:add(memicon)
@@ -573,10 +573,10 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
---
---
+
+
 client.size_hints_honor = false
---
+
 
 -- Slack notification fix
 naughty.config.notify_callback = function(args)
@@ -587,7 +587,7 @@ naughty.config.notify_callback = function(args)
 
   return args
 end
---
+
 
 runonce.run("cmst --minimized -i Arc")
 runonce.run("qxkb")
