@@ -314,8 +314,8 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({ altkey, 'Control' }, "l", function () awful.util.spawn('slimlock') end),
+    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end),
+    awful.key({ altkey, 'Control' }, "l", function () awful.spawn('slimlock') end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
@@ -344,35 +344,35 @@ globalkeys = awful.util.table.join(
 
     -- volume control with amixer
     awful.key({}, "XF86MonBrightnessUp", function ()
-        awful.spawn.with_shell("xbacklight -inc 5")
+        awful.spawn("xbacklight -inc 5")
     end),
 
     awful.key({}, "XF86MonBrightnessDown", function ()
-        awful.spawn.with_shell("xbacklight -dec 5")
+        awful.spawn("xbacklight -dec 5")
     end),
 
     awful.key({}, "XF86AudioLowerVolume", function ()
-        awful.spawn.with_shell("amixer set Master 5%-")
+        awful.spawn("amixer set Master 5%-")
     end),
 
     awful.key({}, "XF86AudioRaiseVolume", function ()
-        awful.util.spawn("amixer set Master 5%+")
+        awful.spawn("amixer set Master 5%+")
     end),
 
     awful.key({}, "XF86AudioMute", function()
         if is_mute then
             is_mute = false
-            awful.spawn.with_shell("amixer set Master unmute")
+            awful.spawn("amixer set Master unmute")
         else
             is_mute = true
-            awful.spawn.with_shell("amixer set Master mute")
+            awful.spawn("amixer set Master mute")
         end
     end),
 
     -- Prompt
     -- Run applications with dmenu
     awful.key({ modkey },            "a",     function ()
-        awful.util.spawn("dmenu_run -l 5 -i -p 'Run:' -nb '" ..
+        awful.spawn("dmenu_run -l 5 -i -p 'Run:' -nb '" ..
         beautiful.bg_normal .. "' -nf '" .. beautiful.fg_normal ..
         "' -sb '" .. beautiful.bg_focus ..
         "' -sf '" .. beautiful.fg_focus .. "'")
