@@ -1,5 +1,5 @@
 [options]
 sort=1
-fullscreen=1
+fullscreen=0
 hide-info-box=1
 scale-images-up=1
