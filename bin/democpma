@@ -1,4 +1,0 @@
-#!/bin/bash
-
-PARAMS='+exec jmcfg/demo.cfg'
-/usr/bin/cpma $PARAMS

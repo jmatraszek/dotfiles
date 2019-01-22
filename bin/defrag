@@ -1,5 +1,0 @@
-#!/bin/sh
-
-cd "$HOME/.q3a"
-$HOME/bin/iDFe.x64 $*
-exit $?
