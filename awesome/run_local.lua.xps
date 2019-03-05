@@ -1,0 +1,3 @@
+local gears = require("gears")
+gears.wallpaper.maximized("/home/jakub/.wallpapers/newyork.jpg", 1, true)
+runonce.run("blueman-applet")
