@@ -33,3 +33,6 @@ alias vim='env -u GEM_PATH -u GEM_HOME \vim'
 alias gvim='env -u GEM_PATH -u GEM_HOME \gvim'
 alias svim='vim -u ~/.vim/simple_vimrc'
 alias sgvim='gvim -u ~/.vim/simple_vimrc'
+
+alias dc='docker-compose'
+alias dcr='docker-compose run --rm app'
