@@ -1,0 +1,2 @@
+xrdb -merge ~/.dotfiles/Xresources.hidpi
+xrandr --dpi 192
