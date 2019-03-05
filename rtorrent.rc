@@ -13,8 +13,6 @@ max_peers = 40
 #min_peers_seed = 10
 #max_peers_seed = 50
 
-use_udp_trackers = yes
-
 #Close torrents when diskspace is low (in this instance, 100MB).
 schedule = low_diskspace,5,60,close_low_diskspace=100M
 
