@@ -135,9 +135,6 @@ mymem = lain.widget.mem({
 -- Textclock
 mytextclock = wibox.widget.textclock("%a, %d/%m/%y, %H:%M")
 
--- calendar
-                                lain.widget.calendar({ attach_to = { mytextclock }, cal = 'cal -m', font = 'Inconsolata', font_size = 10 })
-
 -- Create a wibox for each screen and add it
 mywibox = {}
 mypromptbox = {}
