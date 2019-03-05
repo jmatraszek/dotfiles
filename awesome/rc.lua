@@ -351,22 +351,28 @@ globalkeys = awful.util.table.join(
         awful.spawn("xbacklight -dec 5")
     end),
 
+    awful.key({ modkey, }, "F1", function()
+      awful.spawn("pamixer -t")
+    end),
+
+    awful.key({ modkey, }, "F2", function ()
+        awful.spawn("pamixer -d 5")
+    end),
+
+    awful.key({ modkey, }, "F3", function ()
+        awful.spawn("pamixer -i 5")
+    end),
+
     awful.key({}, "XF86AudioLowerVolume", function ()
-        awful.spawn("amixer set Master 5%-")
+        awful.spawn("pamixer -d 5")
     end),
 
     awful.key({}, "XF86AudioRaiseVolume", function ()
-        awful.spawn("amixer set Master 5%+")
+        awful.spawn("pamixer -i 5")
     end),
 
     awful.key({}, "XF86AudioMute", function()
-        if is_mute then
-            is_mute = false
-            awful.spawn("amixer set Master unmute")
-        else
-            is_mute = true
-            awful.spawn("amixer set Master mute")
-        end
+      awful.spawn("pamixer -t")
     end),
 
     -- Prompt
