@@ -1,3 +1,6 @@
 local gears = require("gears")
 gears.wallpaper.maximized("/home/jakub/.wallpapers/newyork.jpg", 1, true)
+if screen.count() == 2 then
+    gears.wallpaper.maximized("/home/jakub/.wallpapers/newyork.jpg", 2, true)
+end
 runonce.run("blueman-applet")
