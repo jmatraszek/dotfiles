@@ -29,9 +29,9 @@ require('layouts')
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
  tags = {
-   names  = { "1:gen", "2:www", "3:im", "4:mutt", "5:aud", 6, 7, 8, 9 },
-   layout = { layouts[1], layouts[3], layouts[1], layouts[3], layouts[1],
-              layouts[3], layouts[3], layouts[3], layouts[3]
+   names  = { " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 " },
+   layout = { layouts[2], layouts[2], layouts[2], layouts[2], layouts[2],
+              layouts[2], layouts[2], layouts[2], layouts[2]
  }}
  for s = 1, screen.count() do
     -- Each screen has its own tag table.
@@ -98,13 +98,13 @@ netupinfo = lain.widget.net({
 
 -- / fs
 fsicon = wibox.widget.imagebox(beautiful.fs_icon)
-                                -- myfs = lain.widget.fs({
-                                --    timeout = 4,
-                                --     settings  = function()
-                                --         widget:set_markup(markup("#80d9d8", fs_now["/"].percentage .. "% "))
-                                --         fs_notification_preset = { font = "Iosevka Medium", fg = theme.fg_normal }
-                                --     end
-                                -- })
+                                myfs = lain.widget.fs({
+                                   timeout = 4,
+                                    settings  = function()
+                                        widget:set_markup(markup("#80d9d8", fs_now["/"].percentage .. "% "))
+                                        fs_notification_preset = { font = "Iosevka Medium", fg = theme.fg_normal }
+                                    end
+                                })
 
 -- CPU
 cpuicon = wibox.widget.imagebox(beautiful.cpu_icon)
@@ -242,6 +242,10 @@ awful.screen.connect_for_each_screen(function(s)
           right_layout:add(mycpu.widget)
           right_layout:add(memicon)
           right_layout:add(mymem.widget)
+          right_layout:add(tempicon)
+          right_layout:add(temp.widget)
+          right_layout:add(battery_widget)
+          right_layout:add(brightness_icon)
        end
     end
     right_layout:add(spacer)
@@ -598,6 +602,7 @@ runonce.run("redshift-gtk -l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr")
 runonce.run("udiskie -2 --smart-tray --notify --no-automount")
 runonce.run("clipit")
 runonce.run("pasystray --notify=sink_default")
-runonce.run("qopenvpn")
+runonce.run("unclutter")
+runonce.run("flameshot")
 
 require("run_local")
