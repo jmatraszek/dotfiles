@@ -96,16 +96,6 @@ netupinfo = lain.widget.net({
     end
 })
 
--- / fs
-fsicon = wibox.widget.imagebox(beautiful.fs_icon)
-                                myfs = lain.widget.fs({
-                                   timeout = 4,
-                                    settings  = function()
-                                        widget:set_markup(markup("#80d9d8", fs_now["/"].percentage .. "% "))
-                                        fs_notification_preset = { font = "Iosevka Medium", fg = theme.fg_normal }
-                                    end
-                                })
-
 -- CPU
 cpuicon = wibox.widget.imagebox(beautiful.cpu_icon)
 mycpu = lain.widget.cpu({
@@ -217,8 +207,6 @@ awful.screen.connect_for_each_screen(function(s)
        right_layout:add(netdowninfo)
        right_layout:add(netupicon)
        right_layout:add(netupinfo.widget)
-       right_layout:add(fsicon)
-                                    -- right_layout:add(myfs.widget)
        right_layout:add(cpuicon)
        right_layout:add(mycpu.widget)
        right_layout:add(memicon)
@@ -236,8 +224,6 @@ awful.screen.connect_for_each_screen(function(s)
           right_layout:add(netdowninfo)
           right_layout:add(netupicon)
           right_layout:add(netupinfo.widget)
-          right_layout:add(fsicon)
-                                      -- right_layout:add(myfs.widget)
           right_layout:add(cpuicon)
           right_layout:add(mycpu.widget)
           right_layout:add(memicon)
