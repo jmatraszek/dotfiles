@@ -40,13 +40,5 @@ bind K tabprev
 
 bind zp pin
 
-" Don't run Tridactyl on some web sites because it doesn't work well, or
-" because the web site has its own keybindings.
-autocmd DocStart mail.google.com mode ignore
-
-" Sometimes the status bar in the bottom left corner overlaps the Tridactyl
-" command line, so set an option to move the status bar to the right.
-guiset_quiet hoverlink right
-
 " Comment toggler for Reddit and Hacker News
 bind ;c hint -c [class*="expand"],[class="togg"]
