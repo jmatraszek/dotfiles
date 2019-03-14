@@ -244,3 +244,5 @@ complete -cf sudo
 export PATH="$PATH:$HOME/.rvm/bin"
 # Add ghcup for Haskell support
 export PATH="$PATH:$HOME/.ghcup/bin"
+
+eval $(keychain --eval --agents gpg,ssh --ignore-missing --quiet id_ed25519 id_rsa id_ed25519_tl id_ed25519_ynd)
