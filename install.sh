@@ -10,6 +10,7 @@ ln -s ~/.dotfiles/psqlrc ~/.psqlrc
 ln -s ~/.dotfiles/tmux.conf ~/.tmux.conf
 ln -s ~/.dotfiles/xinitrc ~/.xinitrc
 ln -s ~/.dotfiles/pqivrc ~/.pqivrc
+ln -s ~/.dotfiles/bat ~/.config/bat
 
 
 mkdir -p ~/.cache/awesome
