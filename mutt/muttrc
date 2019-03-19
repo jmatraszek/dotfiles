@@ -1,0 +1,23 @@
+# ACCOUNTS
+source $HOME/.config/mutt/accounts.$MUTT_PROFILE.muttrc
+
+# SETTINGS
+source $HOME/.config/mutt/settings.muttrc
+
+# KEY BINDINGS
+source $HOME/.config/mutt/bindings.muttrc
+
+# MACROS
+source $HOME/.config/mutt/macros.muttrc
+
+# ABOOK INTEGRATION
+source $HOME/.config/mutt/abook.muttrc
+
+# GPG
+source $HOME/.config/mutt/gpg.muttrc
+
+#SIDEBAR
+source $HOME/.config/mutt/sidebar.muttrc
+
+# COLORS
+source $HOME/.config/mutt/colors.muttrc

@@ -11,6 +11,7 @@ ln -s ~/.dotfiles/tmux.conf ~/.tmux.conf
 ln -s ~/.dotfiles/xinitrc ~/.xinitrc
 ln -s ~/.dotfiles/pqivrc ~/.pqivrc
 ln -s ~/.dotfiles/bat ~/.config/bat
+ln -s ~/.dotfiles/mutt ~/.config/mutt
 
 
 mkdir -p ~/.cache/awesome

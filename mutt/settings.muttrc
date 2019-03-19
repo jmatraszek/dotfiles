@@ -1,17 +1,17 @@
-set header_cache=~/.mutt/cache/headers
-set message_cachedir=~/.mutt/cache/bodies
-set certificate_file=~/.mutt/certificates
+set header_cache=~/.config/mutt/cache/headers
+set message_cachedir=~/.config/mutt/cache/bodies
+set certificate_file=~/.config/mutt/certificates
 
 set move = no
 
 set index_format="%4C | %Z | %d | %-17.17F | (%?l?%4l&%4c?) | %s"
 set date_format="%d-%m-%Y %H:%M"
-
+# Set proper charset
 set charset="utf-8"
+# Use vim as the editor
 set editor="vim -c 'set tw=72 et' "
-set edit_headers=yes      # See the headers when editing
-mailboxes =INBOX
-#
+# See the headers when editing
+set edit_headers=yes
 # Skip the bothering prompt for recipient and subject when replying and start immediately with writing your message:
 # set fast_reply="yes"
 # Always quote when replying:
@@ -42,23 +42,20 @@ unset markers
 set mailcap_path="~/.mailcap:/etc/mailcap"
 # fast folder switching
 set sleep_time = 0
-
 # Don't jump to next message when at bottom of current message:
 set pager_stop="yes"
 # Check for mail every minute for current IMAP mailbox every 1 min
 set check_new = yes
 set beep_new = yes
-set timeout         = 60
+set timeout = 60
 # Check for new mail in ALL mailboxes every 2 min
-set mail_check      = 120
+set mail_check = 120
 # keep imap connection alive by polling intermittently (time in seconds)
-set imap_keepalive  = 300
+set imap_keepalive = 300
 # allow mutt to open new imap connection automatically
 unset imap_passive
-
-set imap_check_subscribed
+# set imap_check_subscribed
 set imap_peek = no
-
 # Do not mark messages as old
 unset mark_old
 # Ask before quitting mutt
@@ -69,7 +66,6 @@ set write_bcc=yes
 set askcc=yes
 # Ask for BCC: whem composing mail
 set askbcc=yes
-
 # In the first step we are going to weed all headers:
 ignore *
 # In the second step we remove the desired headers from the ignore-list:

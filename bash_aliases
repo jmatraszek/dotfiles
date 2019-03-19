@@ -21,11 +21,10 @@ alias ber='bundle exec rspec -c'
 
 alias rrn="rustup run nightly"
 
-alias mutt='MUTT_PROFILE=gmail /usr/bin/mutt'
-alias mutt-work='MUTT_PROFILE=work /usr/bin/mutt'
+alias mutt='MUTT_PROFILE=gmail /usr/bin/neomutt'
+alias mutt-work='MUTT_PROFILE=work /usr/bin/neomutt'
 
 alias s='TERM=screen-256color'
-
 
 alias ssl1='PKG_CONFIG_PATH=/usr/lib/openssl-1.0/pkgconfig CFLAGS+=" -I/usr/include/openssl-1.0" LDFLAGS+=" -L/usr/lib/openssl-1.0 -lssl"'
 
