@@ -1,3 +1,6 @@
 [submodule "mutt/themes/solarized"]
 	path = mutt/themes/solarized
 	url = https://github.com/altercation/mutt-colors-solarized.git
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
