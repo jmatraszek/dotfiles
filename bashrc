@@ -215,8 +215,6 @@ export MYSQL_PS1="\u@\h [\d]> "
 
 export GPGKEY=8F3CD8EE
 export EDITOR=/usr/bin/vim
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
 function gsed () {
   if [ -z "$3" ]
@@ -240,9 +238,5 @@ man() {
 }
 
 complete -cf sudo
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-# Add ghcup for Haskell support
-export PATH="$PATH:$HOME/.ghcup/bin"
 
 eval $(keychain --eval --agents gpg,ssh --ignore-missing --quiet id_ed25519 id_ed25519_tl id_ed25519_ynd)
