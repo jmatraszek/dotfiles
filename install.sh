@@ -1,5 +1,7 @@
 #!/bin/sh
 
+mkdir -p ~/.config/
+
 ln -s ~/.dotfiles/bashrc ~/.bashrc
 ln -s ~/.dotfiles/bash_aliases ~/.bash_aliases
 ln -s ~/.dotfiles/bash_profile ~/.bash_profile
@@ -9,14 +11,13 @@ ln -s ~/.dotfiles/tigrc ~/.tigrc
 ln -s ~/.dotfiles/psqlrc ~/.psqlrc
 ln -s ~/.dotfiles/xinitrc ~/.xinitrc
 ln -s ~/.dotfiles/pqivrc ~/.pqivrc
-ln -s ~/.dotfiles/bat ~/.config/bat
-ln -s ~/.dotfiles/mutt ~/.config/mutt
+ln -s ~/.dotfiles/bat ~/.config/
+ln -s ~/.dotfiles/mutt ~/.config/
 ln -s ~/.dotfiles/mailcap ~/.mailcap
-ln -s ~/.dotfiles/tmux ~/.config/tmux
+ln -s ~/.dotfiles/tmux ~/.config/
 ln -s ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
+ln -s ~/.dotfiles/alacritty ~/.config/
 
 
 mkdir -p ~/.cache/awesome
-mkdir -p ~/.config/
-
 ln -s ~/.dotfiles/awesome ~/.config/
