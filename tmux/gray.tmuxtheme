@@ -37,6 +37,8 @@ set -g status-right "#{prefix_highlight}#[fg=colour235,bg=colour233]#[fg=colo
 set -g window-status-format "#[fg=black,bg=brightblack,nobold,noitalics,nounderscore] #[fg=white,bg=brightblack]#I #[fg=white,bg=brightblack,nobold,noitalics,nounderscore] #[fg=white,bg=brightblack]#W #F #[fg=brightblack,bg=black,nobold,noitalics,nounderscore]"
 set -g window-status-current-format "#[fg=black,bg=cyan,nobold,noitalics,nounderscore] #[fg=black,bg=cyan]#I #[fg=black,bg=cyan,nobold,noitalics,nounderscore] #[fg=black,bg=cyan]#W #F #[fg=cyan,bg=black,nobold,noitalics,nounderscore]"
 
+set -g window-status-activity-attr none
+
 # Window separator
 set -g window-status-separator ""
 
@@ -49,14 +51,14 @@ set -g pane-border-fg colour235
 
 # Active pane border
 set -g pane-active-border-bg default
-set -g pane-active-border-fg colour240
+set -g pane-active-border-fg cyan #colour240
 
 # Pane number indicator
-set -g display-panes-colour colour233
-set -g display-panes-active-colour colour245
+set -g display-panes-colour brightblack
+set -g display-panes-active-colour cyan
 
 # Clock mode
-set -g clock-mode-colour colour240
+set -g clock-mode-colour cyan #colour240
 set -g clock-mode-style 24
 
 # Message
