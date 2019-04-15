@@ -11,7 +11,8 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # some more ls aliases
-alias ll='exa -abghHliS --git'
+alias la='exa -abghHliS --git'
+alias ll='exa -bghHliS --git'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
