@@ -1,5 +1,4 @@
 *.swp
-gitconfig
 mutt/cache
 mutt/certificates
 mutt/accounts.txt.gpg
