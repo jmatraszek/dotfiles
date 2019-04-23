@@ -181,7 +181,6 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 
 update_title() {
   echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/#$HOME/~}\007"
-    # title "$USER@$HOSTNAME ${PWD/#$HOME/~}"
 }
 
 export KERNEL_VER=`uname -r`
