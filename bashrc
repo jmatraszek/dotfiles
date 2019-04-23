@@ -178,6 +178,8 @@ On_ICyan='\[\e[0;106m\]'    # Cyan
 On_IWhite='\[\e[0;107m\]'   # White
 
 export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_SHOWUPSTREAM=auto
 
 update_title() {
   echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/#$HOME/~}\007"
