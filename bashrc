@@ -154,6 +154,7 @@ export MYSQL_PS1="\u@\h [\d]> "
 
 export GPGKEY=8F3CD8EE
 export EDITOR=/usr/bin/vim
+export PAGER='vimpager -u ~/.vim/simple_vimrc'
 
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
