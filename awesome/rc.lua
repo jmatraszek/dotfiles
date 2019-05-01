@@ -569,9 +569,7 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-
 client.size_hints_honor = false
-
 
 -- Slack notification fix
 naughty.config.notify_callback = function(args)
@@ -582,7 +580,6 @@ naughty.config.notify_callback = function(args)
 
   return args
 end
-
 
 runonce.run("cmst --minimized -i Arc")
 runonce.run("qxkb")
