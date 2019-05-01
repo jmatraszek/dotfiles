@@ -1,0 +1,26 @@
+if [ -z $SETENV_LOADED ]; then
+	export QT_QPA_PLATFORMTHEME="qt5ct"
+
+	export MYSQL_PS1="\u@\h [\d]> "
+
+	export GPGKEY=8F3CD8EE
+	export EDITOR=/usr/bin/vim
+	export PAGER='vimpager -u ~/.vim/simple_vimrc'
+
+	export GIT_PS1_SHOWDIRTYSTATE=1
+	export GIT_PS1_SHOWUNTRACKEDFILES=1
+	export GIT_PS1_SHOWUPSTREAM="verbose"
+
+	export PATH="$PATH:$HOME/bin"
+	export PATH="$PATH:$HOME/.cargo/bin"
+	export PATH="$PATH:$HOME/.ghcup/bin"
+	export PATH="$HOME/.rvm/bin:$PATH"
+
+	[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+	eval $(keychain --eval --agents gpg,ssh --ignore-missing --quiet id_ed25519 id_ed25519_tl id_ed25519_ynd)
+
+	export SETENV_LOADED=1
+fi
+
+# vim: set ft=sh:

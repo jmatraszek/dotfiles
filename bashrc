@@ -42,8 +42,12 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+if [ -f ~/.setenv ]; then
+    . ~/.setenv
+fi
+
 if [ -f /usr/share/git/completion/git-prompt.sh ]; then
-    source /usr/share/git/completion/git-prompt.sh
+    . /usr/share/git/completion/git-prompt.sh
 fi
 
 # Reset
@@ -119,10 +123,6 @@ On_IPurple='\[\e[10;95m\]'  # Purple
 On_ICyan='\[\e[0;106m\]'    # Cyan
 On_IWhite='\[\e[0;107m\]'   # White
 
-export GIT_PS1_SHOWDIRTYSTATE=1
-export GIT_PS1_SHOWUNTRACKEDFILES=1
-export GIT_PS1_SHOWUPSTREAM="verbose"
-
 update_title() {
   echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/#$HOME/~}\007"
 }
@@ -150,19 +150,4 @@ prompt_command () {
 
 PROMPT_COMMAND=prompt_command
 
-export MYSQL_PS1="\u@\h [\d]> "
-
-export GPGKEY=8F3CD8EE
-export EDITOR=/usr/bin/vim
-export PAGER='vimpager -u ~/.vim/simple_vimrc'
-
-export PATH="$PATH:$HOME/bin"
-export PATH="$PATH:$HOME/.cargo/bin"
-export PATH="$PATH:$HOME/.ghcup/bin"
-export PATH="$HOME/.rvm/bin:$PATH"
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
 complete -cf sudo
-
-eval $(keychain --eval --agents gpg,ssh --ignore-missing --quiet id_ed25519 id_ed25519_tl id_ed25519_ynd)

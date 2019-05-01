@@ -10,6 +10,7 @@ ln -s ~/.dotfiles/gitignore ~/.gitignore
 ln -s ~/.dotfiles/tigrc ~/.tigrc
 ln -s ~/.dotfiles/psqlrc ~/.psqlrc
 ln -s ~/.dotfiles/xinitrc ~/.xinitrc
+ln -s ~/.dotfiles/setenv ~/.setenv
 ln -s ~/.dotfiles/pqivrc ~/.pqivrc
 ln -s ~/.dotfiles/bat ~/.config/
 ln -s ~/.dotfiles/mutt ~/.config/

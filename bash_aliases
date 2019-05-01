@@ -41,3 +41,5 @@ function gsed () {
     egrep --exclude-dir=.git -lRZ "$1" $3 | xargs -0 -l sed -i -e "s/$1/$2/g"
   fi
 }
+
+# vim: set ft=sh:

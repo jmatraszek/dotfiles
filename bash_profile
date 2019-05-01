@@ -2,4 +2,6 @@
 # ~/.bash_profile
 #
 
-[[ -f ~/.bashrc ]] && . ~/.bashrc
+[[ -f ~/.setenv ]] && . ~/.setenv
+
+# vim: set ft=sh:
