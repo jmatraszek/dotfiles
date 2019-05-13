@@ -42,8 +42,8 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-if [ -f ~/.setenv ]; then
-    . ~/.setenv
+if [ -f ~/.dotfiles/setenv ]; then
+    . ~/.dotfiles/setenv
 fi
 
 if [ -f /usr/share/git/completion/git-prompt.sh ]; then
