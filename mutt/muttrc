@@ -20,4 +20,4 @@ source $HOME/.config/mutt/gpg.muttrc
 source $HOME/.config/mutt/sidebar.muttrc
 
 # COLORS
-source $HOME/.config/mutt/colors.muttrc
+source $HOME/.config/mutt/dracula.muttrc
