@@ -30,7 +30,12 @@ account-hook        "imaps://$my_login3@imap.gmail.com/" "\
 #
 # Setup for user1:
 set folder          = "imaps://$my_login1@imap.gmail.com"
-mailboxes           = +INBOX =[Gmail]/'All Mail' =[Gmail]/Drafts =[Gmail]/'Sent Mail' =[Gmail]/Spam =[Gmail]/Trash
+named-mailboxes     "jakub.matraszek@gmail.com" "+INBOX"
+named-mailboxes     "All Mail" "=[Gmail]/All Mail"
+named-mailboxes     "Drafts" "=[Gmail]/Drafts"
+named-mailboxes     "Sent Mail" "=[Gmail]/Sent Mail"
+named-mailboxes     "Spam" "=[Gmail]/Spam"
+named-mailboxes     "Trash" "=[Gmail]/Trash"
 set spoolfile       = +INBOX
 folder-hook         imaps://$my_login1@imap.gmail.com "\
     set folder      = imaps://$my_login1@imap.gmail.com \
@@ -46,7 +51,12 @@ folder-hook         imaps://$my_login1@imap.gmail.com "\
 
 # Setup for user2:
 set folder          = "imaps://$my_login2@imap.gmail.com"
-mailboxes           = +INBOX =[Gmail]/'All Mail' =[Gmail]/Drafts =[Gmail]/'Sent Mail' =[Gmail]/Spam =[Gmail]/Trash
+named-mailboxes     "qba.miszcz@gmail.com" "+INBOX"
+named-mailboxes     "All Mail"             "=[Gmail]/All Mail"
+named-mailboxes     "Drafts"               "=[Gmail]/Drafts"
+named-mailboxes     "Sent Mail"            "=[Gmail]/Sent Mail"
+named-mailboxes     "Spam"                 "=[Gmail]/Spam"
+named-mailboxes     "Trash"                "=[Gmail]/Trash"
 set spoolfile       = +INBOX
 folder-hook         imaps://$my_login2@imap.gmail.com "\
     set folder      = imaps://$my_login2@imap.gmail.com \
@@ -62,7 +72,12 @@ folder-hook         imaps://$my_login2@imap.gmail.com "\
 
 # Setup for user3:
 set folder          = "imaps://$my_login3@imap.gmail.com"
-mailboxes           = +INBOX =[Gmail]/'All Mail' =[Gmail]/Drafts =[Gmail]/'Sent Mail' =[Gmail]/Spam =[Gmail]/Trash
+named-mailboxes     "jakub.matraszek@otwarteklatki.pl" "+INBOX"
+named-mailboxes     "All Mail"                         "=[Gmail]/All Mail"
+named-mailboxes     "Drafts"                           "=[Gmail]/Drafts"
+named-mailboxes     "Sent Mail"                        "=[Gmail]/Sent Mail"
+named-mailboxes     "Spam"                             "=[Gmail]/Spam"
+named-mailboxes     "Trash"                            "=[Gmail]/Trash"
 set spoolfile       = +INBOX
 folder-hook         imaps://$my_login3@imap.gmail.com "\
     set folder      = imaps://$my_login3@imap.gmail.com \
