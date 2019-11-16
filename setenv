@@ -12,6 +12,7 @@ if [ -z $SETENV_LOADED ]; then
 	export GIT_PS1_SHOWUPSTREAM="verbose"
 
 	export PATH="$PATH:$HOME/bin"
+	export PATH="$PATH:$HOME/.local/bin"
 	export PATH="$PATH:$HOME/.cargo/bin"
 	export PATH="$PATH:$HOME/.ghcup/bin"
 	export PATH="$HOME/.rvm/bin:$PATH"
