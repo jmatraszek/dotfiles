@@ -32,6 +32,7 @@ alias sgvim='gvim -u ~/.vim/simple_vimrc'
 
 alias dc='docker-compose'
 alias dcr='docker-compose run --rm app'
+alias dcr-sp='docker-compose run --service-ports --rm app'
 
 function gsed () {
   if [ -z "$3" ]
