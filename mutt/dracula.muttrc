@@ -14,7 +14,7 @@ color search		color84		default
 color status 		white		brightblack
 color tilde		color231	default
 color tree		color141	default
-color sidebar_new 	color117       	default
+color sidebar_unread 	color117       	default
 
 
 # message index ------ foreground ---- background -----------------------------
