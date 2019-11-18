@@ -14,6 +14,7 @@ color search		color84		default
 color status 		white		brightblack
 color tilde		color231	default
 color tree		color141	default
+color sidebar_new 	color117       	default
 color sidebar_unread 	color117       	default
 
 
@@ -58,4 +59,5 @@ color status color117 brightblack 'New:[0-9]+'
 color status color210 brightblack 'Del:[0-9]+'
 color status color84  brightblack 'Flag:[0-9]+'
 color status color215 brightblack 'Tag:[0-9]+'
-color status color15 brightblack '-{3}(.+): ' 1
+color status color15 brightblack '---(.+): ' 1
+color status color219 brightblack '-\*-(.+): ' 1
