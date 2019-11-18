@@ -97,7 +97,7 @@ alternates "$my_login1|$my_login2|$my_login3"
 set imap_user   = "$my_login1"
 set imap_pass   = "$my_pass1"
 set folder      = "imaps://$my_login1@imap.gmail.com"
-set spoolfile   = "+INBOX"
+set spoolfile   = "=[Gmail]/All Mail"
 
 set crypt_autosign
 # vim: set ft=muttrc:
