@@ -44,17 +44,16 @@ set mailcap_path="~/.mailcap:/etc/mailcap"
 set sleep_time = 0
 # Don't jump to next message when at bottom of current message:
 set pager_stop="yes"
-# Check for mail every minute for current IMAP mailbox every 1 min
+# Check for mail every minute for current IMAP mailbox every 10 secs
 set check_new = yes
 set beep_new = yes
-set timeout = 60
-# Check for new mail in ALL mailboxes every 2 min
-set mail_check = 120
+set timeout = 10
+# Check for new mail in ALL mailboxes every 1 min
+set mail_check = 60
 # keep imap connection alive by polling intermittently (time in seconds)
-set imap_keepalive = 300
+set imap_keepalive = 120
 # allow mutt to open new imap connection automatically
 unset imap_passive
-# set imap_check_subscribed
 set imap_peek = no
 # Do not mark messages as old
 unset mark_old
