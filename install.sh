@@ -17,6 +17,7 @@ ln -s ~/.dotfiles/mailcap ~/.mailcap
 ln -s ~/.dotfiles/tmux ~/.config/
 ln -s ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
 ln -s ~/.dotfiles/alacritty ~/.config/
+ln -s ~/.dotfiles/mostrc ~/.mostrc
 
 
 mkdir -p ~/.cache/awesome
