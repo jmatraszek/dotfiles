@@ -1,6 +1,7 @@
 [user]
     name = Jakub Matraszek
     email = jakub.matraszek@gmail.com ; set on per-machine basis
+    signingKey = BC42031CEE1EE5DF
 [github]
     user = jmatraszek
 [diff]
@@ -60,3 +61,5 @@
     tool = vimdiff3
 [mergetool]
     keepBackup = false
+[commit]
+    gpgSign = true
