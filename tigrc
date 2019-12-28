@@ -1,2 +1,4 @@
 set horizontal-scroll = 33%     # Scroll 33% of the view width
 bind status A !git commit --amend
+set log-options = --show-signature
+set diff-options = --show-signature
