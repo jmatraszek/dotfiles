@@ -17,7 +17,7 @@ set edit_headers=yes
 # Always quote when replying:
 set include="yes"
 # Here you can determine your personal attribution line. This string always precedes quoted text.
-set attribution="* %n <%a> wrote:\n"
+set attribution="On %[!%e %b %Y at %H:%M], %n <%a> wrote:\n"
 # The quoting character can be set individually, too:
 set indent_string="> "
 # Scrolling line by line in index mode is really a cool thing, isn't it:
