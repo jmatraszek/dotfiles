@@ -20,3 +20,4 @@ vendor/gems
 .sass-cache
 .vimtags
 docs/tags
+doc/tags
