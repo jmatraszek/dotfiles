@@ -32,6 +32,7 @@ alias sgvim='gvim -u ~/.vim/simple_vimrc'
 
 alias dc='docker-compose'
 alias dcr='docker-compose run --rm app'
+alias dcrbe='docker-compose run --rm backend bundle exec'
 alias dcr-sp='docker-compose run --service-ports --rm app'
 
 function gsed () {
