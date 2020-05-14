@@ -57,13 +57,16 @@ nnn ()
     NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
     # export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
 
+    EDITOR="tewrap"
+    LC_COLLATE="C"
+
     # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
     # stty start undef
     # stty stop undef
     # stty lwrap undef
     # stty lnext undef
 
-    command nnn "$@"
+    command nnn -e "$@"
 
     if [ -f "$NNN_TMPFILE" ]; then
             . "$NNN_TMPFILE"
