@@ -9,7 +9,7 @@ set date_format="%d-%m-%Y %H:%M"
 # Set proper charset
 set charset="utf-8"
 # Use vim as the editor
-set editor="vim -c 'set tw=72 et' "
+set editor="vim"
 # See the headers when editing
 set edit_headers=yes
 # Skip the bothering prompt for recipient and subject when replying and start immediately with writing your message:
