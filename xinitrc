@@ -1,5 +1,3 @@
-setxkbmap -layout pl
-
 if [ -f ~/.dotfiles/xinitrc.local ]; then
 	. ~/.dotfiles/xinitrc.local
 fi
