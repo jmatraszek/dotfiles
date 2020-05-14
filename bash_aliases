@@ -35,6 +35,13 @@ alias dcr='docker-compose run --rm app'
 alias dcrbe='docker-compose run --rm backend bundle exec'
 alias dcr-sp='docker-compose run --service-ports --rm app'
 
+alias k='kubectl'
+complete -F _complete_alias k
+alias kc='kubectx'
+complete -F _complete_alias kc
+alias kn='kubens'
+complete -F _complete_alias kn
+
 function gsed () {
   if [ -z "$3" ]
   then

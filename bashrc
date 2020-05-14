@@ -38,6 +38,10 @@ shopt -s checkwinsize
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
+if [ -f /usr/share/bash-complete-alias/complete_alias ]; then
+    . /usr/share/bash-complete-alias/complete_alias
+fi
+
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -143,12 +147,19 @@ prompt_command () {
   local HOST="[$IBlue\h$Color_Off]"
   local RVM="[$IGreen$(~/.rvm/bin/rvm-prompt v p g)$Color_Off]"
   local GIT="[$Green$(__git_ps1 '%s')$Color_Off]"
+  local KUBE="[$Green$(kube_ps1)$Color_Off]"
   local CWD="$d$BIYellow\w$Color_Off$b"
-  export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT \n$CWD \$ "
+  export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT $KUBE \n$CWD \$ "
   update_title
 }
 
 PROMPT_COMMAND=prompt_command
+
+if [ -f /opt/kube-ps1/kube-ps1.sh ]; then
+  . /opt/kube-ps1/kube-ps1.sh
+  KUBE_PS1_PREFIX=""
+  KUBE_PS1_SUFFIX=""
+fi
 
 complete -cf sudo
 
