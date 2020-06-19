@@ -31,9 +31,10 @@ alias svim='vim -u ~/.vim/simple_vimrc'
 alias sgvim='gvim -u ~/.vim/simple_vimrc'
 
 alias dc='docker-compose'
-alias dcr='docker-compose run --rm app'
-alias dcrbe='docker-compose run --rm backend bundle exec'
-alias dcr-sp='docker-compose run --service-ports --rm app'
+complete -F _complete_alias dc
+alias dcra='docker-compose run --rm app'
+alias dcr='docker-compose run --rm backend bundle exec'
+alias dcr-sp='docker-compose run --service-ports --rm backend'
 
 alias k='kubectl'
 complete -F _complete_alias k

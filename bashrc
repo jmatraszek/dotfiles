@@ -38,8 +38,20 @@ shopt -s checkwinsize
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+fi
+
 if [ -f /usr/share/bash-complete-alias/complete_alias ]; then
     . /usr/share/bash-complete-alias/complete_alias
+fi
+
+if [ -f /usr/share/git/completion/git-prompt.sh ]; then
+    . /usr/share/git/completion/git-prompt.sh
+fi
+
+if [ -f /usr/share/bash-completion/completions/tig ]; then
+    . /usr/share/bash-completion/completions/tig
 fi
 
 if [ -f ~/.bash_aliases ]; then
@@ -48,10 +60,6 @@ fi
 
 if [ -f ~/.dotfiles/setenv ]; then
     . ~/.dotfiles/setenv
-fi
-
-if [ -f /usr/share/git/completion/git-prompt.sh ]; then
-    . /usr/share/git/completion/git-prompt.sh
 fi
 
 # Reset
@@ -161,6 +169,6 @@ if [ -f /opt/kube-ps1/kube-ps1.sh ]; then
   KUBE_PS1_SUFFIX=""
 fi
 
-complete -cf sudo
+# complete -cf sudo
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
