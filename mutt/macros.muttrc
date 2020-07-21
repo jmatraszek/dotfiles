@@ -5,14 +5,15 @@ macro index ,R "<collapse-all><tag-pattern>all<return><tag-prefix><clear-flag>N<
 macro index ,v "<collapse-thread>" "collapse/uncollapse thread"
 macro index ,V "<collapse-all>"    "collapse/uncollapse all threads"
 
-macro index,pager a "<enter-command>unset trash\n<delete-message>" "Gmail archive message"
+bind index,pager a noop
+macro index,pager aa "<enter-command>unset trash\n<delete-message>" "Gmail archive message"
 macro index,pager A "<enter-command>unset trash\n<delete-pattern>" "Gmail archive pattern"
 macro index,pager d "<enter-command>set trash=\"+[Gmail]/Trash\"\n<delete-message>" "Gmail delete message"
 macro index,pager D "<enter-command>set trash=\"+[Gmail]/Trash\"\n<delete-pattern>" "Gmail delete pattern"
 
-macro index,pager g1 "<sync-mailbox><change-folder>imaps://$my_login1@imap.gmail.com/[Gmail]/All<quote-char> Mail<return>" "Go to first account"
-macro index,pager g2 "<sync-mailbox><change-folder>imaps://$my_login2@imap.gmail.com/[Gmail]/All<quote-char> Mail<return>" "Go to second account"
-macro index,pager g3 "<sync-mailbox><change-folder>imaps://$my_login3@imap.gmail.com/[Gmail]/All<quote-char> Mail<return>" "Go to third account"
+macro index,pager a1 "<sync-mailbox><change-folder>imaps://$my_login1@imap.gmail.com/[Gmail]/All<quote-char> Mail<return>" "Go to first account"
+macro index,pager a2 "<sync-mailbox><change-folder>imaps://$my_login2@imap.gmail.com/[Gmail]/All<quote-char> Mail<return>" "Go to second account"
+macro index,pager a3 "<sync-mailbox><change-folder>imaps://$my_login3@imap.gmail.com/[Gmail]/All<quote-char> Mail<return>" "Go to third account"
 macro index,pager gi "<change-folder>!<return>" "Go to inbox"
 macro index,pager ga "<change-folder>=[Gmail]/All<quote-char> Mail<enter>" "Go to all mail"
 macro index,pager gd "<change-folder>=[Gmail]/Drafts<enter>" "Go to drafts"
