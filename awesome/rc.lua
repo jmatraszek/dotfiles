@@ -476,6 +476,8 @@ awful.rules.rules = {
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = true,
+                     screen = awful.screen.preferred,
+                     placement = awful.placement.no_overlap+awful.placement.no_offscreen,
                      keys = clientkeys,
                      buttons = clientbuttons } },
     { rule = { class = "kcalc" },
