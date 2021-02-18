@@ -63,3 +63,5 @@
     keepBackup = false
 [commit]
     gpgSign = true
+[pull]
+    rebase = false
