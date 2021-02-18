@@ -122,6 +122,9 @@ mymem = lain.widget.mem({
     end
 })
 
+-- Notifications icon
+notificationwidget = wibox.widget.textbox("")
+
 -- Textclock
 mytextclock = wibox.widget.textclock("%a, %d/%m/%y, %H:%M")
 
@@ -198,6 +201,7 @@ awful.screen.connect_for_each_screen(function(s)
     local left_layout = wibox.layout.fixed.horizontal()
     left_layout:add(mylauncher)
     left_layout:add(mytaglist[s])
+    left_layout:add(notificationwidget)
     left_layout:add(mypromptbox[s])
 
     -- Widgets that are aligned to the right
@@ -324,6 +328,15 @@ globalkeys = awful.util.table.join(
     end),
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
+
+    awful.key({ modkey, "Shift"   }, "n",     function ()
+       naughty.toggle()
+       if naughty.is_suspended() then
+          notificationwidget:set_text("Notifications: OFF ")
+       else
+          notificationwidget:set_text("")
+       end
+    end),
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
