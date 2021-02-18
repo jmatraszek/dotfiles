@@ -9,8 +9,16 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # some more ls aliases
-alias la='exa -abghHliS --git'
-alias ll='exa -bghHliS --git'
+alias exals='exa -abghHliS --git'
+alias l='exa -bghHliS --git'
+
+ll() {
+    if [[ -z "$1" ]]; then
+        exals
+    else
+        [[ -f "$1" ]] && bat "$1" || exals "$1";
+    fi
+}
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
