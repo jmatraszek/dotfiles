@@ -19,6 +19,7 @@ ln -s ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
 ln -s ~/.dotfiles/alacritty ~/.config/
 ln -s ~/.dotfiles/mostrc ~/.mostrc
 ln -s ~/.dotfiles/gpg-agent.conf ~/.gnupg/gpg-agent.conf
+ln -s ~/.dotfiles/ctags.d ~/.ctags.d
 
 
 mkdir -p ~/.cache/awesome

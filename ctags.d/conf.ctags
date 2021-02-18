@@ -1,0 +1,26 @@
+# Basic options
+--recurse=yes
+--tag-relative=yes
+
+# Make ctags work with YouCompleteMe
+--fields=+l
+
+# Excludes
+--exclude=.git
+--exclude=.svn
+--exclude=.hg
+--exclude=.bak
+--exclude=.cache
+--exclude=.swp
+--exclude=.tmp
+--exclude=bower_components
+--exclude=coverage
+--exclude=dist
+--exclude=min
+--exclude=node_modules
+--exclude=vendor
+
+# C++ options
+--c++-kinds=+p
+--fields=+iaS
+--extra=+q
