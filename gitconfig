@@ -40,6 +40,7 @@
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
     ls = ls-files
     lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
+    main = !git symbolic-ref refs/remotes/origin/HEAD | cut -d'/' -f4
     mt = mergetool
     pend = !git --no-pager log --pretty=format:'%C(yellow)%h%Creset %f' origin/`git branch-name`..`git branch-name` && echo
     rmc = rm --cached
