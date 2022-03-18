@@ -66,3 +66,5 @@
     gpgSign = true
 [pull]
     rebase = false
+[includeIf "gitdir:/home/jakub/dev/ynd/"]
+    path = /home/jakub/dev/ynd/gitconfig
