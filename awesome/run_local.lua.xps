@@ -4,3 +4,4 @@ if screen.count() == 2 then
     gears.wallpaper.maximized("/home/jakub/.wallpapers/newyork.jpg", 2, true)
 end
 runonce.run("blueman-applet")
+runonce.run("cbatticon")

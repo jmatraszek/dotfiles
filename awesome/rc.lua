@@ -174,7 +174,7 @@ mytasklist.buttons = awful.util.table.join(
                                           end))
 
 
-require("widgets/battery")
+-- require("widgets/battery")
 require("widgets/brightness")
 awful.screen.connect_for_each_screen(function(s)
     -- Create a promptbox for each screen
@@ -217,7 +217,7 @@ awful.screen.connect_for_each_screen(function(s)
        right_layout:add(mymem.widget)
        right_layout:add(tempicon)
        right_layout:add(temp.widget)
-       right_layout:add(battery_widget)
+       -- right_layout:add(battery_widget)
        right_layout:add(brightness_icon)
        -- right_layout:add(brightness_widget)
        right_layout:add(wibox.widget.systray())
