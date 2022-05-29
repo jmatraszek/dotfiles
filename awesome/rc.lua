@@ -380,10 +380,7 @@ globalkeys = awful.util.table.join(
     -- Prompt
     -- Run applications with dmenu
     awful.key({ modkey },            "a",     function ()
-        awful.spawn("dmenu_run -l 5 -i -p 'Run:' -nb '" ..
-        beautiful.bg_normal .. "' -nf '" .. beautiful.fg_normal ..
-        "' -sb '" .. beautiful.bg_focus ..
-        "' -sf '" .. beautiful.fg_focus .. "'")
+        awful.spawn("rofi -show run")
       end),
 
     awful.key({ modkey }, "x",
