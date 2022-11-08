@@ -63,7 +63,7 @@
 [mergetool]
     keepBackup = false
 [commit]
-    gpgSign = true
+    ; gpgSign = true
 [pull]
     rebase = false
 [includeIf "gitdir:/home/jakub/dev/ynd/"]
