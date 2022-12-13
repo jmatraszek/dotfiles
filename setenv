@@ -21,7 +21,7 @@ if [ -z $SETENV_LOADED ]; then
 	export PATH="$PATH:$HOME/.ghcup/bin"
 	export PATH="$HOME/.rvm/bin:$PATH"
 
-	eval $(keychain --eval --agents gpg,ssh --ignore-missing --quiet id_ed25519 id_ed25519_tl id_ed25519_ynd)
+	eval $(keychain --eval --agents gpg,ssh --ignore-missing --quiet id_ed25519 id_ed25519_ynd)
 
 	export SETENV_LOADED=1
 fi
