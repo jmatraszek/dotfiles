@@ -33,6 +33,7 @@
     br = branch
     branch-name = !git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' | sed -e 's/* \\(.*\\)/\\1/'
     co = checkout
+    com = "!f(){ git checkout $(git main) $@;}; f"
     df = "!sh -c 'git diff -- $1 | tig' -"
     dfs = "!sh -c 'git diff --staged -- $1 | tig' -"
     lg = log -p
