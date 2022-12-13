@@ -273,10 +273,6 @@ globalkeys = awful.util.table.join(
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey,           }, "s",
-        function ()
-            mymainmenu:show({keygrabber=true})
-        end),
 
     awful.key({ modkey,           }, "r",    function ()
                 awful.prompt.run({ prompt = "Rename tab: ", text = awful.tag.selected().name, },
@@ -337,10 +333,6 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
-    -- Multiple monitors
-    -- awful.key({ modkey,           }, "o",      function(c) awful.client.movetoscreen(c,c.screen-1) end ),
-    -- awful.key({ modkey,           }, "p",      function(c) awful.client.movetoscreen(c,c.screen+1) end ),
-
     -- volume control with amixer
     awful.key({}, "XF86MonBrightnessUp", function ()
         awful.spawn("xbacklight -inc 5")
@@ -375,10 +367,14 @@ globalkeys = awful.util.table.join(
     end),
 
     -- Prompt
-    -- Run applications with dmenu
-    awful.key({ modkey },            "a",     function ()
-        awful.spawn("rofi -show run")
-      end),
+    -- Run applications with rofi
+    awful.key({ modkey }, "a", function () awful.spawn("rofi -show run") end),
+
+    -- Switch to a window with rofi
+    awful.key({ modkey }, "w", function () awful.spawn("rofi -show run") end),
+
+    -- Start SSH session with rofi in a new terminal window
+    awful.key({ modkey }, "s", function () awful.spawn("rofi -show ssh -terminal alacritty") end),
 
     awful.key({ modkey }, "x",
               function ()
