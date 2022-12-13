@@ -8,6 +8,9 @@ if [ -z $SETENV_LOADED ]; then
 	export PAGER=most
 	export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
+	# Remove this when kubectl 1.26 is installed, it will no longer be needed
+	export USE_GKE_GCLOUD_AUTH_PLUGIN=true
+
 	export GIT_PS1_SHOWDIRTYSTATE=1
 	export GIT_PS1_SHOWUNTRACKEDFILES=1
 	export GIT_PS1_SHOWUPSTREAM="verbose"
