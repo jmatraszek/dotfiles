@@ -6,6 +6,7 @@ if [ -z $SETENV_LOADED ]; then
 	export GPGKEY=8F3CD8EE
 	export EDITOR=/usr/bin/vim
 	export PAGER=most
+	export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
 	export GIT_PS1_SHOWDIRTYSTATE=1
 	export GIT_PS1_SHOWUNTRACKEDFILES=1

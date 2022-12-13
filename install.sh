@@ -8,6 +8,7 @@ ln -s ~/.dotfiles/bash_profile ~/.bash_profile
 ln -s ~/.dotfiles/gitconfig ~/.gitconfig
 ln -s ~/.dotfiles/gitignore ~/.gitignore
 ln -s ~/.dotfiles/tigrc ~/.tigrc
+ln -s ~/.dotfiles/ripgreprc ~/.ripgreprc
 ln -s ~/.dotfiles/psqlrc ~/.psqlrc
 ln -s ~/.dotfiles/xinitrc ~/.xinitrc
 ln -s ~/.dotfiles/pqivrc ~/.pqivrc
