@@ -33,8 +33,6 @@ alias mutt-work='MUTT_PROFILE=work /usr/bin/neomutt'
 
 alias s='TERM=screen-256color'
 
-alias vim='env -u GEM_PATH -u GEM_HOME \vim'
-alias gvim='env -u GEM_PATH -u GEM_HOME \gvim'
 alias svim='vim -u ~/.vim/simple_vimrc'
 alias sgvim='gvim -u ~/.vim/simple_vimrc'
 
