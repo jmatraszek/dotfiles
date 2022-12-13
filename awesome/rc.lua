@@ -15,7 +15,7 @@ local lain = require("lain")
 runonce = require("runonce")
 
 -- Load Debian menu entries
-require("debian.menu")
+-- require("debian.menu")
 
 require("error_handling")
 require("variable_definitions")
@@ -64,7 +64,7 @@ myawesomemenu = {
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "apps", debian.menu.Debian_menu.Debian },
+                                    -- { "apps", debian.menu.Debian_menu.Debian },
                                     { "layouts", mylayoutmenu },
                                     { "open terminal", terminal }
                                   }
@@ -582,7 +582,7 @@ runonce.run("nm-applet")
 runonce.run("qxkb")
 runonce.run("redshift-gtk -l 52.7:21.6 -t 5700:4300 -g 0.8 -m randr")
 runonce.run("udiskie --smart-tray --notify --no-automount")
-runonce.run("clipit")
+runonce.run("copyq")
 runonce.run("pasystray --notify=sink_default")
 runonce.run("unclutter")
 runonce.run("flameshot")
