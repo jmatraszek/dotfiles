@@ -58,6 +58,10 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+if [ -f ~/.dotfiles/load-k8s-configs ]; then
+    . ~/.dotfiles/load-k8s-configs
+fi
+
 if [ -f ~/.dotfiles/setenv ]; then
     . ~/.dotfiles/setenv
 fi
