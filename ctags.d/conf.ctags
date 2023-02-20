@@ -23,4 +23,4 @@
 # C++ options
 --c++-kinds=+p
 --fields=+iaS
---extra=+q
+--extras=+q
