@@ -1,7 +1,7 @@
 [user]
     name = Jakub Matraszek
     email = jakub.matraszek@gmail.com ; set on per-machine basis
-    signingKey = BC42031CEE1EE5DF
+    signingKey = A8CBCB8DA4A35F91
 [github]
     user = jmatraszek
 [diff]
@@ -64,7 +64,7 @@
 [mergetool]
     keepBackup = false
 [commit]
-    ; gpgSign = true
+    gpgSign = true
 [pull]
     rebase = false
 [includeIf "gitdir:/home/jakub/dev/ynd/"]
