@@ -54,7 +54,7 @@ function gsed () {
   then
     echo "== Usage:    gsed search_string replace_string [path]"
   else
-    egrep --exclude-dir=.git -lRZ "$1" $3 | xargs -0 -l sed -i -e "s/$1/$2/g"
+    grep -E --exclude-dir=.git -lRZ "$1" $3 | xargs -0 -l sed -i -e "s/$1/$2/g"
   fi
 }
 
