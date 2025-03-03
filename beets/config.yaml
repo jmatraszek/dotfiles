@@ -2,10 +2,12 @@ directory: /mnt/omv1/Music
 library: /mnt/omv1/.beets/musiclibrary.db
 import:
     move: no
+    copy: no
+    hardlink: yes
 plugins: inline fetchart web
 paths:
-    default: '$artist/$album%if{$albumdisambig, ($albumdisambig)}/$artist - $album - $track - $title'
-    multidisc: '$artist/$album%if{$albumdisambig, ($albumdisambig)}/$artist - $album - $disc-$track - $title'
+    default: '$albumartist/$album%if{$albumdisambig, ($albumdisambig)}/$artist - $album - $track - $title'
+    multidisc: '$albumartist/$album%if{$albumdisambig, ($albumdisambig)}/$artist - $album - $disc-$track - $title'
 item_fields:
     multidisc: 1 if disctotal > 1 else 0
 fetchart:
