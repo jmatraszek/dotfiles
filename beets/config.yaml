@@ -4,7 +4,7 @@ import:
     move: no
     copy: yes
     hardlink: no
-plugins: inline fetchart web
+plugins: inline fetchart web mbsync
 paths:
     default: '$albumartist/$album%if{$albumdisambig, ($albumdisambig)}/$artist - $album - $track - $title'
     multidisc: '$albumartist/$album%if{$albumdisambig, ($albumdisambig)}/$artist - $album - $disc-$track - $title'
