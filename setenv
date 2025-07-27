@@ -20,6 +20,7 @@ if [ -z $SETENV_LOADED ]; then
 	export PATH="$PATH:$HOME/.cargo/bin"
 	export PATH="$PATH:$HOME/.ghcup/bin"
 	export PATH="$HOME/.rvm/bin:$PATH"
+	export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 	eval $(keychain --eval --ignore-missing --quiet id_ed25519 id_ed25519_ynd)
 
