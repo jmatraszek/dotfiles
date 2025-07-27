@@ -1,9 +1,9 @@
-directory: /mnt/omv1/Music
-library: /mnt/omv1/.beets/musiclibrary.db
+directory: /mnt/omv/Music
+library: /mnt/omv/.beets/musiclibrary.db
 import:
     move: no
-    copy: no
-    hardlink: yes
+    copy: yes
+    hardlink: no
 plugins: inline fetchart web
 paths:
     default: '$albumartist/$album%if{$albumdisambig, ($albumdisambig)}/$artist - $album - $track - $title'
