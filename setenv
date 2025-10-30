@@ -20,9 +20,10 @@ if [ -z $SETENV_LOADED ]; then
 	export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 	eval $(keychain --eval --ignore-missing --quiet id_ed25519 id_ed25519_ynd)
-	eval "$(direnv hook bash)"
 
 	export SETENV_LOADED=1
 fi
+
+eval "$(direnv hook bash)"
 
 # vim: set ft=sh:
