@@ -108,18 +108,32 @@ Customize it by editing `~/.config/starship.toml`.
 ### Tmux
 
 The tmux configuration includes:
-- Custom key bindings (prefix: `Ctrl+B`)
-- Split panes: `prefix + v` (horizontal), `prefix + s` (vertical)
-- Mouse support enabled
-- Plugin management via TPM
+- **Modern terminal**: tmux-256color with true color support
+- **Custom key bindings** (prefix: `Ctrl+B`)
+  - Split panes: `prefix + v` (horizontal), `prefix + s` (vertical)
+  - Toggle status: `prefix + m`
+  - New window in current path: `Ctrl+T`
+  - Navigate windows: `Shift+Left/Right`
+- **Mouse support** enabled
+- **Session persistence**: Auto-saves every 15 minutes, restores on restart
+- **System monitoring**: CPU, battery status in status bar
+- **Theme**: Tokyo Night (easily switchable to Nord, Catppuccin, or Dracula)
 
-Install TPM:
+After running bootstrap, start tmux and press `prefix + I` to install all plugins.
 
-```bash
-git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
-```
+#### Switching Tmux Themes
 
-Then in tmux: `prefix + I` to install plugins.
+Edit `~/.dotfiles/tmux/tmux.conf`:
+1. Comment out current theme (add `#` before the lines)
+2. Uncomment desired theme
+3. Run: `tmux source ~/.config/tmux/tmux.conf`
+4. Press: `prefix + I` to install the new theme plugin
+
+Available themes:
+- **Tokyo Night** (default) - Modern, colorful
+- **Nord** - Arctic, bluish theme
+- **Catppuccin** - Soothing pastel theme (4 variants)
+- **Dracula** - Classic dark theme
 
 ### Alacritty
 

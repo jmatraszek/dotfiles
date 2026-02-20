@@ -61,6 +61,7 @@ AUR_PACKAGES=(
     atuin                  # Sync shell history across machines
     bash-complete-alias    # Completion support for aliases
     kube-ps1               # Kubernetes prompt helper
+    tmux-plugin-manager    # Tmux Plugin Manager (TPM)
 )
 
 # AUR helpers to install (all three for redundancy)
@@ -216,6 +217,10 @@ backup_and_link "$DOTFILES_DIR/setenv" "$HOME/.setenv"
 mkdir -p "$HOME/.config"
 backup_and_link "$DOTFILES_DIR/starship.toml" "$HOME/.config/starship.toml"
 
+# Link tmux config
+mkdir -p "$HOME/.config/tmux"
+backup_and_link "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.config/tmux/tmux.conf"
+
 echo ""
 success "Installation complete!"
 echo ""
@@ -247,6 +252,7 @@ echo "  Completions & extras:"
 echo "    • bash-completion       - General completions"
 echo "    • bash-complete-alias   - Alias completions"
 echo "    • atuin                 - Shell history sync (optional)"
+echo "    • tmux-plugin-manager   - Tmux Plugin Manager (TPM)"
 echo ""
 info "AUR helpers available:"
 for helper in yay paru aura; do
@@ -257,6 +263,7 @@ done
 echo ""
 warn "Next steps:"
 echo "  1. Reload your shell or run: source ~/.bashrc"
-echo "  2. For atuin: run 'atuin register' to create an account (optional)"
-echo "  3. If using Kubernetes, ensure kubeconfig is set up"
+echo "  2. For tmux: start tmux and press 'prefix + I' to install plugins"
+echo "  3. For atuin: run 'atuin register' to create an account (optional)"
+echo "  4. If using Kubernetes, ensure kubeconfig is set up"
 echo ""
