@@ -8,15 +8,27 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
-alias exals='exa -abghHliS --git'
-alias l='exa -bghHliS --git'
+# some more ls aliases with fallbacks (eza -> exa -> ls)
+if command -v eza &>/dev/null; then
+    alias exals='eza -abghHliS --git'
+    alias l='eza -bghHliS --git'
+elif command -v exa &>/dev/null; then
+    alias exals='exa -abghHliS --git'
+    alias l='exa -bghHliS --git'
+else
+    alias exals='ls -lAh --color=auto'
+    alias l='ls -lh --color=auto'
+fi
 
 ll() {
     if [[ -z "$1" ]]; then
         exals
     else
-        [[ -f "$1" ]] && bat "$1" || exals "$1";
+        if command -v bat &>/dev/null; then
+            [[ -f "$1" ]] && bat "$1" || exals "$1"
+        else
+            [[ -f "$1" ]] && cat "$1" || exals "$1"
+        fi
     fi
 }
 
@@ -48,6 +60,8 @@ alias kc='kubectx'
 complete -F _complete_alias kc
 alias kn='kubens'
 complete -F _complete_alias kn
+alias tf='terraform'
+complete -F _complete_alias tf
 
 function gsed () {
   if [ -z "$3" ]

@@ -4,8 +4,17 @@ if [ -z $SETENV_LOADED ]; then
 	export MYSQL_PS1="\u@\h [\d]> "
 
 	export GPGKEY=8F3CD8EE
+	export GPG_TTY=$(tty)
 	export EDITOR=/usr/bin/vim
-	export PAGER=most
+	# Use bat as pager if available, fallback to most, then less
+	if command -v bat &>/dev/null; then
+		export PAGER="bat --style=plain --paging=always"
+		export BAT_PAGER="less -R"
+	elif command -v most &>/dev/null; then
+		export PAGER=most
+	else
+		export PAGER=less
+	fi
 	export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
 	export GIT_PS1_SHOWDIRTYSTATE=1
@@ -19,11 +28,17 @@ if [ -z $SETENV_LOADED ]; then
 	export PATH="$HOME/.rvm/bin:$PATH"
 	export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-	eval $(keychain --eval --ignore-missing --quiet id_ed25519 id_ed25519_ynd)
+	# Load keychain for SSH key management
+	if command -v keychain &>/dev/null; then
+		eval $(keychain --eval --ignore-missing --quiet id_ed25519 id_ed25519_ynd)
+	fi
 
 	export SETENV_LOADED=1
 fi
 
-eval "$(direnv hook bash)"
+# Load direnv for per-directory environment variables
+if command -v direnv &>/dev/null; then
+	eval "$(direnv hook bash)"
+fi
 
 # vim: set ft=sh:

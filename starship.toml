@@ -1,0 +1,99 @@
+# Starship prompt configuration
+# Matches the previous custom bash prompt layout:
+# Line 1: [exit_code] [time] [user] [host] [ruby] [rust] [git] [k8s] [terraform] [docker] [aws]
+# Line 2: [cwd] $
+
+# Use custom format to match the old prompt structure
+format = """
+[┌─](bold green)$status$cmd_duration$time$username$hostname$ruby$rust$git_branch$git_state$git_status$kubernetes$terraform$docker_context$aws
+[└─](bold green)$directory$character"""
+
+# Don't add a newline at the start
+add_newline = false
+
+# Status (exit code) - shown only on error
+[status]
+style = "bold red"
+format = '\[[✗ $status]($style)\] '
+disabled = false
+
+# Command duration
+[cmd_duration]
+format = '\[[⏳ $duration]($style)\] '
+style = "yellow"
+
+# Time
+[time]
+disabled = false
+format = '\[[⌚ $time]($style)\] '
+style = "cyan"
+
+# Username
+[username]
+style_user = "blue"
+style_root = "red bold"
+format = '\[[👤 $user]($style)\] '
+show_always = true
+
+# Hostname
+[hostname]
+ssh_only = false
+format = '\[[💻 $hostname]($style)\] '
+style = "blue"
+disabled = false
+
+# Ruby version (RVM)
+[ruby]
+format = '\[[$symbol($version)]($style)\] '
+style = "green"
+symbol = "🔺 "
+
+# Git branch and status (combined in one bracket)
+[git_branch]
+format = '\[[$symbol$branch]($style) '
+style = "green"
+symbol = " "
+
+# Git status (continues from git_branch)
+[git_status]
+format = '([$all_status$ahead_behind]($style))\] '
+style = "green"
+stashed = "" # Don't show stashed changes
+
+# Kubernetes context
+[kubernetes]
+format = '\[[$symbol$context(:$namespace)]($style)\] '
+style = "cyan"
+symbol = "☸ "
+disabled = false
+
+# Directory (CWD) - on second line
+[directory]
+format = '\[[$path]($style)[$read_only]($read_only_style)\]'
+style = "bold yellow"
+truncation_length = 15
+truncate_to_repo = false
+truncation_symbol = "…/"
+
+# Character (prompt symbol)
+[character]
+success_symbol = '[➜](bold green) '
+error_symbol = '[✗](bold red) '
+vimcmd_symbol = '[V](bold green) '
+
+# Enabled modules with custom styling
+[rust]
+format = '\[[$symbol($version)]($style)\] '
+style = "red"
+
+[terraform]
+format = '\[[$symbol$workspace]($style)\] '
+
+[docker_context]
+format = '\[[$symbol$context]($style)\] '
+style = "blue"
+symbol = "🐳 "
+
+[aws]
+format = '\[[$symbol($profile)(\($region\))]($style)\] '
+style = "yellow"

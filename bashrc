@@ -5,6 +5,50 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+# Check for missing recommended tools and warn once per day
+check_missing_tools() {
+    local warn_file="$HOME/.cache/dotfiles_missing_tools_warned"
+
+    # If we already warned today, skip the check entirely
+    if [ -f "$warn_file" ] && [ -z "$(find "$warn_file" -mtime +0 2>/dev/null)" ]; then
+        return
+    fi
+
+    local missing_tools=()
+    local recommended_tools=(
+        "starship:Modern shell prompt"
+        "fzf:Fuzzy finder"
+        "zoxide:Smart directory navigation"
+        "keychain:SSH key management"
+        "direnv:Per-directory environments"
+        "eza:Better ls"
+        "bat:Syntax highlighting cat"
+        "fd:Modern find"
+        "rg:Fast grep"
+        "tig:Git client"
+        "nnn:File manager"
+    )
+
+    for tool_desc in "${recommended_tools[@]}"; do
+        local tool="${tool_desc%%:*}"
+        local desc="${tool_desc#*:}"
+        if ! command -v "$tool" &>/dev/null; then
+            missing_tools+=("  • $tool - $desc")
+        fi
+    done
+
+    if [ ${#missing_tools[@]} -gt 0 ]; then
+        mkdir -p "$(dirname "$warn_file")"
+        echo -e "\033[1;33m==>\033[0m Some recommended tools are missing:"
+        printf '%s\n' "${missing_tools[@]}"
+        echo -e "\033[0;34m==>\033[0m Run: ~/.dotfiles/bootstrap.sh to install them"
+        echo ""
+        touch "$warn_file"
+    fi
+}
+
+check_missing_tools
+
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace
@@ -64,6 +108,24 @@ fi
 
 if [ -f ~/.dotfiles/setenv ]; then
     . ~/.dotfiles/setenv
+fi
+
+# Load modern shell tools conditionally
+# fzf - fuzzy finder for history and file search
+if command -v fzf &>/dev/null; then
+    # Arch Linux installs fzf shell integration to /usr/share/fzf/
+    [ -f /usr/share/fzf/key-bindings.bash ] && . /usr/share/fzf/key-bindings.bash
+    [ -f /usr/share/fzf/completion.bash ] && . /usr/share/fzf/completion.bash
+fi
+
+# zoxide - smarter cd command
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init bash)"
+fi
+
+# atuin - shell history sync and search
+if command -v atuin &>/dev/null; then
+    eval "$(atuin init bash)"
 fi
 
 # Reset
@@ -143,34 +205,42 @@ update_title() {
   echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/#$HOME/~}\007"
 }
 
-prompt_command () {
-  _bash_history_sync
-  if [[ $SSH_TTY && -z $TMUX ]]
-  then
-    local d="$Red[$Color_Off"
-    local b="$Red]$Color_Off"
-  else
-    local d="["
-    local b="]"
+# Use starship if available, otherwise fall back to custom prompt
+if command -v starship &>/dev/null; then
+  eval "$(starship init bash)"
+  # Still update terminal title
+  PROMPT_COMMAND="update_title${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+else
+  # Legacy custom prompt
+  prompt_command () {
+    _bash_history_sync
+    if [[ $SSH_TTY && -z $TMUX ]]
+    then
+      local d="$Red[$Color_Off"
+      local b="$Red]$Color_Off"
+    else
+      local d="["
+      local b="]"
+    fi
+    local EXIT_CODE="[$BRed\${?#0}$Color_Off]"
+    local TIME="[$Cyan\t$Color_Off]"
+    local USERNAME="[$IBlue\u$Color_Off]"
+    local HOST="[$IBlue\h$Color_Off]"
+    local RVM="[$IGreen$(~/.rvm/bin/rvm-prompt v p g)$Color_Off]"
+    local GIT="[$Green$(__git_ps1 '%s')$Color_Off]"
+    local KUBE="[$Green$(kube_ps1)$Color_Off]"
+    local CWD="$d$BIYellow\w$Color_Off$b"
+    export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT $KUBE \n$CWD \$ "
+    update_title
+  }
+
+  PROMPT_COMMAND=prompt_command
+
+  if [ -f /opt/kube-ps1/kube-ps1.sh ]; then
+    . /opt/kube-ps1/kube-ps1.sh
+    KUBE_PS1_PREFIX=""
+    KUBE_PS1_SUFFIX=""
   fi
-  local EXIT_CODE="[$BRed\${?#0}$Color_Off]"
-  local TIME="[$Cyan\t$Color_Off]"
-  local USERNAME="[$IBlue\u$Color_Off]"
-  local HOST="[$IBlue\h$Color_Off]"
-  local RVM="[$IGreen$(~/.rvm/bin/rvm-prompt v p g)$Color_Off]"
-  local GIT="[$Green$(__git_ps1 '%s')$Color_Off]"
-  local KUBE="[$Green$(kube_ps1)$Color_Off]"
-  local CWD="$d$BIYellow\w$Color_Off$b"
-  export PS1="$EXIT_CODE $TIME $USERNAME $HOST $RVM $GIT $KUBE \n$CWD \$ "
-  update_title
-}
-
-PROMPT_COMMAND=prompt_command
-
-if [ -f /opt/kube-ps1/kube-ps1.sh ]; then
-  . /opt/kube-ps1/kube-ps1.sh
-  KUBE_PS1_PREFIX=""
-  KUBE_PS1_SUFFIX=""
 fi
 
 # complete -cf sudo
