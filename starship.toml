@@ -19,13 +19,13 @@ disabled = false
 
 # Command duration
 [cmd_duration]
-format = '\[[⏳ $duration]($style)\] '
+format = '\[[⏳$duration]($style)\] '
 style = "yellow"
 
 # Time
 [time]
 disabled = false
-format = '\[[⌚ $time]($style)\] '
+format = '\[[⌚$time]($style)\] '
 style = "cyan"
 
 # Username
