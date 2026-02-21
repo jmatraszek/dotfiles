@@ -46,10 +46,12 @@ source ~/.bashrc
 ### Core Shell Enhancements
 
 - **starship** - Modern, fast, cross-shell prompt with context-aware information
-- **fzf** - Fuzzy finder for files and command history
-  - `Ctrl+R` - Search command history
-  - `Ctrl+T` - Find files
-  - `Alt+C` - Change directory
+- **fzf** - Fuzzy finder with extensive integrations
+  - Git: branch checkout, log browser, file search, status, stash
+  - Docker: exec, logs, stop/remove containers and images
+  - Kubernetes: pod exec, logs, context/namespace switching
+  - General: process killer, directory navigation, history search
+  - See **Keybindings Cheatsheet** section below for all commands
 - **zoxide** - Smarter `cd` command that learns your habits
   - Use `z <directory>` to jump to frequently used directories
 - **keychain** - Manages SSH keys and agents
@@ -109,15 +111,11 @@ Customize it by editing `~/.config/starship.toml`.
 
 The tmux configuration includes:
 - **Modern terminal**: tmux-256color with true color support
-- **Custom key bindings** (prefix: `Ctrl+B`)
-  - Split panes: `prefix + v` (horizontal), `prefix + s` (vertical)
-  - Toggle status: `prefix + m`
-  - New window in current path: `Ctrl+T`
-  - Navigate windows: `Shift+Left/Right`
+- **Custom key bindings** (prefix: `Ctrl+B`) - see Keybindings section below
 - **Mouse support** enabled
-- **Session persistence**: Auto-saves every 15 minutes, restores on restart
 - **System monitoring**: CPU, battery status in status bar
-- **Theme**: Tokyo Night (easily switchable to Nord, Catppuccin, or Dracula)
+- **Theme**: Tokyo Night (easily switchable to Nord)
+- **Quick tool access**: htop, nmon, tig, man pages via prefix tables
 
 After running bootstrap, start tmux and press `prefix + I` to install all plugins.
 
@@ -206,6 +204,179 @@ sudo pacman -R starship
 ### Modifying Aliases
 
 Edit `~/.dotfiles/bash_aliases` and reload with `source ~/.bashrc`.
+
+## Keybindings Cheatsheet
+
+### Bash / Shell
+
+| Keybinding | Action |
+|------------|--------|
+| `Ctrl+R` | FZF history search (enhanced) |
+| `Ctrl+T` | FZF file finder |
+| `Alt+C` | FZF directory navigator |
+| `Ctrl+L` | Clear screen |
+| `Ctrl+A` | Jump to beginning of line |
+| `Ctrl+E` | Jump to end of line |
+| `Ctrl+U` | Delete from cursor to beginning of line |
+| `Ctrl+K` | Delete from cursor to end of line |
+| `Ctrl+W` | Delete word before cursor |
+| `Alt+Backspace` | Delete word before cursor |
+| `Ctrl+D` | Exit shell / EOF |
+
+### FZF Functions
+
+#### Git Operations
+
+| Command | Keybinding | Description |
+|---------|------------|-------------|
+| `gb` | - | Fuzzy checkout git branches (with preview) |
+| `gl` | - | Interactive git log browser |
+| `gf` | - | Fuzzy search git files |
+| `gs` | - | Fuzzy git status - stage files interactively |
+| `gst` | - | Browse git stash with preview |
+
+**FZF Preview Controls (in FZF windows):**
+- `Ctrl+/` - Toggle preview window
+- `Ctrl+U` - Preview page up
+- `Ctrl+D` - Preview page down
+- `Ctrl+S` - Toggle sort (in git log)
+- `Ctrl+M` / `Enter` - View full commit (in git log)
+
+#### Docker Operations
+
+| Command | Description |
+|---------|-------------|
+| `dex` | Exec into container (auto-detects bash/sh) |
+| `dlog` | View logs for selected container |
+| `dstop` | Stop containers interactively (multi-select) |
+| `drm` | Remove containers interactively (multi-select) |
+| `drmi` | Remove images interactively (multi-select) |
+
+#### Kubernetes Operations
+
+| Command | Description |
+|---------|-------------|
+| `kex [namespace]` | Exec into pod (default: default namespace) |
+| `klog [namespace]` | View pod logs |
+| `kdesc [namespace]` | Describe pod |
+| `kctx` | Switch kubectl context with preview |
+| `kns` | Switch kubectl namespace with preview |
+| `kdel [namespace]` | Delete pods (multi-select) |
+| `kres [namespace]` | Browse all resources in namespace |
+
+**Note:** All k8s commands support optional namespace argument, default is `default`
+
+#### General Utilities
+
+| Command | Description |
+|---------|-------------|
+| `fkill [signal]` | Kill processes interactively (default: SIGKILL) |
+| `up` | Navigate to parent directories |
+
+### Tmux
+
+**Prefix Key:** `Ctrl+B` (press prefix, then the command key)
+
+#### Window Management
+
+| Keybinding | Action |
+|------------|--------|
+| `Ctrl+T` | New window (in current directory) |
+| `Shift+Left` | Previous window |
+| `Shift+Right` | Next window |
+| `Ctrl+Shift+Left` | Move window left |
+| `Ctrl+Shift+Right` | Move window right |
+| `prefix + Q` | Kill current window (with confirmation) |
+| `prefix + S` | Kill server (with confirmation) |
+
+#### Pane Management
+
+| Keybinding | Action |
+|------------|--------|
+| `prefix + v` | Split pane horizontally |
+| `prefix + s` | Split pane vertically |
+| `prefix + hjkl` | Navigate panes (vim-style via pain-control plugin) |
+| `prefix + HJKL` | Resize panes (vim-style via pain-control plugin) |
+| `prefix + <` | Move pane left |
+| `prefix + >` | Move pane right |
+| `prefix + y` | Synchronize panes (type in all at once) |
+
+#### Quick Tools (Prefix Tables)
+
+Press `prefix + ~` for horizontal split or `prefix + `` ` (backtick) for vertical split, then:
+
+| Key | Tool | Description |
+|-----|------|-------------|
+| `h` | htop | System monitor |
+| `n` | nmon | Performance monitor |
+| `t` | tig | Git interface (in current dir) |
+| `l` | tail | Tail a file (prompts for path) |
+| `/` | man | Open man page (prompts for command) |
+
+#### Copy Mode
+
+| Keybinding | Action |
+|------------|--------|
+| `prefix + Escape` | Enter copy mode |
+| `prefix + [` | Enter copy mode (tmux-sensible) |
+| *(in copy mode)* Emacs-style navigation |
+| `prefix + ]` | Paste buffer |
+
+#### Other
+
+| Keybinding | Action |
+|------------|--------|
+| `prefix + m` | Toggle status bar |
+| `prefix + I` | Install tmux plugins (TPM) |
+| `prefix + U` | Update tmux plugins (TPM) |
+| `prefix + t` | Show time |
+
+### Alacritty Terminal
+
+#### Font Size
+
+| Keybinding | Action |
+|------------|--------|
+| `Ctrl+Plus` / `Ctrl+=` | Increase font size |
+| `Ctrl+Minus` / `Ctrl+-` | Decrease font size |
+| `Ctrl+0` | Reset font size |
+
+#### Clipboard
+
+| Keybinding | Action |
+|------------|--------|
+| `Ctrl+Shift+C` | Copy to clipboard |
+| `Ctrl+Shift+V` | Paste from clipboard |
+| `Shift+Insert` | Paste selection |
+| `Middle Click` | Paste selection (mouse) |
+
+#### Scrolling
+
+| Keybinding | Action |
+|------------|--------|
+| `Shift+PageUp` | Scroll page up |
+| `Shift+PageDown` | Scroll page down |
+
+### Zoxide (Smart cd)
+
+| Command | Description |
+|---------|-------------|
+| `z <partial>` | Jump to most frecent directory matching partial |
+| `zi <partial>` | Interactive directory selection with fzf |
+| `z -` | Go to previous directory |
+
+### Common Tool Shortcuts
+
+#### File Viewing
+
+- `ll <file>` - View file with bat (syntax highlighting)
+- `ll <dir>` - List directory with eza
+- `l` - Detailed file listing with eza
+
+#### Navigation
+
+- `nnn` - File manager with cd-on-quit
+- `z <dir>` - Smart directory jumping
 
 ## AUR Helpers
 
