@@ -1,0 +1,333 @@
+# ============================================================================
+# FZF Configuration and Functions
+# ============================================================================
+
+# FZF default options
+export FZF_DEFAULT_OPTS="
+  --height 40%
+  --layout=reverse
+  --border
+  --inline-info
+  --preview-window=:hidden
+  --bind='ctrl-/:toggle-preview'
+  --bind='ctrl-u:preview-page-up'
+  --bind='ctrl-d:preview-page-down'
+"
+
+# Use fd if available for better performance
+if command -v fd &>/dev/null; then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+elif command -v rg &>/dev/null; then
+  export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
+
+# File preview with bat or cat
+if command -v bat &>/dev/null; then
+  export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}'"
+else
+  export FZF_CTRL_T_OPTS="--preview 'cat {}'"
+fi
+
+# Directory preview with tree or ls
+if command -v tree &>/dev/null; then
+  export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+else
+  export FZF_ALT_C_OPTS="--preview 'ls -la {} | head -200'"
+fi
+
+# ============================================================================
+# FZF Key Bindings
+# ============================================================================
+
+# Enable fzf keybindings if available
+if [ -f /usr/share/fzf/key-bindings.bash ]; then
+  source /usr/share/fzf/key-bindings.bash
+elif [ -f ~/.fzf/shell/key-bindings.bash ]; then
+  source ~/.fzf/shell/key-bindings.bash
+elif [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+  source /usr/share/doc/fzf/examples/key-bindings.bash
+fi
+
+# Enable fzf completion if available
+if [ -f /usr/share/fzf/completion.bash ]; then
+  source /usr/share/fzf/completion.bash
+elif [ -f ~/.fzf/shell/completion.bash ]; then
+  source ~/.fzf/shell/completion.bash
+elif [ -f /usr/share/doc/fzf/examples/completion.bash ]; then
+  source /usr/share/doc/fzf/examples/completion.bash
+fi
+
+# ============================================================================
+# Git Integration
+# ============================================================================
+
+# Fuzzy git branch checkout
+fzf-git-branch() {
+  local branches branch
+  branches=$(git branch -a --color=always | grep -v HEAD) &&
+  branch=$(echo "$branches" | fzf --ansi --preview="git log --color=always {1}") &&
+  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
+alias gb='fzf-git-branch'
+
+# Fuzzy git log browser
+fzf-git-log() {
+  git log --graph --color=always \
+    --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --no-sort --reverse --tiebreak=index \
+    --preview 'echo {} | grep -o "[a-f0-9]\{7\}" | head -1 | xargs git show --color=always' \
+    --bind 'ctrl-s:toggle-sort' \
+    --bind "ctrl-m:execute:
+      (grep -o '[a-f0-9]\{7\}' | head -1 |
+      xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+      {}
+FZF-EOF"
+}
+alias gl='fzf-git-log'
+
+# Fuzzy git file browser with preview
+fzf-git-files() {
+  local files
+  files=$(git ls-files) &&
+  echo "$files" | fzf --preview 'bat --style=numbers --color=always {} 2>/dev/null || cat {}'
+}
+alias gf='fzf-git-files'
+
+# Fuzzy git status - stage/unstage files
+fzf-git-status() {
+  local files
+  files=$(git -c color.status=always status --short |
+    fzf --ansi --multi --preview 'git diff --color=always {2}' |
+    awk '{print $2}')
+
+  if [[ -n "$files" ]]; then
+    echo "$files" | xargs git add
+    git status --short
+  fi
+}
+alias gs='fzf-git-status'
+
+# Fuzzy git stash browser
+fzf-git-stash() {
+  local stash
+  stash=$(git stash list | fzf --preview 'git stash show -p {1}') &&
+  git stash show -p $(echo "$stash" | cut -d: -f1)
+}
+alias gst='fzf-git-stash'
+
+# ============================================================================
+# Docker Integration
+# ============================================================================
+
+# Fuzzy docker container selection
+fzf-docker-container() {
+  local container
+  container=$(docker ps -a --format '{{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}' |
+    column -t -s $'\t' |
+    fzf --header-lines=0 --preview 'docker inspect {1}' |
+    awk '{print $1}')
+  echo "$container"
+}
+
+# Docker exec into container
+fzf-docker-exec() {
+  local container
+  container=$(fzf-docker-container)
+  if [[ -n "$container" ]]; then
+    echo "Executing shell in container: $container"
+    docker exec -it "$container" /bin/bash || docker exec -it "$container" /bin/sh
+  fi
+}
+alias dex='fzf-docker-exec'
+
+# Docker logs for selected container
+fzf-docker-logs() {
+  local container
+  container=$(fzf-docker-container)
+  if [[ -n "$container" ]]; then
+    docker logs -f "$container"
+  fi
+}
+alias dlog='fzf-docker-logs'
+
+# Docker stop container
+fzf-docker-stop() {
+  local containers
+  containers=$(docker ps --format '{{.ID}}\t{{.Names}}\t{{.Status}}' |
+    column -t -s $'\t' |
+    fzf --multi --header-lines=0 |
+    awk '{print $1}')
+  if [[ -n "$containers" ]]; then
+    echo "$containers" | xargs docker stop
+  fi
+}
+alias dstop='fzf-docker-stop'
+
+# Docker remove container
+fzf-docker-rm() {
+  local containers
+  containers=$(docker ps -a --format '{{.ID}}\t{{.Names}}\t{{.Status}}' |
+    column -t -s $'\t' |
+    fzf --multi --header-lines=0 |
+    awk '{print $1}')
+  if [[ -n "$containers" ]]; then
+    echo "$containers" | xargs docker rm
+  fi
+}
+alias drm='fzf-docker-rm'
+
+# Docker image selection and removal
+fzf-docker-rmi() {
+  local images
+  images=$(docker images --format '{{.ID}}\t{{.Repository}}\t{{.Tag}}\t{{.Size}}' |
+    column -t -s $'\t' |
+    fzf --multi --header-lines=0 |
+    awk '{print $1}')
+  if [[ -n "$images" ]]; then
+    echo "$images" | xargs docker rmi
+  fi
+}
+alias drmi='fzf-docker-rmi'
+
+# ============================================================================
+# Kubernetes Integration
+# ============================================================================
+
+# Fuzzy kubectl pod selection
+fzf-k8s-pod() {
+  local namespace="${1:-default}"
+  kubectl get pods -n "$namespace" -o wide |
+    fzf --header-lines=1 --preview "kubectl describe pod -n $namespace {1}" |
+    awk '{print $1}'
+}
+
+# Kubectl exec into pod
+fzf-k8s-exec() {
+  local namespace="${1:-default}"
+  local pod
+  pod=$(fzf-k8s-pod "$namespace")
+  if [[ -n "$pod" ]]; then
+    echo "Executing shell in pod: $pod (namespace: $namespace)"
+    kubectl exec -n "$namespace" -it "$pod" -- /bin/bash || \
+    kubectl exec -n "$namespace" -it "$pod" -- /bin/sh
+  fi
+}
+alias kex='fzf-k8s-exec'
+
+# Kubectl logs for selected pod
+fzf-k8s-logs() {
+  local namespace="${1:-default}"
+  local pod
+  pod=$(fzf-k8s-pod "$namespace")
+  if [[ -n "$pod" ]]; then
+    kubectl logs -n "$namespace" -f "$pod"
+  fi
+}
+alias klog='fzf-k8s-logs'
+
+# Kubectl describe pod
+fzf-k8s-describe() {
+  local namespace="${1:-default}"
+  local pod
+  pod=$(fzf-k8s-pod "$namespace")
+  if [[ -n "$pod" ]]; then
+    kubectl describe pod -n "$namespace" "$pod"
+  fi
+}
+alias kdesc='fzf-k8s-describe'
+
+# Fuzzy kubectl context switching
+fzf-k8s-context() {
+  local context
+  context=$(kubectl config get-contexts -o name | fzf --preview 'kubectl config view --context={} --minify')
+  if [[ -n "$context" ]]; then
+    kubectl config use-context "$context"
+  fi
+}
+alias kctx='fzf-k8s-context'
+
+# Fuzzy kubectl namespace switching
+fzf-k8s-namespace() {
+  local namespace
+  namespace=$(kubectl get namespaces -o name | cut -d/ -f2 | fzf --preview 'kubectl get all -n {}')
+  if [[ -n "$namespace" ]]; then
+    kubectl config set-context --current --namespace="$namespace"
+  fi
+}
+alias kns='fzf-k8s-namespace'
+
+# Kubectl delete pod
+fzf-k8s-delete-pod() {
+  local namespace="${1:-default}"
+  local pods
+  pods=$(kubectl get pods -n "$namespace" -o wide |
+    fzf --multi --header-lines=1 |
+    awk '{print $1}')
+  if [[ -n "$pods" ]]; then
+    echo "$pods" | xargs kubectl delete pod -n "$namespace"
+  fi
+}
+alias kdel='fzf-k8s-delete-pod'
+
+# Browse all resources in namespace
+fzf-k8s-resources() {
+  local namespace="${1:-default}"
+  local resource_type
+  resource_type=$(kubectl api-resources --verbs=list --namespaced -o name | fzf)
+  if [[ -n "$resource_type" ]]; then
+    kubectl get "$resource_type" -n "$namespace"
+  fi
+}
+alias kres='fzf-k8s-resources'
+
+# ============================================================================
+# General Helper Functions
+# ============================================================================
+
+# Kill process by name
+fzf-kill() {
+  local pids
+  pids=$(ps -ef | sed 1d | fzf --multi --preview 'echo {}' | awk '{print $2}')
+  if [[ -n "$pids" ]]; then
+    echo "$pids" | xargs kill -${1:-9}
+  fi
+}
+alias fkill='fzf-kill'
+
+# Change directory to parent directories
+fzf-cd-up() {
+  local dirs=()
+  local parent_dir
+
+  get_parent_dirs() {
+    if [[ -d "$1" ]]; then dirs+=("$1"); else return; fi
+    if [[ "$1" == '/' ]]; then
+      for _dir in "${dirs[@]}"; do echo "$_dir"; done
+    else
+      get_parent_dirs "$(dirname "$1")"
+    fi
+  }
+
+  parent_dir=$(get_parent_dirs "$(realpath "${1:-$PWD}")" | fzf --preview 'ls -la {}')
+  if [[ -n "$parent_dir" ]]; then
+    cd "$parent_dir" || return
+  fi
+}
+alias up='fzf-cd-up'
+
+# History search with fzf
+fzf-history() {
+  local selected
+  selected=$(history | fzf --tac --no-sort | sed 's/^[ ]*[0-9]*[ ]*//')
+  if [[ -n "$selected" ]]; then
+    echo "$selected"
+    eval "$selected"
+  fi
+}
+# Bind Ctrl+R to fzf history search
+bind -x '"\C-r": fzf-history'
+
+# vim: set ft=sh:

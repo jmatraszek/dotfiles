@@ -111,11 +111,9 @@ if [ -f ~/.dotfiles/setenv ]; then
 fi
 
 # Load modern shell tools conditionally
-# fzf - fuzzy finder for history and file search
-if command -v fzf &>/dev/null; then
-    # Arch Linux installs fzf shell integration to /usr/share/fzf/
-    [ -f /usr/share/fzf/key-bindings.bash ] && . /usr/share/fzf/key-bindings.bash
-    [ -f /usr/share/fzf/completion.bash ] && . /usr/share/fzf/completion.bash
+# fzf - fuzzy finder for history and file search with custom integrations
+if command -v fzf &>/dev/null && [ -f ~/.dotfiles/fzf_functions ]; then
+    . ~/.dotfiles/fzf_functions
 fi
 
 # zoxide - smarter cd command
