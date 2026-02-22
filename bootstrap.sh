@@ -189,10 +189,13 @@ info "Creating symlinks for dotfiles..."
 
 DOTFILES_DIR="$HOME/.dotfiles"
 
-# Backup and link bash configuration files
+# Backup and link configuration files
 backup_and_link() {
     local src="$1"
     local dest="$2"
+
+    # Extract just the filename from src for display
+    local src_name=$(basename "$src")
 
     if [ -e "$dest" ] && [ ! -L "$dest" ]; then
         warn "Backing up existing $dest to ${dest}.backup"
@@ -205,7 +208,7 @@ backup_and_link() {
     fi
 
     ln -sf "$src" "$dest"
-    success "Linked $src → $dest"
+    success "Linked $src_name → $dest"
 }
 
 # Link bash files
@@ -220,6 +223,15 @@ backup_and_link "$DOTFILES_DIR/starship.toml" "$HOME/.config/starship.toml"
 # Link tmux config
 mkdir -p "$HOME/.config/tmux"
 backup_and_link "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.config/tmux/tmux.conf"
+
+# Link ripgrep config
+backup_and_link "$DOTFILES_DIR/ripgreprc" "$HOME/.ripgreprc"
+
+# Link git config
+backup_and_link "$DOTFILES_DIR/gitconfig" "$HOME/.gitconfig"
+
+# Link global gitignore
+backup_and_link "$DOTFILES_DIR/gitignore" "$HOME/.gitignore"
 
 echo ""
 success "Installation complete!"

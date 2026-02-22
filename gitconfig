@@ -2,71 +2,243 @@
     name = Jakub Matraszek
     email = jakub.matraszek@gmail.com ; set on per-machine basis
     signingKey = A8CBCB8DA4A35F91
+
 [github]
     user = jmatraszek
+
 [diff]
     tool = vimdiff
+
 [color]
     ui = auto
+
 [color "branch"]
     current = yellow reverse
     local = yellow
     remote = green
+
 [color "diff"]
     meta = yellow bold
     frag = magenta bold
     old = red bold
     new = green bold
     whitespace = red reverse
+
 [color "status"]
     added = yellow
     changed = green
     untracked = cyan
+
 [core]
-    whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+    whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
     pager = less
     excludesFile = ~/.gitignore
     editor = vim
+
 [alias]
+    # ========================================================================
+    # Alias Management
+    # ========================================================================
     alias = "!sh -c '[ $# = 2 ] && git config --global alias.\"$1\" \"$2\" && exit 0 || [ $# = 1 ] && [ $1 = \"--list\" ] && git config --list | grep \"alias\\.\" | sed \"s/^alias\\.\\([^=]*\\)=\\(.*\\).*/\\1@@@@=>@@@@\\2/\" | grep -v \"alias\" | sort | column -ts \"@@@@\" && exit 0 || echo \"usage: git alias <new alias> <original command>\\n       git alias --list\" >&2 && exit 1' -"
+
+    # ========================================================================
+    # Basic Shortcuts
+    # ========================================================================
+    st = status
+    stu = status -u
     ci = commit
     br = branch
-    branch-name = !git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' | sed -e 's/* \\(.*\\)/\\1/'
     co = checkout
-    com = "!f(){ git checkout $(git main) $@;}; f"
     df = "!sh -c 'git diff -- $1 | tig' -"
     dfs = "!sh -c 'git diff --staged -- $1 | tig' -"
+    mt = mergetool
+    ls = ls-files
+    s = !tig status
+
+    # ========================================================================
+    # Undo Operations
+    # ========================================================================
+
+    # Undo last commit, keep changes staged
+    uncommit = reset --soft HEAD^
+
+    # Undo last commit, keep changes unstaged
+    undo = reset HEAD^
+
+    # Undo a merge (if merge was the last commit)
+    undo-merge-hard = reset --hard HEAD^
+
+    # Undo a merge, keeping changes
+    undo-merge = reset --merge HEAD^
+
+    # Unstage files (opposite of git add)
+    unstage = reset HEAD --
+
+    # Discard changes in working directory
+    discard = checkout --
+
+    # ========================================================================
+    # Commit Helpers
+    # ========================================================================
+
+    # Amend last commit (with current staged changes)
+    amend = commit --amend --no-edit
+
+    # Work in progress commit
+    wip = commit -am "WIP" --no-verify
+
+    # Undo WIP commit
+    unwip = reset HEAD^
+
+    # Create fixup commit for later autosquash
+    fixup = commit --fixup
+
+    # Create squash commit for later autosquash
+    squash = commit --squash
+
+    # ========================================================================
+    # Branch Operations
+    # ========================================================================
+
+    # Get current branch name
+    branch-name = !git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' | sed -e 's/* \\(.*\\)/\\1/'
+
+    # Get main branch name (master or main)
+    main = !git symbolic-ref refs/remotes/origin/HEAD | cut -d'/' -f4
+
+    # Checkout main branch
+    com = "!f(){ git checkout $(git main) $@;}; f"
+
+    # Delete merged branches (cleanup)
+    cleanup-merged-branches = "!git branch --merged $(git main) | grep -v \"^\\*\\|$(git main)\" | xargs -r git branch -d"
+
+    # ========================================================================
+    # Log & History
+    # ========================================================================
+
+    # Pretty log with graph
     lg = log -p
     lol = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
-    ls = ls-files
+
+    # Show last commit
+    last = log -1 HEAD --stat
+
+    # Show commits on current branch not in main
+    pending = !git --no-pager log --pretty=format:'%C(yellow)%h%Creset %f' origin/`git branch-name`..`git branch-name` && echo
+
+    # Show all commits by author
+    who = shortlog -sn --
+
+    # Find commits by message
+    find = "!f() { git log --all --grep=\"$1\"; }; f"
+
+    # Find commits by code change
+    fc = "!f() { git log --all -S\"$1\" --pretty=format:'%C(yellow)%h%Creset %s %Cgreen(%cr)%Creset'; }; f"
+
+    # Show lost commits (dangling)
     lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
-    main = !git symbolic-ref refs/remotes/origin/HEAD | cut -d'/' -f4
-    mt = mergetool
-    pend = !git --no-pager log --pretty=format:'%C(yellow)%h%Creset %f' origin/`git branch-name`..`git branch-name` && echo
-    rmc = rm --cached
-    rbc = rebase --continue
-    rba = rebase --abort
-    s = !tig status
+
+    # ========================================================================
+    # Stash Operations
+    # ========================================================================
+
+    # List stashes with better format
     sl = !git --no-pager stash list --pretty=format:'%C(yellow)%ai %C(blue)%h %C(red)%gd %Creset%f' && echo
-    sa = !"sh -c 'git stash apply `echo \"stash@{$1}\"`' -"
-    sd = !"sh -c 'git stash drop `echo \"stash@{$1}\"`' -"
-    sh = !"sh -c 'git stash show -p `echo \"stash@{$1}\"` | tig' -"
-    sp = !"sh -c 'git stash pop `echo \"stash@{$1}\"`' -"
+
+    # Save stash with message
     ss = stash save
+
+    # Save stash with patch selection
     ssp = stash save --patch --no-keep-index
-    st = status
-    stu = status -u
+
+    # Apply stash by number (usage: git sa 0)
+    sa = !"sh -c 'git stash apply `echo \"stash@{$1}\"`' -"
+
+    # Pop stash by number
+    sp = !"sh -c 'git stash pop `echo \"stash@{$1}\"`' -"
+
+    # Show stash by number
+    sh = !"sh -c 'git stash show -p `echo \"stash@{$1}\"` | tig' -"
+
+    # Drop stash by number
+    sd = !"sh -c 'git stash drop `echo \"stash@{$1}\"`' -"
+
+    # ========================================================================
+    # Rebase Operations
+    # ========================================================================
+
+    # Continue rebase
+    rbc = rebase --continue
+
+    # Abort rebase
+    rba = rebase --abort
+
+    # Interactive rebase last N commits (usage: git rbi 5)
+    rbi = "!f() { git rebase -i HEAD~${1}; }; f"
+
+    # Rebase on main branch
+    rbm = "!f() { git rebase $(git main); }; f"
+
+    # Rebase with autosquash (use with fixup/squash commits)
+    rba-auto = rebase -i --autosquash
+
+    # ========================================================================
+    # Utility Commands
+    # ========================================================================
+
+    # Show files ignored by git
+    ignored = ls-files --others --ignored --exclude-standard
+
+    # Remove file from index (keep in working directory)
+    rmc = rm --cached
+
+    # Show current HEAD commit hash
+    hash = rev-parse HEAD
+
+    # Show aliases (pretty printed)
+    aliases = !git config --get-regexp alias | sed 's/alias\\.//' | sed 's/ / = /'
+
+    # Show contributors
+    contributors = shortlog --summary --numbered
+
+    # Grep through git history
+    grep-history = log -p -S
+
+    # ========================================================================
+    # Diff Helpers
+    # ========================================================================
+
+    # Diff of staged changes
+    dfc = diff --cached
+
+    # Diff with main branch
+    dfm = "!f() { git diff $(git main)..HEAD; }; f"
+
+    # Show files changed in last commit
+    changed = diff --name-only HEAD^
+
+    # Show changed files in branch
+    files = diff --name-only
+
 [mergetool "vimdiff3"]
     cmd = vim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+
 [merge]
     conflictStyle = diff3
     tool = vimdiff3
+
 [mergetool]
     keepBackup = false
+
 [commit]
     gpgSign = true
+
 [pull]
     rebase = false
+
 [includeIf "gitdir:/home/jakub/dev/ynd/"]
     path = /home/jakub/dev/ynd/gitconfig
+
+[rebase]
+    autosquash = true

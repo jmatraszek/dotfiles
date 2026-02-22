@@ -1,21 +1,116 @@
-# Don't let ripgrep vomit really long lines to my terminal, and show a preview.
+# ripgrep configuration file
+# Referenced by RIPGREP_CONFIG_PATH in setenv
+
+# ============================================================================
+# Display Options
+# ============================================================================
+
+# Don't let ripgrep vomit really long lines to my terminal, and show a preview
 --max-columns=400
 --max-columns-preview
 
-# Add my 'web' type.
+# Show line numbers by default
+--line-number
+
+# Smart case: case-insensitive if pattern is all lowercase, case-sensitive otherwise
+--smart-case
+
+# Follow symlinks
+--follow
+
+# Search hidden files and directories (but still respect ignore files)
+# Comment out if this is too noisy
+# --hidden
+
+# ============================================================================
+# File Type Definitions
+# ============================================================================
+
+# Web development
 --type-add
-web:*.{html,css,js}*
+web:*.{html,css,js,jsx,ts,tsx,vue,svelte}
 
-# Using glob patterns to include/exclude files or folders
---glob=!git/*
+# Configuration files
+--type-add
+config:*.{json,yaml,yml,toml,ini,conf,config}
 
-# or
---glob
-!git/*
+# Documentation
+--type-add
+docs:*.{md,rst,txt,adoc}
 
-# Set the colors.
+# Scripts
+--type-add
+scripts:*.{sh,bash,zsh,fish,py,rb,pl}
+
+# Docker/Kubernetes
+--type-add
+container:*{Dockerfile,docker-compose.yml,.dockerignore,*.k8s.yaml,*.k8s.yml}
+
+# Infrastructure as Code
+--type-add
+iac:*.{tf,tfvars,hcl}
+
+# ============================================================================
+# Exclusion Patterns
+# ============================================================================
+
+# Version control
+--glob=!.git/*
+--glob=!.svn/*
+
+# Dependencies
+--glob=!node_modules/*
+--glob=!vendor/*
+--glob=!.bundle/*
+
+# Build outputs
+--glob=!build/*
+--glob=!dist/*
+--glob=!target/*
+--glob=!out/*
+--glob=!*.min.js
+--glob=!*.min.css
+
+# Logs and temporary files
+--glob=!*.log
+--glob=!tmp/*
+--glob=!temp/*
+--glob=!.cache/*
+
+# IDE and editor files
+--glob=!.idea/*
+--glob=!.vscode/*
+--glob=!*.swp
+--glob=!*.swo
+--glob=!*~
+
+# OS files
+--glob=!.DS_Store
+--glob=!Thumbs.db
+
+# Binary and media files
+--glob=!*.png
+--glob=!*.jpg
+--glob=!*.jpeg
+--glob=!*.gif
+--glob=!*.ico
+--glob=!*.pdf
+--glob=!*.woff
+--glob=!*.woff2
+--glob=!*.ttf
+--glob=!*.eot
+
+# ============================================================================
+# Color Configuration
+# ============================================================================
+
+# Line numbers
 --colors=line:none
 --colors=line:style:bold
 
-# Because who cares about case!?
---smart-case
+# Matches
+--colors=match:fg:red
+--colors=match:style:bold
+
+# File paths
+--colors=path:fg:green
