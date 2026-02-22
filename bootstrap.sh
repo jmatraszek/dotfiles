@@ -27,6 +27,7 @@ info "Starting dotfiles dependency installation..."
 # Official repository packages
 OFFICIAL_PACKAGES=(
     # Core shell enhancements
+    atuin             # Sync shell history across machines
     starship          # Modern cross-shell prompt
     fzf               # Fuzzy finder for history/files
     zoxide            # Smarter cd command
@@ -38,6 +39,26 @@ OFFICIAL_PACKAGES=(
     bat               # cat with syntax highlighting
     fd                # Modern find alternative
     ripgrep           # Fast grep alternative
+    dust              # Modern du (disk usage)
+    duf               # Modern df (disk free)
+    procs             # Modern ps (process viewer)
+    btop              # Modern top/htop (system monitor)
+
+    # Git & Docker tools
+    git-delta         # Beautiful git diffs
+    lazydocker        # Interactive docker TUI
+    dive              # Docker image layer explorer
+
+    # HTTP & network tools
+    xh                # Modern curl/httpie alternative
+    bandwhich         # Network bandwidth monitor (network top)
+    dog               # Modern DNS client (better dig)
+    gping             # Ping with graph
+    trippy            # Modern traceroute with TUI
+
+    # Kubernetes tools
+    k9s               # Kubernetes TUI
+    stern             # Multi-pod log tailing
 
     # Terminal & multiplexer
     tmux              # Terminal multiplexer (if not installed)
@@ -50,6 +71,12 @@ OFFICIAL_PACKAGES=(
     # File management
     nnn               # Terminal file manager
 
+    # Git & development tools
+    lazygit           # Interactive git TUI
+    jq                # JSON processor
+    yq                # YAML processor
+    tldr              # Simplified man pages
+
     # Kubernetes tools (optional, comment out if not needed)
     kubectl           # Kubernetes CLI
     kubectx           # Switch between clusters
@@ -58,10 +85,12 @@ OFFICIAL_PACKAGES=(
 
 # AUR packages (optional but recommended)
 AUR_PACKAGES=(
-    atuin                  # Sync shell history across machines
     bash-complete-alias    # Completion support for aliases
     kube-ps1               # Kubernetes prompt helper
     tmux-plugin-manager    # Tmux Plugin Manager (TPM)
+
+    # System utilities
+    viddy-bin              # Modern watch command
 )
 
 # AUR helpers to install (all three for redundancy)
@@ -150,22 +179,17 @@ fi
 if [ ${#AUR_PACKAGES[@]} -gt 0 ]; then
     info "Installing AUR packages..."
 
-    # Find first working AUR helper
-    AUR_CMD=""
-    for helper in paru yay aura; do
-        if command -v "$helper" &>/dev/null; then
-            AUR_CMD="$helper"
-            break
-        fi
-    done
-
-    if [ -z "$AUR_CMD" ]; then
-        error "No working AUR helper found!"
+    # Use aura as primary AUR helper (most stable)
+    if ! command -v aura &>/dev/null; then
+        error "Aura not found! AUR helper installation may have failed."
+        error "Please install aura manually and re-run bootstrap."
         exit 1
     fi
 
-    info "Using $AUR_CMD for AUR packages..."
+    info "Using aura for AUR packages..."
     MISSING_AUR=()
+    FAILED_AUR=()
+
     for pkg in "${AUR_PACKAGES[@]}"; do
         if ! pacman -Qi "$pkg" &>/dev/null; then
             MISSING_AUR+=("$pkg")
@@ -174,8 +198,21 @@ if [ ${#AUR_PACKAGES[@]} -gt 0 ]; then
 
     if [ ${#MISSING_AUR[@]} -gt 0 ]; then
         info "Installing: ${MISSING_AUR[*]}"
-        $AUR_CMD -S --needed --noconfirm "${MISSING_AUR[@]}" || warn "Some AUR packages failed to install"
-        success "AUR packages processed"
+
+        # Try to install each package individually to collect failures
+        for pkg in "${MISSING_AUR[@]}"; do
+            info "Installing $pkg..."
+            if ! sudo aura -A --needed --noconfirm "$pkg" 2>/dev/null; then
+                warn "Failed to install: $pkg"
+                FAILED_AUR+=("$pkg")
+            fi
+        done
+
+        if [ ${#FAILED_AUR[@]} -eq 0 ]; then
+            success "All AUR packages installed successfully"
+        else
+            warn "Some AUR packages failed to install (see errors below)"
+        fi
     else
         success "All AUR packages already installed"
     fi
@@ -244,21 +281,49 @@ echo "    • zoxide        - Smart directory jumping (use 'z' command)"
 echo "    • keychain      - SSH key management"
 echo "    • direnv        - Per-directory environment variables"
 echo ""
-echo "  Modern CLI tools:"
+echo "  Modern CLI replacements:"
 echo "    • eza           - Better ls (aliased as 'l' and 'exals')"
-echo "    • bat           - Syntax-highlighted cat"
-echo "    • fd            - Modern find"
-echo "    • ripgrep       - Fast grep"
+echo "    • bat           - Better cat with syntax highlighting"
+echo "    • fd            - Better find"
+echo "    • ripgrep       - Better grep"
+echo "    • dust          - Better du (disk usage)"
+echo "    • duf           - Better df (disk free)"
+echo "    • procs         - Better ps (process viewer)"
+echo "    • btop          - Better top/htop (system monitor)"
+echo "    • xh            - Better curl (HTTP client)"
+echo "    • viddy         - Better watch"
 echo ""
-echo "  Git & file management:"
-echo "    • tig           - Git client"
-echo "    • nnn           - Terminal file manager"
+echo "  Git tools:"
+echo "    • tig           - Git text UI"
+echo "    • lazygit       - Interactive git TUI"
+echo "    • delta         - Beautiful git diffs"
+echo "    • tldr          - Simplified man pages"
+echo ""
+echo "  Docker tools:"
+echo "    • lazydocker    - Interactive docker TUI"
+echo "    • dive          - Docker image layer explorer"
+echo ""
+echo "  Network tools:"
+echo "    • bandwhich     - Network bandwidth monitor (run with sudo)"
+echo "    • dog           - Modern DNS client (better dig)"
+echo "    • gping         - Ping with graph"
+echo "    • trippy        - Modern traceroute with TUI"
+echo "    • xh            - Modern HTTP client (better curl)"
 echo ""
 echo "  Kubernetes tools:"
 echo "    • kubectl       - Kubernetes CLI"
+echo "    • k9s           - Kubernetes TUI (must-have!)"
+echo "    • stern         - Multi-pod log tailing"
 echo "    • kubectx       - Switch between clusters"
 echo "    • kubens        - Switch between namespaces"
 echo "    • kube-ps1      - Kubernetes prompt helper"
+echo ""
+echo "  Data tools:"
+echo "    • jq            - JSON processor"
+echo "    • yq            - YAML processor"
+echo ""
+echo "  File management:"
+echo "    • nnn           - Terminal file manager"
 echo ""
 echo "  Completions & extras:"
 echo "    • bash-completion       - General completions"
@@ -273,6 +338,27 @@ for helper in yay paru aura; do
     fi
 done
 echo ""
+# Report failures if any
+if [ ${#FAILED_AUR[@]} -gt 0 ]; then
+    echo ""
+    error "============================================"
+    error "FAILED AUR PACKAGES (action required):"
+    error "============================================"
+    for pkg in "${FAILED_AUR[@]}"; do
+        error "  • $pkg"
+    done
+    echo ""
+    warn "Common causes:"
+    echo "  - Binary packages (-bin) linked against old libraries"
+    echo "  - Package maintainer hasn't updated yet"
+    echo ""
+    warn "Solutions:"
+    echo "  - Try non-bin version: aura -A ${FAILED_AUR[0]%-bin}"
+    echo "  - Wait for maintainer update"
+    echo "  - Install manually from AUR"
+    echo ""
+fi
+
 warn "Next steps:"
 echo "  1. Reload your shell or run: source ~/.bashrc"
 echo "  2. For tmux: start tmux and press 'prefix + I' to install plugins"
