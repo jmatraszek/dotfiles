@@ -1,0 +1,4 @@
+# Ignore all plugins (managed by TPM)
+# The tpm symlink is created by bootstrap.sh
+plugins/*
+!plugins/.gitkeep

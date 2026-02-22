@@ -257,9 +257,22 @@ backup_and_link "$DOTFILES_DIR/setenv" "$HOME/.setenv"
 mkdir -p "$HOME/.config"
 backup_and_link "$DOTFILES_DIR/starship.toml" "$HOME/.config/starship.toml"
 
-# Link tmux config
+# Link tmux config (file-level symlink, plugins managed by TPM)
+# Remove old directory-level symlink if it exists
+if [ -L "$HOME/.config/tmux" ]; then
+    info "Removing old directory-level tmux symlink..."
+    rm "$HOME/.config/tmux"
+fi
+
 mkdir -p "$HOME/.config/tmux"
 backup_and_link "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.config/tmux/tmux.conf"
+
+# Create plugins directory and symlink AUR TPM to expected location
+mkdir -p "$HOME/.config/tmux/plugins"
+if [ ! -L "$HOME/.config/tmux/plugins/tpm" ]; then
+    ln -sf /usr/share/tmux-plugin-manager "$HOME/.config/tmux/plugins/tpm"
+    success "Linked TPM to plugins directory"
+fi
 
 # Link ripgrep config
 backup_and_link "$DOTFILES_DIR/ripgreprc" "$HOME/.ripgreprc"
