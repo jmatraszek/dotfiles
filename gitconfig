@@ -31,9 +31,18 @@
 
 [core]
     whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-    pager = less
+    pager = delta
     excludesFile = ~/.gitignore
     editor = vim
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true    # use n and N to move between diff sections
+    light = false      # set to true if you use a light terminal theme
+    line-numbers = true
+    side-by-side = false  # set to true if you prefer side-by-side diffs
 
 [alias]
     # ========================================================================
