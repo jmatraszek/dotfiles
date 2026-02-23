@@ -122,9 +122,11 @@ if command -v zoxide &>/dev/null; then
 fi
 
 # atuin - shell history sync and search
-if command -v atuin &>/dev/null; then
-    eval "$(atuin init bash)"
-fi
+# Disabled until sync is configured. Run 'atuin register' to set up.
+# Uncomment the lines below to enable atuin:
+# if command -v atuin &>/dev/null; then
+#     eval "$(atuin init bash)"
+# fi
 
 # Reset
 Color_Off='\[\e[0m\]'       # Text Reset
