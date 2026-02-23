@@ -12,6 +12,16 @@ export FZF_DEFAULT_OPTS="
   --bind='ctrl-/:toggle-preview'
   --bind='ctrl-u:preview-page-up'
   --bind='ctrl-d:preview-page-down'
+  --tiebreak=begin,index
+  --algo=v2
+"
+
+# FZF Ctrl+R options - prioritize exact matches and recent commands
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}'
+  --preview-window down:3:hidden:wrap
+  --exact
+  --tiebreak=index
 "
 
 # Use fd if available for better performance
@@ -318,16 +328,8 @@ fzf-cd-up() {
 }
 alias up='fzf-cd-up'
 
-# History search with fzf
-fzf-history() {
-  local selected
-  selected=$(history | fzf --tac --no-sort | sed 's/^[ ]*[0-9]*[ ]*//')
-  if [[ -n "$selected" ]]; then
-    echo "$selected"
-    eval "$selected"
-  fi
-}
-# Bind Ctrl+R to fzf history search
-bind -x '"\C-r": fzf-history'
+# Note: Ctrl+R is handled by standard fzf key-bindings.bash (sourced above)
+# It properly inserts commands into readline without executing them
+# This allows you to edit the command before running it and properly adds to history
 
 # vim: set ft=sh:
