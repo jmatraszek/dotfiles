@@ -7,3 +7,6 @@ bash ~/.screenlayout/a.sh
 # Import DISPLAY and XAUTHORITY into systemd user environment
 # Required for xdg-desktop-portal (used by Electron apps for file pickers)
 systemctl --user import-environment DISPLAY XAUTHORITY
+
+# Start dunst notification daemon (before WM so it can handle startup errors)
+dunst &

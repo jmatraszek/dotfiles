@@ -79,6 +79,7 @@ OFFICIAL_PACKAGES=(
     flameshot         # Screenshot tool
     unclutter         # Hide mouse cursor when inactive
     picom             # X compositor (optional, currently disabled)
+    dunst             # Lightweight notification daemon
 
     # Laptop-specific (xps)
     blueman           # Bluetooth manager (blueman-applet)
@@ -313,6 +314,10 @@ backup_and_link "$DOTFILES_DIR/gitignore" "$HOME/.gitignore"
 # Link betterlockscreen config
 mkdir -p "$HOME/.config/betterlockscreen"
 backup_and_link "$DOTFILES_DIR/betterlockscreenrc" "$HOME/.config/betterlockscreen/betterlockscreenrc"
+
+# Link dunst config
+mkdir -p "$HOME/.config/dunst"
+backup_and_link "$DOTFILES_DIR/dunstrc" "$HOME/.config/dunst/dunstrc"
 
 echo ""
 success "Installation complete!"
