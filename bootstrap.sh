@@ -63,6 +63,27 @@ OFFICIAL_PACKAGES=(
     # Terminal & multiplexer
     tmux              # Terminal multiplexer (if not installed)
 
+    # System utilities (awesome WM dependencies)
+    brightnessctl     # Backlight control (replaces xbacklight)
+    feh               # Wallpaper setter (replaces awsetbg)
+    ly                # Minimal TUI display manager (replaces SLiM)
+
+    # awesome WM runtime dependencies
+    lxqt-policykit    # PolicyKit authentication agent (lxqt-policykit-agent)
+    network-manager-applet  # NetworkManager tray icon (nm-applet)
+    qxkb              # Keyboard layout switcher
+    redshift          # Color temperature adjustment (redshift-gtk)
+    udiskie           # Removable disk automounter with tray
+    copyq             # Clipboard manager
+    pasystray         # PulseAudio system tray
+    flameshot         # Screenshot tool
+    unclutter         # Hide mouse cursor when inactive
+    picom             # X compositor (optional, currently disabled)
+
+    # Laptop-specific (xps)
+    blueman           # Bluetooth manager (blueman-applet)
+    cbatticon         # Battery icon for system tray
+
     # Completion & prompt helpers
     bash-completion   # General bash completions
     git               # Git (includes git-prompt.sh)
@@ -91,6 +112,7 @@ AUR_PACKAGES=(
 
     # System utilities
     viddy-bin              # Modern watch command
+    betterlockscreen       # Modern screen locker (replaces slimlock)
 )
 
 # AUR helpers to install (all three for redundancy)
@@ -253,6 +275,11 @@ backup_and_link "$DOTFILES_DIR/bashrc" "$HOME/.bashrc"
 backup_and_link "$DOTFILES_DIR/bash_aliases" "$HOME/.bash_aliases"
 backup_and_link "$DOTFILES_DIR/setenv" "$HOME/.setenv"
 
+# Link X11 session files
+backup_and_link "$DOTFILES_DIR/xinitrc" "$HOME/.xinitrc"
+backup_and_link "$DOTFILES_DIR/xprofile" "$HOME/.xprofile"
+backup_and_link "$DOTFILES_DIR/Xresources" "$HOME/.Xresources"
+
 # Link starship config
 mkdir -p "$HOME/.config"
 backup_and_link "$DOTFILES_DIR/starship.toml" "$HOME/.config/starship.toml"
@@ -282,6 +309,10 @@ backup_and_link "$DOTFILES_DIR/gitconfig" "$HOME/.gitconfig"
 
 # Link global gitignore
 backup_and_link "$DOTFILES_DIR/gitignore" "$HOME/.gitignore"
+
+# Link betterlockscreen config
+mkdir -p "$HOME/.config/betterlockscreen"
+backup_and_link "$DOTFILES_DIR/betterlockscreenrc" "$HOME/.config/betterlockscreen/betterlockscreenrc"
 
 echo ""
 success "Installation complete!"

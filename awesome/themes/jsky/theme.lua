@@ -8,7 +8,7 @@
 theme = {}
 theme.font          = "sans 8"
 
-config_dir = awful.util.getdir("config")
+config_dir = require("gears.filesystem").get_configuration_dir()
 
 theme.bg_focus      = "#e2eeea"
 theme.bg_normal     = "#5b7fa6"
@@ -21,9 +21,8 @@ theme.fg_urgent     = "#2e3436"
 theme.fg_minimize   = "#2e3436"
 
 theme.border_width  = "2"
-theme.border_normal = "#dae3e0"
-theme.border_focus  = "#ff0000"
 theme.border_normal = "#c0c0c0"
+theme.border_focus  = "#ff0000"
 
 -- IMAGES
 theme.layout_fairh           = "/usr/share/awesome/themes/sky/layouts/fairh.png"
@@ -53,7 +52,7 @@ theme.netup_icon    = config_dir .. "/icons/net_up.png"
 theme.netdown_icon  = config_dir .. "/icons/net_down.png"
 
 -- MISC
-theme.wallpaper_cmd         = { "awsetbg /usr/share/awesome/themes/sky/sky-background.png" }
+theme.wallpaper_cmd         = { "feh --bg-scale /usr/share/awesome/themes/sky/sky-background.png" }
 theme.taglist_squares       = "true"
 theme.titlebar_close_button = "true"
 theme.menu_height           = "15"

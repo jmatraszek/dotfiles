@@ -1,0 +1,9 @@
+#!/bin/sh
+# Sourced by display managers before starting the session
+
+# Set monitor layout
+bash ~/.screenlayout/a.sh
+
+# Import DISPLAY and XAUTHORITY into systemd user environment
+# Required for xdg-desktop-portal (used by Electron apps for file pickers)
+systemctl --user import-environment DISPLAY XAUTHORITY

@@ -1,0 +1,22 @@
+# ~/.config/betterlockscreen/betterlockscreenrc
+# Only non-default values - customized for prettier effects and blue highlights
+
+# Prettier visual effects (increased from defaults)
+dim_level=50
+blur_level=2
+
+# Blue keypress highlights (default was red)
+keyhlcolor=2196f3ff
+bshlcolor=1976d2ff
+modifcolor=2196f3ff
+
+# Cyan/blue verification state (default was white)
+ringvercolor=00bcd4ff
+insidevercolor=0288d1aa
+verifcolor=00bcd4ff
+
+# Brighter red for wrong password
+ringwrongcolor=ff5252ff
+insidewrongcolor=d32f2faa
+wrongtext="Wrong password!"
+wrongcolor=ff5252ff

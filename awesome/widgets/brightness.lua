@@ -18,7 +18,7 @@ brightness_icon = wibox.widget {
 brightness_popup = awful.tooltip({ objects = { brightness_icon } })
 
 watch(
-    "xbacklight -get", 5,
+    "sh -c 'brightnessctl -m | cut -d, -f5 | tr -d \"%\"'", 5,
     function(widget, stdout, stderr, exitreason, exitcode)
         local brightness_level = tonumber(string.format("%.0f", stdout))
         -- brightness_widget:set_text(brightness_level)
