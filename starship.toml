@@ -77,9 +77,9 @@ truncation_symbol = "…/"
 
 # Character (prompt symbol)
 [character]
-success_symbol = '[➜](bold green) '
-error_symbol = '[✗](bold red) '
-vimcmd_symbol = '[V](bold green) '
+success_symbol = ' [➜](bold green)'
+error_symbol = ' [✗](bold red)'
+vimcmd_symbol = ' [V](bold green)'
 
 # Enabled modules with custom styling
 [rust]
