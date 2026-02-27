@@ -106,8 +106,18 @@ if [ -f ~/.dotfiles/load-k8s-configs ]; then
     . ~/.dotfiles/load-k8s-configs
 fi
 
+# Load RVM early so its cd hook is established before other tools
+# RVM needs to hook cd to auto-detect .ruby-version files
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+
 if [ -f ~/.dotfiles/setenv ]; then
     . ~/.dotfiles/setenv
+fi
+
+# Load direnv for per-directory environment variables (after RVM, before zoxide)
+# This allows RVM to switch Ruby versions first, then direnv can load project env
+if command -v direnv &>/dev/null; then
+    eval "$(direnv hook bash)"
 fi
 
 # Load modern shell tools conditionally
@@ -244,5 +254,3 @@ else
 fi
 
 # complete -cf sudo
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

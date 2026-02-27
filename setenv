@@ -36,9 +36,4 @@ if [ -z $SETENV_LOADED ]; then
 	export SETENV_LOADED=1
 fi
 
-# Load direnv for per-directory environment variables
-if command -v direnv &>/dev/null; then
-	eval "$(direnv hook bash)"
-fi
-
 # vim: set ft=sh:
