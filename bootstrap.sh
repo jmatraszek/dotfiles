@@ -75,11 +75,27 @@ OFFICIAL_PACKAGES=(
     redshift          # Color temperature adjustment (redshift-gtk)
     udiskie           # Removable disk automounter with tray
     copyq             # Clipboard manager
-    pasystray         # PulseAudio system tray
+    pasystray         # PulseAudio system tray (lightweight)
+    pavucontrol-qt    # PulseAudio volume control GUI
+    pamixer           # PulseAudio mixer CLI (used in awesome keybindings)
     flameshot         # Screenshot tool
     unclutter         # Hide mouse cursor when inactive
     picom             # X compositor (optional, currently disabled)
     dunst             # Lightweight notification daemon
+    rofi              # Application launcher and window switcher
+
+    # Terminal emulators
+    alacritty         # GPU-accelerated terminal emulator
+    konsole           # KDE terminal emulator (optional alternative)
+
+    # Display & monitor management
+    arandr            # GUI for xrandr (monitor configuration)
+    autorandr         # Auto-detect and apply monitor configurations
+
+    # Rofi extensions
+    rofimoji          # Emoji picker for rofi
+    rofi-calc         # Calculator for rofi
+    xdotool           # X11 automation tool (required by rofimoji for typing)
 
     # Laptop-specific (xps)
     blueman           # Bluetooth manager (blueman-applet)
@@ -318,6 +334,9 @@ backup_and_link "$DOTFILES_DIR/betterlockscreenrc" "$HOME/.config/betterlockscre
 # Link dunst config
 mkdir -p "$HOME/.config/dunst"
 backup_and_link "$DOTFILES_DIR/dunstrc" "$HOME/.config/dunst/dunstrc"
+
+# Link rofimoji config
+backup_and_link "$DOTFILES_DIR/rofimoji.rc" "$HOME/.config/rofimoji.rc"
 
 echo ""
 success "Installation complete!"

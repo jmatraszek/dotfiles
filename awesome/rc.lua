@@ -382,6 +382,12 @@ globalkeys = gears.table.join(
     -- Start SSH session with rofi in a new terminal window
     awful.key({ modkey }, "s", function () awful.spawn("rofi -show ssh -terminal alacritty") end),
 
+    -- Emoji picker with rofimoji
+    awful.key({ modkey }, "e", function () awful.spawn("rofimoji") end),
+
+    -- Calculator with rofi-calc
+    awful.key({ modkey }, "c", function () awful.spawn("rofi -show calc -modi calc -no-show-match -no-sort") end),
+
     awful.key({ modkey }, "x",
               function ()
                   awful.prompt.run({ prompt = "Run Lua code: " },

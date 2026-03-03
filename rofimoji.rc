@@ -1,0 +1,17 @@
+# Rofimoji configuration
+# Default action when selecting emoji (type, copy, clipboard, or print)
+action = type
+
+# Skin tone selector (neutral, light, medium-light, moderate, dark, medium-dark, or ask)
+skin-tone = neutral
+
+# Files to load (default includes emojis, can add: math, nerd_font, etc.)
+files = [emojis]
+
+# Insert method for typing (xdotool or typer, typer is faster but xdotool is more compatible)
+typer = xdotool
+
+# Keybindings
+# Alt+C = copy to clipboard instead of typing
+# Alt+T = type (default action)
+# Ctrl+C is handled by rofi itself for copy mode
