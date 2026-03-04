@@ -38,7 +38,8 @@ show_always = true
 # Hostname
 [hostname]
 ssh_only = false
-format = '\[[💻 $hostname]($style)\] '
+ssh_symbol = "🌐 "
+format = '\[[$ssh_symbol💻 $hostname]($style)\] '
 style = "blue"
 disabled = false
 
