@@ -3,6 +3,9 @@
 # Line 1: [exit_code] [time] [user] [host] [ruby] [rust] [git] [k8s] [terraform] [docker] [aws]
 # Line 2: [cwd] $
 
+# Increase scan timeout from default 30ms
+scan_timeout = 100
+
 # Use custom format to match the old prompt structure
 format = """
 [┌─](bold green)$status$cmd_duration$time$username$hostname$ruby$rust$git_branch$git_state$git_status$kubernetes$terraform$docker_context$aws
