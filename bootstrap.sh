@@ -338,6 +338,14 @@ backup_and_link "$DOTFILES_DIR/dunstrc" "$HOME/.config/dunst/dunstrc"
 # Link rofimoji config
 backup_and_link "$DOTFILES_DIR/rofimoji.rc" "$HOME/.config/rofimoji.rc"
 
+# Link bin scripts
+info "Linking bin scripts..."
+mkdir -p "$HOME/bin"
+for script in "$DOTFILES_DIR/bin/"*; do
+    [ -f "$script" ] || continue
+    backup_and_link "$script" "$HOME/bin/$(basename "$script")"
+done
+
 echo ""
 success "Installation complete!"
 echo ""
