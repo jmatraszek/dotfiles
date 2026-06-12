@@ -551,7 +551,7 @@ runonce.run("copyq")
 runonce.run("pasystray --notify=sink_default")
 runonce.run("unclutter -idle 3")
 runonce.run("flameshot")
--- runonce.run("picom -CGbd")
+runonce.run("picom")
 
 -- Disable naughty for desktop notifications (let dunst handle them)
 -- Keep naughty only for awesome's internal error notifications

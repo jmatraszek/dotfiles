@@ -80,7 +80,7 @@ OFFICIAL_PACKAGES=(
     pamixer           # PulseAudio mixer CLI (used in awesome keybindings)
     flameshot         # Screenshot tool
     unclutter         # Hide mouse cursor when inactive
-    picom             # X compositor (optional, currently disabled)
+    picom             # X compositor
     dunst             # Lightweight notification daemon
     rofi              # Application launcher and window switcher
 
@@ -334,6 +334,10 @@ backup_and_link "$DOTFILES_DIR/betterlockscreenrc" "$HOME/.config/betterlockscre
 # Link dunst config
 mkdir -p "$HOME/.config/dunst"
 backup_and_link "$DOTFILES_DIR/dunstrc" "$HOME/.config/dunst/dunstrc"
+
+# Link picom config
+mkdir -p "$HOME/.config/picom"
+backup_and_link "$DOTFILES_DIR/picom.conf" "$HOME/.config/picom/picom.conf"
 
 # Link rofimoji config
 backup_and_link "$DOTFILES_DIR/rofimoji.rc" "$HOME/.config/rofimoji.rc"
