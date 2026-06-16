@@ -1,0 +1,5 @@
+#!/bin/bash
+file="$1"
+root=$(git rev-parse --show-toplevel)
+pane=$(tmux list-panes -a -F '#{pane_id} #{pane_current_command}' | grep -Em1 'vim$|nvim$' | awk '{print $1}')
+[ -n "$pane" ] && tmux send-keys -t "$pane" Escape ":e ${root}/${file}" Enter
