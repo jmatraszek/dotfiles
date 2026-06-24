@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+
+API_URL="https://bin.b12.dev"
+
+jq -Rns '{text: inputs, burn_after_reading: true}' \
+    | curl -sfS -H 'Content-Type: application/json' --data-binary @- "${API_URL}/" \
+    | jq -r --arg url "$API_URL" '$url + .path'
