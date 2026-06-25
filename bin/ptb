@@ -2,7 +2,27 @@
 set -euo pipefail
 
 API_URL="https://bin.b12.dev"
+EXPIRES=86400
 
-jq -Rns '{text: inputs, burn_after_reading: true}' \
+for arg in "$@"; do
+    case "$arg" in
+        --no-expire) EXPIRES="" ;;
+        -h|--help)
+            echo "Usage: ... | ptb [--no-expire]"
+            echo "  Default: paste expires after 1 day"
+            echo "  --no-expire: paste never expires"
+            exit 0
+            ;;
+        *) echo "ptb: unknown option: $arg" >&2; exit 2 ;;
+    esac
+done
+
+if [ -n "$EXPIRES" ]; then
+    payload=$(jq -Rns --argjson e "$EXPIRES" '{text: inputs, expires: $e}')
+else
+    payload=$(jq -Rns '{text: inputs}')
+fi
+
+printf '%s' "$payload" \
     | curl -sfS -H 'Content-Type: application/json' --data-binary @- "${API_URL}/" \
     | jq -r --arg url "$API_URL" '$url + .path'
