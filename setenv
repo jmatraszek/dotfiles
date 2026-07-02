@@ -4,7 +4,6 @@ if [ -z $SETENV_LOADED ]; then
 	export MYSQL_PS1="\u@\h [\d]> "
 
 	export GPGKEY=8F3CD8EE
-	export GPG_TTY=$(tty)
 	export EDITOR=/usr/bin/vim
 	# Use bat as pager if available, fallback to most, then less
 	if command -v bat &>/dev/null; then
@@ -34,6 +33,14 @@ if [ -z $SETENV_LOADED ]; then
 	fi
 
 	export SETENV_LOADED=1
+fi
+
+# Must run per-shell, not once per env: tmux panes get their own pty and
+# gpg-agent/pinentry-curses need to know the current tty to draw on.
+GPG_TTY=$(tty)
+export GPG_TTY
+if [ -n "$GPG_TTY" ] && command -v gpg-connect-agent &>/dev/null; then
+	gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
 fi
 
 # vim: set ft=sh:
