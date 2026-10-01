@@ -27,12 +27,17 @@ if [ -z $SETENV_LOADED ]; then
 	export PATH="$HOME/.rvm/bin:$PATH"
 	export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-	# Load keychain for SSH key management
-	if command -v keychain &>/dev/null; then
-		eval $(keychain --eval --ignore-missing --quiet id_ed25519 id_ed25519_ynd)
-	fi
-
 	export SETENV_LOADED=1
+fi
+
+# Load keychain only in interactive shells. Kept OUT of the SETENV_LOADED
+# block on purpose: keychain 3.x multi-terminal coordination prints
+# "Press Enter to initialize keys" and blocks on stdin. During ly's
+# non-interactive X-session sourcing that prompt is invisible and hangs
+# WM startup (black screen). The [[ $- == *i* ]] guard skips it there;
+# --immediate elects one terminal to run ssh-add and drops the Enter gate.
+if [[ $- == *i* ]] && command -v keychain &>/dev/null; then
+	eval $(keychain --eval --ignore-missing --quiet --immediate id_ed25519 id_ed25519_ynd)
 fi
 
 # Must run per-shell, not once per env: tmux panes get their own pty and
