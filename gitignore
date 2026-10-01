@@ -40,3 +40,5 @@ TODO.local
 NOTES.local
 *.local
 .local/
+
+**/.claude/settings.local.json
