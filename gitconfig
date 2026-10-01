@@ -249,5 +249,14 @@
 [includeIf "gitdir:/home/jakub/dev/ynd/"]
     path = /home/jakub/dev/ynd/gitconfig
 
+[includeIf "gitdir:/home/jakub/dev/ynd/iwc/gitlab/"]
+    path = /home/jakub/dev/ynd/iwc/gitconfig
+
+[includeIf "gitdir:/home/jakub/dev/ynd/medicover/ado/"]
+    path = /home/jakub/dev/ynd/medicover/ado/gitconfig
+
 [rebase]
     autosquash = true
+[credential "https://gitlab.richemont.com"]
+	helper = 
+	helper = !/usr/bin/glab auth git-credential
