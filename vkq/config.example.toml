@@ -1,0 +1,29 @@
+# ~/.config/vkq/config.toml  (no secrets in here; safe to keep in dotfiles)
+
+base_url = "https://vikunja.b12.dev"   # env VKQ_BASE_URL overrides (test instance)
+
+# API token, first match wins:
+#   1. env VKQ_TOKEN
+#   2. token_cmd (stdout of this shell command), e.g. "pass show vikunja/token"
+#   3. token_file (default below; must be chmod 600)
+# token_cmd  = "pass show vikunja/token"
+# token_file = "~/.config/vkq/token"
+
+default_time   = "12:00"   # time given to date-only due dates (@tomorrow, @fri, @+3d)
+create_labels   = true      # false: unknown #labels are skipped with a warning
+include_raw     = true      # append the original input line to the description
+undo_window     = 3600      # `undo` only deletes a task created within this many seconds
+cache_ttl       = 600       # seconds; `vkq --refresh` forces
+timeout         = 10        # HTTP timeout, seconds
+
+# Projects need no mapping here: the first word of every line is the project's Vikunja
+# identifier (project settings -> Identifier), e.g. `WRK fix thing`.
+
+# Named clock times usable as @name (rolls to tomorrow if already past)
+[times]
+eob = "17:00"
+morning = "09:00"
+
+[rofi]
+prompt = "task"
+args = []       # extra rofi args, e.g. ["-theme", "~/.config/rofi/quick.rasi"]

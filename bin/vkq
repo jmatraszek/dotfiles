@@ -1,0 +1,773 @@
+#!/usr/bin/env python3
+"""vkq - quick-capture tasks into Vikunja from rofi.
+
+    vkq                 rofi prompt -> create task (default)
+    vkq add LINE        create task from LINE (no rofi)
+    vkq parse LINE      show what LINE would produce, no network
+    vkq refresh         refresh the project/label cache
+    vkq undo            (or type "undo" in rofi) delete newest task, copy its input line
+    vkq ls [FILTER]     (or type "ls [FILTER]" in rofi) list open tasks, Enter opens one
+
+See ~/.dotfiles/vkq/README.md for the notation.
+"""
+import argparse
+import html
+import json
+import os
+import re
+import stat
+import subprocess
+import sys
+import time
+import tomllib
+import urllib.error
+import urllib.parse
+import urllib.request
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from pathlib import Path
+
+CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "vkq"
+CACHE_DIR = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "vkq"
+
+DEFAULTS = {
+    "base_url": "",
+    "token_cmd": "",
+    "token_file": str(CONFIG_DIR / "token"),
+    "default_time": "12:00",
+    "create_labels": True,
+    "include_raw": True,
+    "cache_ttl": 600,
+    "timeout": 10,
+    "undo_window": 3600,
+    "times": {"eob": "17:00"},
+    "rofi": {"prompt": "task", "args": []},
+}
+
+URL_RE = re.compile(r"https?://[^\s<>\"']+")
+CODE_RE = re.compile(r"^([A-Za-z0-9]+)(?::\s*|\s+|$)")   # WRK, wrk, WRK:
+LABEL_RE = re.compile(r"^#([\w][\w\-./:]*)$")
+PRIO_RE = re.compile(r"^!([1-5])$")
+ESCAPABLE = "#@!+-"                       # \X keeps a token literal in the title
+NEEDS_CLIP = re.compile(r"(?<!\S)\+[uc](?!\S)")
+NEEDS_SEL = re.compile(r"(?<!\S)\+us(?!\S)")
+LS_RE = re.compile(r"^ls(?:\s+(.*))?$", re.IGNORECASE | re.DOTALL)
+RAW_MARK = "vkq: "
+RAW_RE = re.compile(r"<small>" + RAW_MARK + r"(.*?)</small>", re.DOTALL)
+DESC_RE = re.compile(r"(?:^|\s)desc:\s*", re.IGNORECASE)
+TIME_RE = re.compile(r"^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$", re.IGNORECASE)
+_DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+WEEKDAY_NAMES = {n: i for i, d in enumerate(_DAYS) for n in (d, d[:3])}
+
+
+class VkqError(Exception):
+    pass
+
+
+class InputError(VkqError):
+    """The input line is wrong (e.g. unknown project code): nothing is created."""
+
+
+class ApiDown(VkqError):
+    """Unreachable or 5xx: capture should be preserved by the caller."""
+
+
+# --------------------------------------------------------------------- config
+
+def load_config(path=None):
+    path = Path(path or os.environ.get("VKQ_CONFIG") or CONFIG_DIR / "config.toml")
+    cfg = json.loads(json.dumps(DEFAULTS))
+    if path.exists():
+        with open(path, "rb") as f:
+            user = tomllib.load(f)
+        for k, v in user.items():
+            if isinstance(v, dict) and isinstance(cfg.get(k), dict):
+                cfg[k].update(v)
+            else:
+                cfg[k] = v
+    if os.environ.get("VKQ_BASE_URL"):
+        cfg["base_url"] = os.environ["VKQ_BASE_URL"]
+    cfg["times"] = {k.lower(): v for k, v in cfg["times"].items()}
+    if not cfg["base_url"]:
+        raise VkqError(f"base_url not set (config: {path})")
+    cfg["base_url"] = cfg["base_url"].rstrip("/")
+    return cfg
+
+
+def load_token(cfg):
+    """VKQ_TOKEN env > token_cmd > token_file (must be 0600-ish)."""
+    if os.environ.get("VKQ_TOKEN"):
+        return os.environ["VKQ_TOKEN"].strip()
+    if cfg["token_cmd"]:
+        r = subprocess.run(cfg["token_cmd"], shell=True, capture_output=True, text=True)
+        if r.returncode != 0 or not r.stdout.strip():
+            raise VkqError(f"token_cmd failed: {r.stderr.strip()[:100]}")
+        return r.stdout.strip()
+    p = Path(cfg["token_file"]).expanduser()
+    if not p.exists():
+        raise VkqError(f"no API token: set VKQ_TOKEN, token_cmd or create {p}")
+    if p.stat().st_mode & (stat.S_IRWXG | stat.S_IRWXO):
+        raise VkqError(f"{p} must not be group/world accessible (chmod 600)")
+    return p.read_text().strip()
+
+
+# -------------------------------------------------------------------- parsing
+
+@dataclass
+class Parsed:
+    raw: str
+    title: str = ""
+    code: str = ""             # project code (Vikunja project identifier), upper-cased
+    labels: list = field(default_factory=list)
+    due: datetime | None = None
+    due_has_time: bool = False  # False: date only (filters then mean "until end of that day")
+    reminder: datetime | None = None
+    priority: int = 0
+    description: str = ""
+    urls: list = field(default_factory=list)
+    open: bool = False         # +o: xdg-open the created task
+    quiet: bool = False        # -n: no success notification
+    errors: list = field(default_factory=list)    # typo-prone input: nothing is created
+    warnings: list = field(default_factory=list)  # shown in the notification
+    retry: bool = False        # task created but something to fix: copy the input line
+
+    def as_dict(self):
+        d = self.__dict__.copy()
+        for k in ("due", "reminder"):
+            d[k] = d[k].isoformat() if d[k] else None
+        return d
+
+
+def _parse_time(s, cfg_times):
+    s = s.strip().lower()
+    if s in cfg_times:
+        s = cfg_times[s]
+    m = TIME_RE.match(s)
+    if not m:
+        return None
+    h, mi, ap = int(m[1]), int(m[2] or 0), m[3]
+    if ap:
+        if not 1 <= h <= 12:
+            return None
+        h = h % 12 + (12 if ap.lower() == "pm" else 0)
+    if h > 23 or mi > 59:
+        return None
+    return h, mi
+
+
+def _is_clock(s):
+    return bool(_parse_time(s, {})) and (":" in s or s[-2:].lower() in ("am", "pm"))
+
+
+def parse_when(spec, now, default_time="12:00", times=None, explicit_time=None):
+    """Return (datetime, has_time) for a date spec, or None if unparseable.
+
+    Date-only specs get default_time. Time-only specs that already passed
+    today roll over to tomorrow.
+    """
+    times = times or {}
+    s = spec.strip().lower()
+    dh, dm = _parse_time(default_time, {}) or (12, 0)
+
+    def at(day, hm):
+        return day.replace(hour=hm[0], minute=hm[1], second=0, microsecond=0)
+
+    m = re.fullmatch(r"\+(\d+)(min|h|d|w)", s)
+    if m:
+        n, unit = int(m[1]), m[2]
+        if unit == "min":
+            return (now + timedelta(minutes=n)).replace(second=0, microsecond=0), True
+        if unit == "h":
+            return (now + timedelta(hours=n)).replace(second=0, microsecond=0), True
+        day = now + timedelta(days=n * (7 if unit == "w" else 1))
+        return at(day, explicit_time or (dh, dm)), bool(explicit_time)
+
+    day = None
+    if s == "today":
+        day = now
+    elif s == "tomorrow":
+        day = now + timedelta(days=1)
+    elif s in WEEKDAY_NAMES:
+        delta = (WEEKDAY_NAMES[s] - now.weekday()) % 7 or 7
+        day = now + timedelta(days=delta)
+    else:
+        m = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})(?:t(\d{1,2}:\d{2}))?", s)
+        if m:
+            try:
+                day = now.replace(year=int(m[1]), month=int(m[2]), day=int(m[3]))
+            except ValueError:
+                return None
+            if m[4]:
+                explicit_time = _parse_time(m[4], {})
+        else:
+            m = re.fullmatch(r"(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?", s)
+            if m:
+                try:
+                    day = now.replace(year=int(m[3] or now.year), month=int(m[2]),
+                                      day=int(m[1]))
+                except ValueError:
+                    return None
+                if not m[3] and at(day, (23, 59)) < now:
+                    day = day.replace(year=day.year + 1)
+    if day is not None:
+        return at(day, explicit_time or (dh, dm)), bool(explicit_time)
+
+    hm = _parse_time(s, times)
+    if hm:
+        dt = at(now, hm)
+        if dt <= now:
+            dt += timedelta(days=1)
+        return dt, True
+    return None
+
+
+def parse(line, cfg, now=None, clipboard="", selection=""):
+    """Pure function: one captured line -> Parsed. No I/O.
+
+    clipboard / selection are the CLIPBOARD and PRIMARY contents for +u/+c and +us."""
+    now = (now or datetime.now()).astimezone()
+    p = Parsed(raw=line)
+    text = line.strip()
+
+    m = CODE_RE.match(text)   # the project code always comes first and is mandatory
+    if m:
+        p.code = m[1].upper()
+        text = text[m.end():].strip()
+    else:
+        p.errors.append("project code required first, e.g. 'WRK fix the thing'")
+
+    if len(text) > 1 and text.startswith('"') and text.endswith('"'):
+        p.title = text[1:-1].strip()
+        return p
+
+    m = DESC_RE.search(text)
+    if m:
+        p.description = text[m.end():].strip()
+        text = text[:m.start()].strip()
+
+    # URLs first, so '#' / '@' inside them are never interpreted.
+    for url in URL_RE.findall(text):
+        p.urls.append(url.rstrip(".,;)"))
+    text = URL_RE.sub(" ", text)
+
+    tokens = text.split()
+    title = []
+    want_url = want_sel = want_clip = False
+    seen = {}   # "due" / "reminder" -> token that set it
+    i = 0
+    while i < len(tokens):
+        t = tokens[i]
+        i += 1
+        if len(t) > 1 and t[0] == "\\" and t[1] in ESCAPABLE:
+            title.append(t[1:])                       # \#123 -> literal "#123" in the title
+        elif t == "+u":
+            want_url = True
+        elif t == "+us":
+            want_sel = True
+        elif t == "+c":
+            want_clip = True
+        elif t == "+o":
+            p.open = True
+        elif t == "-n":
+            p.quiet = True
+        elif (m := LABEL_RE.match(t)):
+            if m[1].lower() not in [x.lower() for x in p.labels]:
+                p.labels.append(m[1])
+        elif (m := PRIO_RE.match(t)):
+            p.priority = int(m[1])
+        elif t.lower() == "r" and i < len(tokens) and tokens[i].startswith("@"):
+            p.errors.append(f"stray 'r' before {tokens[i]!r}: did you mean r{tokens[i]}?")
+        elif t[:1] == "@" or t[:2].lower() == "r@":
+            kind, spec = ("due", t[1:]) if t[0] == "@" else ("reminder", t[2:])
+            r = parse_when(spec, now, cfg["default_time"], cfg["times"]) if spec else None
+            if r and not r[1] and i < len(tokens) and _is_clock(tokens[i]):
+                # "@tomorrow 9:00" / "@fri 5pm": following clock time belongs to the date
+                r = parse_when(spec, now, cfg["default_time"], cfg["times"],
+                               _parse_time(tokens[i], {}))
+                i += 1
+            if not r:
+                p.errors.append(f"unknown date {t!r} (use \\{t} for a literal)")
+                continue
+            if kind in seen:
+                p.errors.append(f"two {kind} dates: {seen[kind]!r} and {t!r}"
+                                + (" (r@ for a reminder)" if kind == "due" else ""))
+            seen[kind] = t
+            setattr(p, kind, r[0])
+            if kind == "due":
+                p.due_has_time = r[1]
+            if r[0] < now:
+                p.warnings.append(f"{kind} is in the past ({r[0]:%Y-%m-%d %H:%M})")
+        else:
+            title.append(t)
+
+    p.title = " ".join(title)
+    if want_clip:   # +c wins over +u
+        if clipboard.strip():
+            p.description = (p.description + "\n" + clipboard.strip()).strip()
+        else:
+            p.errors.append("+c: clipboard is empty")
+    else:
+        for flag, wanted, src, name in (("+u", want_url, clipboard, "clipboard"),
+                                        ("+us", want_sel, selection, "selection")):
+            if not wanted:
+                continue
+            m = URL_RE.search(src)
+            if m:
+                p.urls.append(m.group().rstrip(".,;)"))
+            else:
+                p.errors.append(f"{flag}: {name} has no URL" + (
+                    "" if not src.strip() else f" (it has text: {src.strip()[:40]!r})")
+                    + (" - copy the URL, or use +us for the primary selection"
+                       if flag == "+u" else ""))
+    p.urls = list(dict.fromkeys(p.urls))
+    return p
+
+
+def build_description(p, include_raw=True):
+    parts = []
+    if p.description:
+        parts.append(f"<p>{html.escape(p.description.replace(chr(13), '')).replace(chr(10), '<br>')}</p>")
+    for u in p.urls:
+        e = html.escape(u)
+        parts.append(f'<p><a href="{e}">{e}</a></p>')
+    if include_raw:   # also what `undo` reads back
+        parts.append(f"<p><small>{RAW_MARK}{html.escape(p.raw)}</small></p>")
+    return "".join(parts)
+
+
+def extract_raw(description):
+    """Input line stored by build_description, or None (task not made by vkq)."""
+    found = RAW_RE.findall(description or "")
+    return html.unescape(found[-1]) if found else None
+
+
+# ------------------------------------------------------------------------ API
+
+class Api:
+    def __init__(self, base, token, timeout=10):
+        self.base, self.token, self.timeout = base.rstrip("/"), token, timeout
+
+    def call(self, method, path, body=None, query=None):
+        url = f"{self.base}/api/v1{path}"
+        if query:
+            url += "?" + urllib.parse.urlencode(query)
+        req = urllib.request.Request(
+            url, method=method,
+            data=json.dumps(body).encode() if body is not None else None,
+            headers={"Authorization": f"Bearer {self.token}",
+                     "Content-Type": "application/json", "Accept": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                return json.loads(r.read() or b"null")
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode(errors="replace")[:200]
+            e.close()
+            try:
+                detail = json.loads(detail).get("message", detail)
+            except ValueError:
+                pass
+            if e.code >= 500:
+                raise ApiDown(f"HTTP {e.code}: {detail}")
+            hint = " (token invalid/expired?)" if e.code == 401 else \
+                   " (token lacks permission?)" if e.code == 403 else ""
+            raise VkqError(f"HTTP {e.code}{hint}: {detail}")
+        except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as e:
+            raise ApiDown(str(getattr(e, "reason", e)))
+
+    def list_all(self, path, query=None):
+        out, page = [], 1
+        while True:
+            items = self.call("GET", path, query={**(query or {}), "page": page,
+                                                  "per_page": 50}) or []
+            out += items
+            if len(items) < 50:
+                return out
+            page += 1
+
+
+class Cache:
+    """projects + labels, TTL'd JSON file; keyed to base_url so test instances don't mix."""
+
+    def __init__(self, api, cfg, path=None):
+        self.api, self.cfg = api, cfg
+        self.path = Path(path or CACHE_DIR / "cache.json")
+        self.data = None
+
+    def _load(self):
+        try:
+            d = json.loads(self.path.read_text())
+            if d["base_url"] == self.cfg["base_url"] and d.get("v") == 2:
+                return d
+        except (OSError, ValueError, KeyError):
+            pass
+        return None
+
+    def refresh(self):
+        self.data = {
+            "base_url": self.cfg["base_url"], "fetched": time.time(), "v": 2,
+            "projects": [{"id": x["id"], "title": x["title"],
+                          "code": (x.get("identifier") or "").upper()}
+                         for x in self.api.list_all("/projects") if not x.get("is_archived")],
+            "labels": [{"id": x["id"], "title": x["title"]}
+                       for x in self.api.list_all("/labels")],
+        }
+        self._save()
+
+    def _save(self):
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = self.path.with_suffix(".tmp")
+        tmp.write_text(json.dumps(self.data))
+        tmp.replace(self.path)
+
+    def get(self):
+        if self.data is None:
+            d = self._load()
+            if d and time.time() - d["fetched"] < self.cfg["cache_ttl"]:
+                self.data = d
+            else:
+                self.refresh()
+        return self.data
+
+    def find(self, kind, name):
+        for x in self.get()[kind]:
+            if x["title"].lower() == name.lower():
+                return x
+        return None
+
+    def project_by_code(self, code):
+        """Project whose identifier is `code`; refreshes once on a miss. InputError if unknown."""
+        for attempt in (0, 1):
+            for x in self.get()["projects"]:
+                if x["code"] and x["code"] == code.upper():
+                    return x
+            if attempt == 0:
+                self.refresh()
+        known = " ".join(x["code"] for x in self.get()["projects"] if x["code"]) or "none set"
+        raise InputError(f"unknown project code {code.upper()!r} (known: {known})")
+
+    def add_label(self, label):
+        self.get()["labels"].append({"id": label["id"], "title": label["title"]})
+        self._save()
+
+
+def resolve_labels(cache, api, names, create, warnings):
+    ids = []
+    for n in names:
+        lab = cache.find("labels", n)
+        if not lab:
+            cache.refresh()  # stale cache must not cause duplicates
+            lab = cache.find("labels", n)
+        if not lab and create:
+            lab = api.call("PUT", "/labels", {"title": n})
+            cache.add_label(lab)
+        if lab:
+            ids.append(lab["id"])
+        else:
+            warnings.append(f"label {n!r} not found (not created)")
+    return ids
+
+
+def create_task(api, cache, cfg, p):
+    """Perform the API calls for a Parsed capture. Returns (task, project_title)."""
+    if not p.title:
+        raise InputError("empty title")
+    if not p.code:
+        raise InputError("project code required")
+    proj = cache.project_by_code(p.code)   # before any label is created
+    warned = len(p.warnings)
+    label_ids = resolve_labels(cache, api, p.labels, cfg["create_labels"], p.warnings)
+    p.retry = len(p.warnings) > warned   # missing label: user will want to fix
+    body = {"title": p.title}
+    desc = build_description(p, cfg["include_raw"])
+    if desc:
+        body["description"] = desc
+    if p.due:
+        body["due_date"] = p.due.isoformat()
+    if p.reminder:
+        body["reminders"] = [{"reminder": p.reminder.isoformat()}]
+    if p.priority:
+        body["priority"] = p.priority
+    task = api.call("PUT", f"/projects/{proj['id']}/tasks", body)
+    if label_ids:
+        try:
+            api.call("POST", f"/tasks/{task['id']}/labels/bulk",
+                     {"labels": [{"id": i} for i in label_ids]})
+        except VkqError as e:  # task exists; do not report as lost
+            p.warnings.append(f"labels not applied: {e}")
+            p.retry = True
+    return task, proj["title"]
+
+
+def last_task_input(api, cfg, now=None):
+    """Newest task and the input line stored in it. Raises VkqError if it must not be undone."""
+    items = api.call("GET", "/tasks", query={"sort_by": "id", "order_by": "desc", "per_page": 1})
+    if not items:
+        raise VkqError("undo: no tasks found")
+    task = items[0]
+    line = extract_raw(task.get("description"))
+    if line is None:
+        raise VkqError(f"undo: newest task #{task['id']} {task['title']!r} has no stored vkq "
+                       "input (not made by vkq, or include_raw = false); not deleted")
+    age = ((now or datetime.now()).astimezone()
+           - datetime.fromisoformat(task["created"])).total_seconds()
+    if age > cfg["undo_window"]:
+        raise VkqError(f"undo: newest vkq task #{task['id']} {task['title']!r} is "
+                       f"{int(age // 60)} min old (undo_window {cfg['undo_window'] // 60} min); "
+                       "not deleted")
+    return task, line
+
+
+def build_filter(p, project_id=None, label_ids=()):
+    """Vikunja filter string for a parsed `ls` line: open tasks that match every given part."""
+    parts = ["done = false"]
+    if project_id:
+        parts.append(f"project = {project_id}")
+    parts += [f"labels = {i}" for i in label_ids]   # repeated = all labels required
+    if p.priority:
+        parts.append(f"priority >= {p.priority}")
+    if p.due:   # up to and including; overdue tasks match too
+        end = p.due if p.due_has_time else p.due.replace(hour=23, minute=59, second=59)
+        parts.append(f"due_date <= '{end.isoformat()}'")
+    return " && ".join(parts)
+
+
+def describe_filter(p):
+    bits = [p.code] + [f"#{x}" for x in p.labels]
+    if p.due:
+        bits.append(f"due ≤ {p.due:%a %d %b}" + (f" {p.due:%H:%M}" if p.due_has_time else ""))
+    if p.priority:
+        bits.append(f"!≥{p.priority}")
+    if p.title:
+        bits.append(f"'{p.title}'")
+    return " · ".join(bits)
+
+
+def list_tasks(api, cache, cfg, p):
+    """Open tasks matching a parsed `ls` line, soonest due first (no due date last)."""
+    if not p.code:
+        raise InputError("project code required")
+    project_id = cache.project_by_code(p.code)["id"]
+    label_ids = []
+    for n in p.labels:
+        lab = cache.find("labels", n)
+        if not lab:
+            cache.refresh()
+            lab = cache.find("labels", n)
+        if not lab:
+            raise InputError(f"label #{n} does not exist")
+        label_ids.append(lab["id"])
+    query = {"filter": build_filter(p, project_id, label_ids)}
+    if p.title:
+        query["s"] = p.title
+    tasks = api.list_all("/tasks", query)
+
+    def due(t):
+        d = t.get("due_date") or ""
+        return "" if d.startswith("0001") else d
+    tasks.sort(key=lambda t: (not due(t), datetime.fromisoformat(due(t)).timestamp()
+                              if due(t) else 0, -t.get("priority", 0), t["id"]))
+    return tasks
+
+
+def format_task(t, project_names, now=None):
+    d = t.get("due_date") or ""
+    due = ""
+    if d and not d.startswith("0001"):
+        dt = datetime.fromisoformat(d).astimezone()
+        due = f"{dt:%a %d %b %H:%M}"
+    prio = f"!{t['priority']}" if t.get("priority") else ""
+    labels = " ".join(f"#{lab['title']}" for lab in t.get("labels") or [])
+    title = " ".join(t["title"].split())
+    return (f"{due:<14} {prio:<2} {project_names.get(t['project_id'], '?'):<9} {title}"
+            + (f"  {labels}" if labels else ""))
+
+
+# ------------------------------------------------------------------------ I/O
+
+def open_url(url):
+    subprocess.Popen(["xdg-open", url], stdout=subprocess.DEVNULL,
+                     stderr=subprocess.DEVNULL, start_new_session=True)
+
+
+def notify(summary, body="", critical=False):
+    cmd = ["notify-send", "-a", "vkq", "-u", "critical" if critical else "normal",
+           summary, body]
+    try:
+        subprocess.run(cmd, timeout=5)
+    except (OSError, subprocess.SubprocessError):
+        print(summary, body, file=sys.stderr)
+
+
+def clipboard_get(selection="clipboard"):
+    try:
+        r = subprocess.run(["xclip", "-selection", selection, "-o"],
+                           capture_output=True, text=True, timeout=2)
+        return r.stdout if r.returncode == 0 else ""
+    except (OSError, subprocess.SubprocessError):
+        return ""
+
+
+def clipboard_set(text):
+    try:
+        subprocess.run(["xclip", "-selection", "clipboard"], input=text, text=True, timeout=2)
+        return True
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def rofi_prompt(cfg):
+    cmd = ["rofi", "-dmenu", "-p", cfg["rofi"]["prompt"],
+           "-theme-str", "listview { enabled: false; }", *cfg["rofi"]["args"]]
+    r = subprocess.run(cmd, input="", capture_output=True, text=True)
+    return r.stdout.strip() if r.returncode == 0 else ""
+
+
+def esc(s):
+    return html.escape(s, quote=False)
+
+
+def parse_with_clipboards(line, cfg):
+    return parse(line, cfg,
+                 clipboard=clipboard_get() if NEEDS_CLIP.search(line) else "",
+                 selection=clipboard_get("primary") if NEEDS_SEL.search(line) else "")
+
+
+def run_ls(text, cfg):
+    """`ls [filter]`: pick an open task in rofi, Enter opens it in the browser."""
+    line = f"ls {text}".strip()
+    p = parse(text, cfg)   # same notation as capture, read as a filter
+    if p.errors:
+        notify("vkq ls: bad filter", "⚠ " + esc("; ".join(p.errors)) + "\n"
+               + retry_hint(clipboard_set(line), line), critical=True)
+        return 1
+    try:
+        api = Api(cfg["base_url"], load_token(cfg), cfg["timeout"])
+        cache = Cache(api, cfg)
+        tasks = list_tasks(api, cache, cfg, p)
+        names = {x["id"]: x["title"] for x in cache.get()["projects"]}
+    except VkqError as e:
+        notify("vkq ls failed", esc(str(e)) + "\n" + retry_hint(clipboard_set(line), line),
+               critical=True)
+        return 2
+    summary = describe_filter(p)
+    if not tasks:
+        notify("vkq ls: no open tasks", esc(summary))
+        return 0
+    lines = [format_task(t, names) for t in tasks]
+    cmd = ["rofi", "-dmenu", "-i", "-format", "i", "-p", "ls", "-mesg",
+           f"{html.escape(summary)}: {len(tasks)}", *cfg["rofi"]["args"]]
+    r = subprocess.run(cmd, input="\n".join(lines), capture_output=True, text=True)
+    if r.returncode != 0 or not r.stdout.strip():
+        return 0
+    open_url(f"{cfg['base_url']}/tasks/{tasks[int(r.stdout)]['id']}")
+    return 0
+
+
+def run_undo(cfg):
+    """Delete the newest vkq task and put its input line on the clipboard for a redo."""
+    try:
+        api = Api(cfg["base_url"], load_token(cfg), cfg["timeout"])
+        task, line = last_task_input(api, cfg)
+        copied = clipboard_set(line)   # before deleting: the capture is never lost
+        api.call("DELETE", f"/tasks/{task['id']}")
+    except VkqError as e:
+        notify("vkq: undo failed", esc(str(e)), critical=True)
+        return 2
+    notify(f"↶ undone: {esc(task['title'])}",
+           "Input copied to clipboard - paste into rofi to redo." if copied
+           else f"Input: {esc(line)}")
+    return 0
+
+
+def retry_hint(copied, line, created=False):
+    if not copied:
+        return f"Input: {esc(line)}"
+    return ("Input copied to clipboard (task already created: edit it, or delete it after retrying)."
+            if created else "Input copied to clipboard - paste into rofi, fix and retry.")
+
+
+def run_add(line, cfg, refresh=False):
+    """Full capture. Returns exit code; notifies on its own."""
+    p = parse_with_clipboards(line, cfg)
+    if not p.title and not p.errors:
+        p.errors.append("empty title")
+    if p.errors:
+        copied = clipboard_set(line)
+        notify("vkq: nothing created", "⚠ " + esc("; ".join(p.errors)) + "\n" + retry_hint(copied, line),
+               critical=True)
+        return 1
+    try:
+        api = Api(cfg["base_url"], load_token(cfg), cfg["timeout"])
+        cache = Cache(api, cfg)
+        if refresh:
+            cache.refresh()
+        task, proj = create_task(api, cache, cfg, p)
+    except VkqError as e:
+        copied = clipboard_set(line)
+        notify("vkq: " + ("server unreachable" if isinstance(e, ApiDown)
+                          else "nothing created" if isinstance(e, InputError) else "FAILED"),
+               f"{esc(str(e))}\n" + retry_hint(copied, line), critical=True)
+        return 2
+    link = f"{cfg['base_url']}/tasks/{task['id']}"
+    if p.open:
+        open_url(link)
+    if p.quiet and not p.warnings:
+        return 0
+    bits = [proj]
+    if p.due:
+        bits.append(f"due {p.due:%a %d %b %H:%M}")
+    if p.reminder:
+        bits.append(f"remind {p.reminder:%a %d %b %H:%M}")
+    bits += [f"#{x}" for x in p.labels]
+    if p.priority:
+        bits.append(f"!{p.priority}")
+    body = " · ".join(esc(b) for b in bits) + f"\n{link}"
+    if p.warnings:
+        body += "\n⚠ " + esc("; ".join(p.warnings))
+    if p.retry:
+        body += "\n" + retry_hint(clipboard_set(line), line, created=True)
+    notify(f"✓ {esc(p.title)}", body)
+    return 0
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(prog="vkq", description=__doc__.split("\n")[0])
+    ap.add_argument("--refresh", action="store_true", help="refresh project/label cache first")
+    ap.add_argument("--config", help="config file (default ~/.config/vkq/config.toml)")
+    sub = ap.add_subparsers(dest="cmd")
+    sub.add_parser("capture", help="rofi prompt (default)")
+    for name in ("add", "parse"):
+        sp = sub.add_parser(name)
+        sp.add_argument("line", nargs="+")
+    sp = sub.add_parser("ls", help="list open tasks in rofi, filter with capture notation")
+    sp.add_argument("line", nargs="*")
+    sub.add_parser("refresh")
+    sub.add_parser("undo", help="delete newest vkq task, copy its input line")
+    a = ap.parse_args(argv)
+    try:
+        cfg = load_config(a.config)
+        if a.cmd == "parse":
+            line = " ".join(a.line)
+            p = parse_with_clipboards(line, cfg)
+            print(json.dumps(p.as_dict(), indent=2, ensure_ascii=False))
+            return 0
+        if a.cmd == "refresh":
+            Cache(Api(cfg["base_url"], load_token(cfg), cfg["timeout"]), cfg).refresh()
+            return 0
+        if a.cmd == "undo":
+            return run_undo(cfg)
+        if a.cmd == "ls":
+            return run_ls(" ".join(a.line), cfg)
+        line = " ".join(a.line) if a.cmd == "add" else rofi_prompt(cfg)
+        if line.strip().lower() == "undo":   # "undo" in quotes creates a task titled undo
+            return run_undo(cfg)
+        if (m := LS_RE.match(line.strip())):
+            return run_ls(m[1] or "", cfg)
+        return run_add(line, cfg, a.refresh) if line else 0
+    except VkqError as e:
+        notify("vkq: " + str(e), critical=True)
+        return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())

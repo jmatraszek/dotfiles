@@ -22,6 +22,11 @@ ln -s ~/.dotfiles/mostrc ~/.mostrc
 ln -s ~/.dotfiles/gpg-agent.conf ~/.gnupg/gpg-agent.conf
 ln -s ~/.dotfiles/ctags.d ~/.ctags.d
 
+# vkq (Vikunja quick capture); put the API token in ~/.config/vkq/token (chmod 600)
+mkdir -p ~/.local/bin ~/.config/vkq
+ln -sf ~/.dotfiles/bin/vkq ~/.local/bin/vkq
+ln -sf ~/.dotfiles/vkq/config.example.toml ~/.config/vkq/config.toml
+
 
 mkdir -p ~/.cache/awesome
 ln -s ~/.dotfiles/awesome ~/.config/

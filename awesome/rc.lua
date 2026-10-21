@@ -379,6 +379,9 @@ globalkeys = gears.table.join(
     -- Switch between windows with rofi
     awful.key({ modkey }, "Tab", function () awful.spawn("rofi -show window") end),
 
+    -- Quick-capture a Vikunja task (see vkq/README.md)
+    awful.key({ modkey }, "i", function () awful.spawn("vkq") end),
+
     -- Start SSH session with rofi in a new terminal window
     awful.key({ modkey }, "s", function () awful.spawn("rofi -show ssh -terminal alacritty") end),
 
