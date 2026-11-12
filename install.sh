@@ -19,6 +19,8 @@ ln -s ~/.dotfiles/tmux ~/.config/
 ln -s ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
 ln -s ~/.dotfiles/alacritty ~/.config/
 ln -s ~/.dotfiles/ghostty ~/.config/
+mkdir -p ~/.config/herdr
+ln -sf ~/.dotfiles/herdr/config.toml ~/.config/herdr/config.toml
 ln -s ~/.dotfiles/mostrc ~/.mostrc
 ln -s ~/.dotfiles/gpg-agent.conf ~/.gnupg/gpg-agent.conf
 ln -s ~/.dotfiles/ctags.d ~/.ctags.d

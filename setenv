@@ -48,4 +48,9 @@ if [ -n "$GPG_TTY" ] && command -v gpg-connect-agent &>/dev/null; then
 	gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
 fi
 
+# herdr sets TERM_PROGRAM=herdr, which Claude Code does not recognise, so it
+# stops emitting OSC 8 hyperlinks. Remove once Claude Code lists herdr
+# (https://github.com/anthropics/claude-code/issues/83508).
+[ "$TERM_PROGRAM" = herdr ] && export FORCE_HYPERLINK=1
+
 # vim: set ft=sh:

@@ -1,0 +1,15 @@
+onboarding = false
+
+[ui.toast]
+delivery = "system"
+
+[ui]
+sidebar_collapsed_mode = "hidden"
+
+[keys]
+previous_tab = ["prefix+p", "shift+left"]
+next_tab = ["prefix+n", "shift+right"]
+previous_workspace = ["shift+up"]
+next_workspace = ["shift+down"]
+previous_agent = ["alt+up"]
+next_agent = ["alt+down"]
