@@ -260,3 +260,5 @@
 [credential "https://gitlab.richemont.com"]
 	helper = 
 	helper = !/usr/bin/glab auth git-credential
+[init]
+	defaultBranch = main
