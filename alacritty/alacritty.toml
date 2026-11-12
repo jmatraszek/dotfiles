@@ -678,7 +678,7 @@ hyperlinks = true
 post_processing = true
 persist = false
 command = { program = "xdg-open" }
-mouse = { enabled = true, mods = "Shift" }
+mouse = { enabled = true, mods = "Control" }
 binding = { key = "U", mods = "Control|Shift" }
 regex = "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
 
