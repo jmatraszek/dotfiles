@@ -1,0 +1,53 @@
+# Ghostty config, mirrors alacritty/alacritty.toml
+
+# "Iosevka Fixed" has ligatures disabled; "Iosevka Term" is the monospace variant that keeps them
+font-family = "Iosevka Term"
+font-style = Medium
+font-style-bold = Bold
+font-style-italic = Italic
+font-size = 14
+
+# Window: decorations come from awesome, not GTK client-side titlebar
+gtk-titlebar = false
+window-decoration = server
+window-padding-x = 2
+window-padding-y = 2
+window-padding-balance = false
+background-opacity = 1.0
+
+# Colors (alacritty draw_bold_text_with_bright_colors = true)
+background = #000000
+foreground = #b2b2b2
+bold-color = bright
+palette = 0=#000000
+palette = 1=#b21818
+palette = 2=#18b218
+palette = 3=#e6c547
+palette = 4=#5f87af
+palette = 5=#b218b2
+palette = 6=#18b2b2
+palette = 7=#b2b2b2
+palette = 8=#686868
+palette = 9=#ff5454
+palette = 10=#54ff54
+palette = 11=#ffff54
+palette = 12=#8fafd7
+palette = 13=#ff54ff
+palette = 14=#54ffff
+palette = 15=#ffffff
+
+# Cursor
+cursor-style = block
+cursor-style-blink = false
+
+# Scrolling and mouse
+mouse-scroll-multiplier = 3
+mouse-hide-while-typing = false
+scrollback-limit = 50000000
+
+# Selection
+copy-on-select = true
+selection-word-chars = ,│`|:"' ()[]{}<>
+
+# Shift+Enter sends ESC CR (newline in Claude Code etc.)
+keybind = shift+enter=text:\x1b\r

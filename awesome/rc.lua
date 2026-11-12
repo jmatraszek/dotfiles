@@ -299,6 +299,7 @@ globalkeys = gears.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end),
+    awful.key({ modkey, "Shift"   }, "Return", function () awful.spawn("ghostty -e tmux") end),
     awful.key({ modkey,           }, "\\",     function () awful.spawn('alacritty') end),
     awful.key({ modkey,           }, "=",      function () awful.spawn('konsole') end),
     awful.key({ altkey, 'Control' }, "l",      function () awful.spawn('betterlockscreen --lock') end),
