@@ -5,6 +5,42 @@ delivery = "system"
 
 [ui]
 sidebar_collapsed_mode = "hidden"
+tab_bar_position = "bottom"
+tab_bar_right = [
+  { type = "zoom" },
+  { type = "command", command = "~/.dotfiles/herdr/status.sh", interval_seconds = 5, timeout_seconds = 2 },
+  { type = "hostname" },
+  { type = "datetime", format = "\uf017 %H:%M" },
+]
+tab_bar_right_separator = " \ue0b3 "
+status_indicators = "symbols"
+
+[ui.sidebar.spaces]
+rows = [
+  ["state_icon", { token = "workspace", fg = "#7aa2f7", bold = true }],
+  ["branch", "git_status"],
+]
+
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", { token = "workspace", fg = "#7aa2f7" }, { token = "tab", fg = "#9ece6a" }],
+  ["agent", "terminal_title_stripped"],
+]
+
+# Tokyo Night Storm, matching tmux
+[theme]
+name = "terminal"
+
+[theme.custom]
+accent = "#7aa2f7"
+sidebar_bg = "#1f2335"
+active_row_bg = "#2f334d"
+selection_bg = "#364a82"
+panel_bg = "#24283b"
+green = "#9ece6a"
+blue = "#7aa2f7"
+red = "#f7768e"
+yellow = "#e0af68"
 
 [keys]
 previous_tab = ["prefix+p", "shift+left"]
