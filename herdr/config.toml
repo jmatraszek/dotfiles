@@ -5,6 +5,7 @@ delivery = "system"
 
 [ui]
 sidebar_collapsed_mode = "hidden"
+pane_scrollbars = false
 tab_bar_position = "bottom"
 tab_bar_right = [
   { type = "zoom" },
