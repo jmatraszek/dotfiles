@@ -183,7 +183,9 @@ def main():
             continue
         out.append(custom_system(bundled[name], bat, label))
 
+        # RetroArch silently falls back to its own folders when these are missing
         saves = SAVES / bat
+        saves.mkdir(exist_ok=True)
         (RA_CFG / f"{bat}.cfg").write_text(
             f'savefile_directory = "{saves}"\nsavestate_directory = "{saves}"\n'
         )
