@@ -509,6 +509,11 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Firefox" }, except = { role = 'browser' },
       properties = { floating = true } },
+    -- ES-DE and the emulators it launches play on the landscape (primary) screen.
+    { rule_any = { class = { "es-de", "retroarch", "RetroArch", "pcsx2-qt", "PCSX2",
+                             "dolphin-emu", "xemu", "PPSSPPSDL", "PPSSPPQt",
+                             "scummvm", "ScummVM" } },
+      properties = { screen = screen.primary } },
 }
 -- }}}
 
