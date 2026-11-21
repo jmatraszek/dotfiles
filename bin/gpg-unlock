@@ -1,0 +1,10 @@
+#!/bin/sh
+# Unlock the git signing key so gpg-agent caches the passphrase (default-cache-ttl in gpg-agent.conf).
+# Usage: gpg-unlock [key-id]   (default: git config user.signingkey)
+set -e
+key=${1:-$(git config user.signingkey)}
+[ -n "$key" ] || { echo "no key: pass one or set git config user.signingkey" >&2; exit 1; }
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null
+echo unlock | gpg --sign --local-user "$key" --output /dev/null
+echo "unlocked $key"
