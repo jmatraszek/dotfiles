@@ -1,0 +1,4 @@
+#!/bin/sh
+# Launch a Batocera-style ScummVM game from ES-DE: the .scummvm file holds the
+# game's short name (e.g. "sky"), the game data sits in the same folder.
+exec scummvm --path="$(dirname "$1")" "$(tr -d '[:space:]' < "$1")"

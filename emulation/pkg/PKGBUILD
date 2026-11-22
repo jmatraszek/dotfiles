@@ -1,0 +1,21 @@
+# Meta-package for desktop emulation (ES-DE over the omv library). Everything
+# below is installed as its dependency, so removing this package removes it all:
+#   paru -Bi ~/.dotfiles/emulation/pkg     # install (AUR deps resolved by paru)
+#   sudo pacman -Rns emulation-desktop     # remove with everything it pulled in
+pkgname=emulation-desktop
+pkgver=1
+pkgrel=1
+pkgdesc="ES-DE, RetroArch and standalone emulators for the omv ROM library"
+arch=(any)
+license=(custom)
+depends=(
+  emulationstation-de      # AUR
+  retroarch
+  retroarch-assets-ozone
+  libretro-core-info
+  pcsx2-latest-bin         # AUR
+  dolphin-emu
+  ppsspp
+  xemu-bin                 # AUR
+  scummvm
+)

@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <int name="DisplayIndex" value="1" />
+<bool name="ShowHiddenGames" value="false" />
+<bool name="ShowHiddenFiles" value="false" />
 <string name="ROMDirectory" value="/mnt/omv/Games/ROMs" />
 <string name="Theme" value="art-book-next-es-de" />
 <string name="ThemeAspectRatio" value="16:9" />
