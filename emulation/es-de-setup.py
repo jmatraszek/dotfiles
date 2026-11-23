@@ -18,14 +18,23 @@ What it writes (rerun after RomM adds systems or games):
       favourite
   ~/.config/retroarch/cores/<core>_libretro.so
       the default core of every system, from the libretro buildbot, when missing
+  /mnt/omv/Games/Decorations/<set>/systems/<bezel>.{png,info}
+      Batocera's bezel of every system, downloaded once; the per-system
+      RetroArch config shows it as an overlay with the game inside its window
+  ~/.config/retroarch/config/<core>/<system>.slangp
+      CRT shader for the 2D home systems (RetroArch's per-folder preset)
 
-ES-DE itself never writes to the share.
+ES-DE itself never writes to the share; this script only adds the bezels.
 """
 import argparse
 import copy
 import io
 import os
+import json
 import re
+import subprocess
+import urllib.error
+import urllib.parse
 import urllib.request
 import zipfile
 import xml.etree.ElementTree as ET
@@ -33,6 +42,7 @@ from pathlib import Path
 
 ROMS = Path("/mnt/omv/Games/ROMs")
 SAVES = Path("/mnt/syncthing/retro-saves")
+BIOS = Path("/mnt/omv/Games/BIOS")
 BUNDLED = Path("/usr/share/es-de/resources/systems/linux/es_systems.xml")
 HOME = Path.home()
 SCUMMVM_LAUNCH = Path(__file__).resolve().parent / "scummvm-launch"
@@ -41,6 +51,38 @@ RA_CFG = HOME / ".config/retroarch/es-de"
 RA_CORES = HOME / ".config/retroarch/cores"
 BUILDBOT = "https://buildbot.libretro.com/nightly/linux/x86_64/latest"
 MEDIA = ("covers", "screenshots", "manuals")
+RA_CONFIG = HOME / ".config/retroarch/config"
+CORE_INFO = Path("/usr/share/libretro/info")
+# Batocera's bezels (batocera-linux/batocera-bezel), flat screen variant. Each
+# .info gives the game window in a 1920x1080 frame.
+BEZELS = Path("/mnt/omv/Games/Decorations")
+BEZEL_SET = "default_nocurve"
+BEZEL_URL = "https://raw.githubusercontent.com/batocera-linux/batocera-bezel/master"
+# Batocera folder -> bezel name, where they differ. Systems without a bezel
+# (arcade, nds, psp, computers run windowed) play full screen.
+BEZEL_ALIASES = {
+    "amiga1200": "amiga500",
+    "fds": "nes",
+    "o2em": "odyssey2",
+    "satellaview": "snes",
+    "segacd": "megacd",
+    "sufami": "snes",
+}
+# Systems whose BIOS sits in a subfolder of BIOS/ (Batocera layout) and whose
+# core looks only in the system folder root: PUAE wants the Kickstarts there,
+# or it falls back to AROS and WHDLoad (.lha) games fail
+SYSTEM_DIRS = {"amiga500": "amiga", "amiga1200": "amiga"}
+NO_BEZEL = {"dos", "fbneo", "mame", "nds", "psp", "xbox", "c20", "daphne"}
+# 2D home systems that get a light CRT shader (the GTX 750 Ti cannot run the
+# heavy ones at 1440p). Handhelds and 3D systems stay clean.
+CRT_SHADER = "/usr/share/libretro/shaders/shaders_slang/crt/crt-easymode.slangp"
+CRT_SYSTEMS = {
+    "amiga500", "amiga1200", "amstradcpc", "atari2600", "atari5200", "atari7800",
+    "atari800", "atarist", "c64", "colecovision", "fds", "intellivision",
+    "mastersystem", "megadrive", "msx1", "msx2", "neogeo", "nes", "o2em",
+    "pcengine", "pcenginecd", "satellaview", "sega32x", "segacd", "sg1000",
+    "snes", "sufami", "supergrafx", "zxspectrum",
+}
 # Per-game fields ES-DE writes on the desktop; kept across refreshes from the share
 LOCAL_FIELDS = ("playcount", "lastplayed", "favorite")
 # File a game folder launches directly (ES-DE folder link): the .m3u of a
@@ -162,6 +204,89 @@ def fetch_cores(systems):
             zipfile.ZipFile(io.BytesIO(response.read())).extract(core, RA_CORES)
 
 
+def screen_size():
+    """Resolution of the primary monitor, where games run (HDMI-0)."""
+    try:
+        out = subprocess.run(["xrandr", "--query"], capture_output=True, text=True).stdout
+        match = re.search(r" connected primary (\d+)x(\d+)", out)
+        if match:
+            return int(match.group(1)), int(match.group(2))
+    except FileNotFoundError:
+        pass
+    return 2560, 1440
+
+
+def fetch_bezel(path):
+    """A file from the bezel repo, following its git symlinks, or None."""
+    for _ in range(5):
+        try:
+            with urllib.request.urlopen(f"{BEZEL_URL}/{urllib.parse.quote(path)}") as response:
+                data = response.read()
+        except urllib.error.HTTPError:
+            return None
+        # A git symlink comes back as its target path
+        if len(data) > 256 or data[:1] == b"{" or data.startswith(b"\x89PNG"):
+            return data
+        path = os.path.normpath(os.path.join(os.path.dirname(path), data.decode().strip()))
+    return None
+
+
+def bezel(bat, screen):
+    """RetroArch settings showing the system's bezel, or [] if it has none."""
+    name = BEZEL_ALIASES.get(bat, bat)
+    if bat in NO_BEZEL:
+        return []
+    base = BEZELS / BEZEL_SET / "systems" / name
+    for ext in ("png", "info"):
+        path = base.with_suffix(f".{ext}")
+        if path.exists():
+            continue
+        data = fetch_bezel(f"{BEZEL_SET}/systems/{name}.{ext}")
+        if data is None:
+            return []
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        print(f"bezel {path.name}")
+    info = json.loads(base.with_suffix(".info").read_text())
+    overlay = RA_CFG / "overlays" / f"{bat}.cfg"
+    overlay.parent.mkdir(exist_ok=True)
+    overlay.write_text(
+        "overlays = 1\n"
+        f'overlay0_overlay = "{base.with_suffix(".png")}"\n'
+        "overlay0_full_screen = true\n"
+        "overlay0_descs = 0\n"
+    )
+    # The game window from the 1920x1080 .info, scaled to the screen
+    sx, sy = screen[0] / info["width"], screen[1] / info["height"]
+    return [
+        'input_overlay_enable = "true"',
+        f'input_overlay = "{overlay}"',
+        'input_overlay_opacity = "1.000000"',
+        'input_overlay_hide_in_menu = "true"',
+        'video_scale_integer = "false"',
+        'aspect_ratio_index = "23"',  # custom viewport
+        # Anchor top left: RetroArch otherwise centres the viewport and adds x/y
+        'video_viewport_bias_x = "0.000000"',
+        'video_viewport_bias_y = "0.000000"',
+        f'custom_viewport_x = "{round(info["left"] * sx)}"',
+        f'custom_viewport_y = "{round(info["top"] * sy)}"',
+        f'custom_viewport_width = "{round((info["width"] - info["left"] - info["right"]) * sx)}"',
+        f'custom_viewport_height = "{round((info["height"] - info["top"] - info["bottom"]) * sy)}"',
+    ]
+
+
+def crt_shader(bat, system):
+    """Per-folder shader preset: RetroArch loads config/<core>/<folder>.slangp."""
+    match = re.search(r"%CORE_RETROARCH%/(\w+)_libretro\.so", system.find("command").text or "")
+    info = CORE_INFO / f"{match.group(1)}_libretro.info" if match else None
+    if not info or not info.exists():
+        return
+    core = re.search(r'^corename = "(.*)"', info.read_text(), re.M).group(1)
+    preset = RA_CONFIG / core / f"{bat}.slangp"
+    preset.parent.mkdir(parents=True, exist_ok=True)
+    preset.write_text(f'#reference "{CRT_SHADER}"\n')
+
+
 def folder_link(folder):
     """The file inside a game folder ES-DE should launch, or None."""
     files = sorted(
@@ -224,18 +349,23 @@ def main():
     present = {p.name for p in ROMS.iterdir() if p.is_dir()}
     out = ET.Element("systemList")
     RA_CFG.mkdir(parents=True, exist_ok=True)
+    screen = screen_size()
 
     for bat, (name, label) in sorted(SYSTEMS.items()):
         if bat not in present:
             continue
-        out.append(custom_system(bundled[name], bat, label))
+        system = custom_system(bundled[name], bat, label)
+        out.append(system)
 
         # RetroArch silently falls back to its own folders when these are missing
         saves = SAVES / bat
         saves.mkdir(exist_ok=True)
-        (RA_CFG / f"{bat}.cfg").write_text(
-            f'savefile_directory = "{saves}"\nsavestate_directory = "{saves}"\n'
-        )
+        lines = [f'savefile_directory = "{saves}"', f'savestate_directory = "{saves}"']
+        if bat in SYSTEM_DIRS:
+            lines.append(f'system_directory = "{BIOS / SYSTEM_DIRS[bat]}"')
+        (RA_CFG / f"{bat}.cfg").write_text("\n".join(lines + bezel(bat, screen)) + "\n")
+        if bat in CRT_SYSTEMS:
+            crt_shader(bat, system)
 
         for kind in MEDIA:
             if (ROMS / bat / kind).is_dir():

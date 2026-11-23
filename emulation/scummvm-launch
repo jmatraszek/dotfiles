@@ -1,4 +1,47 @@
 #!/bin/sh
 # Launch a Batocera-style ScummVM game from ES-DE: the .scummvm file holds the
 # game's short name (e.g. "sky"), the game data sits in the same folder.
-exec scummvm --path="$(dirname "$1")" "$(tr -d '[:space:]' < "$1")"
+# Batocera also writes variant names (loom-vga, kq6-cd) that ScummVM rejects:
+# use the detected game id the variant name starts with. Folders holding several
+# languages of a game start in English.
+# The game plays with a CRT shader in a borderless window over the Batocera
+# ScummVM bezel, shown full screen by feh; awesome (rc.lua) stacks and centres
+# both on the primary screen. Without the bezel ScummVM runs full screen.
+BEZEL=/mnt/omv/Games/Decorations/default_nocurve/systems/scummvm
+SHADER=crt/crt-easymode.glslp
+dir=$(dirname "$1")
+want=$(tr -d '[:space:]' < "$1")
+detected=$(scummvm --detect --path="$dir" 2>/dev/null | awk 'NR > 2 { sub(/^[^:]*:/, "", $1); print }')
+set -- --auto-detect
+for id in $(echo "$detected" | awk '{ print $1 }' | sort -u); do
+    case "$want" in
+    "$id"|"$id"-*)
+        lines=$(echo "$detected" | awk -v id="$id" '$1 == id')
+        set -- "$id"
+        if echo "$lines" | grep -q English && echo "$lines" | grep -v -q English; then
+            set -- --language=en "$id"
+        fi
+        break ;;
+    esac
+done
+set -- --path="$dir" --gfx-mode=opengl --shader="$SHADER" "$@"
+
+# Primary screen size, e.g. "2560 1440"
+screen=$(xrandr | awk '/ primary / { split($4, g, /[x+]/); print g[1], g[2] }')
+if [ ! -f "$BEZEL.png" ] || [ ! -f "$BEZEL.info" ] || [ -z "$screen" ]; then
+    exec scummvm --fullscreen "$@"
+fi
+# The bezel's hole from its 1920x1080 .info, scaled to the screen
+size=$(tr -d '{}" \n' < "$BEZEL.info" | tr , '\n' | awk -F: -v screen="$screen" '
+    { v[$1] = $2 }
+    END {
+        split(screen, s, " ")
+        printf "%d,%d", (v["width"] - v["left"] - v["right"]) * s[1] / v["width"] + 0.5,
+            (v["height"] - v["top"] - v["bottom"]) * s[2] / v["height"] + 0.5
+    }')
+feh --fullscreen --auto-zoom --hide-pointer --class scummvm-bezel "$BEZEL.png" &
+bezel=$!
+scummvm --no-fullscreen --window-size="$size" "$@"
+status=$?
+kill "$bezel"
+exit "$status"

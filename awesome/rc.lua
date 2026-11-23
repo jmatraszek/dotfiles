@@ -514,6 +514,27 @@ awful.rules.rules = {
                              "dolphin-emu", "xemu", "PPSSPPSDL", "PPSSPPQt",
                              "scummvm", "ScummVM" } },
       properties = { screen = screen.primary } },
+    -- scummvm-launch: the bezel fills the screen, the game window sits in its hole
+    -- (screen geometry, not the workarea: both cover the wibar).
+    { rule = { class = "scummvm-bezel" },
+      properties = { screen = screen.primary, focusable = false, floating = true,
+                     border_width = 0, ontop = true },
+      -- Delayed: the screen rule above moves the client after this callback
+      callback = function (c)
+          gears.timer.delayed_call(function () c:geometry(screen.primary.geometry) end)
+      end },
+    { rule_any = { class = { "scummvm", "ScummVM" } },
+      callback = function (c)
+          if c.fullscreen then return end
+          c.floating = true
+          c.border_width = 0
+          c.ontop = true
+          gears.timer.delayed_call(function ()
+              local s, g = screen.primary.geometry, c:geometry()
+              c:geometry({ x = s.x + (s.width - g.width) // 2, y = s.y + (s.height - g.height) // 2 })
+              c:raise()
+          end)
+      end },
 }
 -- }}}
 
